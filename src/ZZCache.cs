@@ -6,6 +6,8 @@ using System.Text;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO.Compression;
 
+using Volte.Data.JsonObject;
+
 namespace Volte.Data.Dapper
 {
     public class ZZCache {
