@@ -21,6 +21,7 @@ namespace Volte.Data.Dapper
         private string _AliasName    = "";
         private string _TypeChar     = "c";
         private string _DataType     = "";
+        private string _DataBand     = "";
         private bool   _PrimaryKey   = false;
         private bool   _CanWrite     = true;
         private bool   _timestamp    = false;
@@ -74,6 +75,7 @@ namespace Volte.Data.Dapper
         public bool Readonly     { get { return _Readonly;                   } set { _Readonly     = value; }  }
         public string TypeChar   { get { return _TypeChar;                   } set { _TypeChar     = value; }  }
         public string DataType   { get { return _DataType;                   } set { _DataType     = value; }  }
+        public string DataBand   { get { return _DataBand;                   } set { _DataBand     = value; }  }
         public string Status     { get { return _Status;                     } set { _Status       = value; }  }
         public string Reference  { get { return _Reference;                  } set { _Reference    = value; }  }
         public string AlignName  { get { return _AlignName;                  } set { _AlignName    = value; }  }
