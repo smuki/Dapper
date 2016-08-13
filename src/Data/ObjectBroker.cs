@@ -33,10 +33,12 @@ namespace Volte.Data.Dapper
 
         internal void RegisterDbConnectionInfo(Setting _Setting)
         {
+
             if (!_DatabasePool.ContainsKey(_Setting.DbName)) {
                 Streaming database1 = null;
 
                 try {
+
                     string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
                     string Url = path;
 
@@ -46,12 +48,14 @@ namespace Volte.Data.Dapper
 
                     string cFileName = Url + Path.DirectorySeparatorChar + _Setting.TypeName + ".dll";
 
+
                     if (File.Exists(cFileName) && !_Setting.Include) {
                         Console.WriteLine(_Setting.TypeName);
 
                         System.Reflection.Assembly objAssembly = DapperUtil.ReadAssembly(cFileName);
                         database1 = (Streaming)objAssembly.CreateInstance(_Setting.TypeName);
                     } else {
+                    		Console.WriteLine("........"+_Setting.TypeName);
                         database1 = (Streaming)base.GetType().Assembly.CreateInstance(_Setting.TypeName);
                     }
 
