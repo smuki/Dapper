@@ -3,6 +3,8 @@ using System.Data;
 using System.IO;
 using System.Data.SqlClient;
 
+using Volte.Data.Dapper;
+
 namespace Volte.Data.Dapper
 {
     public class MsSqlServer : Streaming {
@@ -94,22 +96,22 @@ namespace Volte.Data.Dapper
                 }
 
                 if (num3 == 0x203) {
-                    message = "?ο???" + exception1.Message;
+                    message = "Reference:" + exception1.Message;
                     return ExceptionTypes.NotAllowDataNull;
                 }
 
                 if (num3 == 0x220) {
-                    message = "?ο???" + exception1.Message;
+                    message = "Reference:" + exception1.Message;
                     return ExceptionTypes.AutoValueOn;
                 }
             } else if (num3 <= 0xa43) {
                 if (num3 == 0x223) {
-                    message = "?ο???" + exception1.Message;
+                    message = "Reference:" + exception1.Message;
                     return ExceptionTypes.RestrictError;
                 }
 
                 if (num3 == 0xa43) {
-                    message = "?????ظ???";
+                    message = "Reference!";
                     return ExceptionTypes.NotUnique;
                 }
             } else {
@@ -118,12 +120,12 @@ namespace Volte.Data.Dapper
                 }
 
                 if (num3 == 0x1ff2) {
-                    message = "?ο???" + exception1.Message;
+                    message = "Reference:" + exception1.Message;
                     return ExceptionTypes.RequireAttribute;
                 }
             }
 
-            message = "???ݿ??????쳣:";
+            message = "Database Exception:";
 
             for (int num2 = 0; num2 < exception1.Errors.Count; num2++) {
                 object obj1 = message;
@@ -187,10 +189,10 @@ namespace Volte.Data.Dapper
                     this.Connection.Open();
                 } catch (SqlException exception2) {
                     if (exception2.Number == 0x11) {
-                        throw new DapperException("???ݿⲻ???ڣ??ο???" + exception1.Message + "." + exception2.Message, ExceptionTypes.DatabaseConnectionError);
+                        throw new DapperException("Database Not Found Reference:" + exception1.Message + "." + exception2.Message, ExceptionTypes.DatabaseConnectionError);
                     }
 
-                    throw new DapperException("��?????ݿ?ʧ?ܣ??ο???" + exception1.Message + "." + exception2.Message, ExceptionTypes.DatabaseError);
+                    throw new DapperException("Connect Database Fail Reference:" + exception1.Message + "." + exception2.Message, ExceptionTypes.DatabaseError);
                 }
             } finally {
                 if (this.Connection != null) {
