@@ -206,7 +206,7 @@ namespace Volte.Data.Dapper
             return this.GetType(name) == "v";
         }
 
-        public bool IsNameValueList(string name)
+        public bool IsNameValues(string name)
         {
             return this.GetType(name) == "l";
         }
@@ -224,17 +224,17 @@ namespace Volte.Data.Dapper
             return _NameValue;
         }
 
-        public NameValueList GetNameValueList(string Name)
+        public NameValues GetNameValues(string Name)
         {
-            NameValueList _NameValueList = new NameValueList();
+            NameValues _NameValues = new NameValues();
 
             if (this.GetType(Name) == "l") {
                 if (_Dictionary.ContainsKey(Name)) {
-                    _NameValueList = (NameValueList)_Dictionary[Name].Value;
+                    _NameValues = (NameValues)_Dictionary[Name].Value;
                 }
             }
 
-            return _NameValueList;
+            return _NameValues;
         }
 
         public string GetValue(string name)
@@ -257,7 +257,7 @@ namespace Volte.Data.Dapper
             }
         }
 
-        public void SetValue(string name, NameValueList value)
+        public void SetValue(string name, NameValues value)
         {
             NameValuePair variable1 = new NameValuePair();
             variable1.Name          = name;

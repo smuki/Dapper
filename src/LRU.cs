@@ -16,8 +16,6 @@ namespace Volte.Data.Dapper
         private readonly TimeSpan timeOut;
         private static object _PENDING = new object();
 
-        private Timer cleanupTimer;
-
         public LRU(int maxCacheSize = 100)
         {
             this.maxSize = maxCacheSize;
@@ -28,8 +26,6 @@ namespace Volte.Data.Dapper
             AutoResetEvent autoEvent = new AutoResetEvent(false);
             this.maxSize             = maxCacheSize;
             this.timeOut             = itemExpiryTimeout;
-            TimerCallback tcb        = this.RemoveExpiredElements;
-            this.cleanupTimer        = new Timer(tcb, autoEvent, 0, memoryRefreshInterval);
         }
 
         public void SetValue(TKey key, TValue cacheObject)

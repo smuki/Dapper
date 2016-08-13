@@ -20,7 +20,7 @@ namespace Volte.Data.Dapper
         {
 
             if (_Lexer.Current == '{') {
-                NameValues _VContexts = new NameValues();
+                NameValue _VContexts = new NameValue();
 
                 _VContexts.Read(_Lexer);
                 this.Value = _VContexts;
@@ -32,7 +32,7 @@ namespace Volte.Data.Dapper
                     _Lexer.SkipWhiteSpace();
 
                     if (_Lexer.Current == '{') {
-                        NameValues _VContexts = new NameValues();
+                        NameValue _VContexts = new NameValue();
                         _VContexts.Read(_Lexer);
 
                         this.Name  = name;
@@ -40,7 +40,7 @@ namespace Volte.Data.Dapper
                         this.Value = _VContexts;
 
                     } else if (_Lexer.Current == '[') {
-                        NameValueList _VContexts = new NameValueList();
+                        NameValues _VContexts = new NameValues();
                         _VContexts.Read(_Lexer);
 
                         this.Name  = name;
@@ -67,10 +67,10 @@ namespace Volte.Data.Dapper
                     //ZZLogger.Debug(ZFILE_NAME , "type = "+this.Type);
                     if (this.Type == "v") {
                         writer.AppendLine();
-                        ((NameValues)this.Value).Write(writer);
+                        ((NameValue)this.Value).Write(writer);
                     } else if (this.Type == "l") {
                         writer.AppendLine();
-                        ((NameValueList)this.Value).Write(writer);
+                        ((NameValues)this.Value).Write(writer);
                     } else if (this.Type == "t") {
                         //  this.Value.Write(writer);
                     } else {
