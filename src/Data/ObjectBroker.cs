@@ -10,7 +10,7 @@ using System.Diagnostics;
 using System.Reflection.Emit;
 using System.Reflection;
 
-using Volte.Data.Dapper;
+using Volte.Data.JsonObject;
 
 namespace Volte.Data.Dapper
 {

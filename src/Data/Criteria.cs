@@ -2,6 +2,7 @@ using System;
 using System.Data;
 
 using Volte.Data.Dapper;
+using Volte.Data.JsonObject;
 
 namespace Volte.Data.Dapper
 {
@@ -12,7 +13,7 @@ namespace Volte.Data.Dapper
         {
 
             if (attributeValue == null) {
-                throw new DapperException("?Ò«?‚tNull!");
+                throw new DapperException("?Ò«??tNull!");
             }
 
             _isFieldToField = false;
@@ -26,7 +27,7 @@ namespace Volte.Data.Dapper
         {
 
             if (attributeName2 == null) {
-                throw new DapperException("»³‚tžX»³Ò«‚t»³‚t?‚t‚t");
+                throw new DapperException("???t?X??Ò«?t???t??t?t");
             }
 
             _isFieldToField = _FieldToField;
@@ -159,7 +160,7 @@ namespace Volte.Data.Dapper
             }
 
             case SqlValueTypes.NotSupport: {
-                string text3 = "?»³»³žX‚t»³" + _atrribute.Name + "žX»³»³žX‚t»³‚tžX»³žX»³??";
+                string text3 = "??????X?t??" + _atrribute.Name + "?X?????X?t???t?X???X????";
                 throw new DapperException(text3, ExceptionTypes.PesistentError);
             }
             }
@@ -260,7 +261,7 @@ namespace Volte.Data.Dapper
             }
 
             case SqlValueTypes.NotSupport: {
-                throw new DapperException("?»³»³žX‚t»³" + _atrribute.Name + "žX»³»³žX‚t»³‚tžX»³žX»³??", ExceptionTypes.PesistentError);
+                throw new DapperException("??????X?t??" + _atrribute.Name + "?X?????X?t???t?X???X????", ExceptionTypes.PesistentError);
             }
 
             default: {

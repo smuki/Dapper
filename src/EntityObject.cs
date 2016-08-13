@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
+using Volte.Data.JsonObject;
 
 namespace Volte.Data.Dapper
 {

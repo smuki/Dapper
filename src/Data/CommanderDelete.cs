@@ -1,7 +1,7 @@
 using System;
 using System.Data;
 
-using Volte.Data.Dapper;
+using Volte.Data.JsonObject;
 
 namespace Volte.Data.Dapper
 {
