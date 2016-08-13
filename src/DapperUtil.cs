@@ -8,6 +8,9 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Globalization;
 using System.IO.Compression;
+using System.Data;
+
+using Volte.Data.JsonObject;
 
 namespace Volte.Data.Dapper
 {
@@ -18,6 +21,9 @@ namespace Volte.Data.Dapper
         private static readonly object _PENDING                = new object();
         private static Dictionary<string, Assembly> oAssembly  = new Dictionary<string, Assembly>();
         private static Dictionary<string, DateTime> oZDateTime = new Dictionary<string, DateTime>();
+        private static string cDbName = "_";
+        private static Dictionary<string, ClassMapping> _ClassMappingCache = new Dictionary<string, ClassMapping>();
+        private static Dictionary<string, AttributeMapping> _AttributeMappings = new Dictionary<string, AttributeMapping>();
 
         public DapperUtil()
         {
@@ -661,6 +667,224 @@ namespace Volte.Data.Dapper
                 oAssembly  = new Dictionary<string, Assembly>();
                 oZDateTime = new Dictionary<string, DateTime>();
             }
+        }
+
+        private static ClassMapping ContainsKey(string key)
+        {
+            ClassMapping value;
+            _ClassMappingCache.TryGetValue(key, out value);
+            return value;
+        }
+
+        private static void SetValue(string key, ClassMapping _des)
+        {
+            lock (_PENDING) {
+
+                if (_des != null) {
+                    _ClassMappingCache[key] = _des;
+                }
+            }
+        }
+
+
+        private static void Add(string key, ClassMapping des)
+        {
+            lock (_PENDING) {
+                if ((!_ClassMappingCache.ContainsKey(key)) && des != null) {
+                    _ClassMappingCache.Add(key, des);
+                }
+            }
+        }
+
+        private static ClassMapping getClassMappingCache(string key)
+        {
+            ClassMapping value;
+            _ClassMappingCache.TryGetValue(key, out value);
+
+            if (value != null) {
+                return value;
+            }
+
+            throw new Exception("缓存中没存在此数据");
+        }
+
+        private static ClassMapping UpdateClassMappingCache<T>()
+        {
+            var type = typeof(T);
+            var cacheValue = ContainsKey(type.FullName);
+
+            if (cacheValue == null) {
+                var model = new ClassMapping();
+                model.ClassType = type;
+                model.ClassName = type.Name;
+                string tableName          = type.Name;
+                Attribute[] attibutes     = null;
+
+                PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+                //Querying Class Attributes
+                foreach (Attribute attr in type.GetCustomAttributes(true)) {
+                    if (attr.GetType() == typeof(AttributeMapping))  {
+                        AttributeMapping _attribute = (AttributeMapping) attr;
+                        tableName = _attribute.TableName;
+                        break;
+                    }
+                }
+
+                foreach (PropertyInfo p in properties)  {
+
+
+                    if (p.CanWrite && p.CanRead) {
+                        attibutes = Attribute.GetCustomAttributes(p);
+                        AttributeMapping _AttributeMapping = null;
+
+                        foreach (Attribute attribute in attibutes)  {
+                            //检怀是倀设瀀了AttributeMapping倀性
+                            if (attribute.GetType() == typeof(AttributeMapping))  {
+                                string key = (cDbName + "_" + type.FullName + "_" + p.Name).ToLower();
+
+                                if (_AttributeMappings.ContainsKey(key)) {
+                                    _AttributeMapping = _AttributeMappings[key];
+                                } else {
+                                    AttributeMapping _attribute = (AttributeMapping) attribute;
+                                    _AttributeMapping           = new AttributeMapping(p.Name);
+
+                                    if (string.IsNullOrEmpty(_attribute.TableName) && !string.IsNullOrEmpty(tableName)) {
+                                        _AttributeMapping.TableName = tableName;
+                                    } else {
+                                        _AttributeMapping.TableName = _attribute.TableName;
+                                    }
+
+                                    if (string.IsNullOrEmpty(_attribute.ColumnName)) {
+                                        _AttributeMapping.ColumnName = p.Name;
+                                    } else {
+                                        _AttributeMapping.ColumnName = _attribute.ColumnName;
+                                    }
+
+                                    _AttributeMapping.PrimaryKey   = _attribute.PrimaryKey;
+                                    _AttributeMapping.AutoIdentity = _attribute.AutoIdentity;
+                                    _AttributeMapping.Ignore       = _attribute.Ignore;
+                                    _AttributeMapping.Type         = _attribute.Type;
+                                }
+                            }
+                        }
+
+
+                        if (_AttributeMapping == null) {
+
+                            _AttributeMapping            = new AttributeMapping(p.Name);
+                            _AttributeMapping.TableName  = tableName;
+                            _AttributeMapping.ColumnName = p.Name;
+                        }
+
+                        if (_AttributeMapping.Ignore) {
+                            continue;
+                        }
+
+                        _AttributeMapping.Nullable = Nullable.GetUnderlyingType(p.PropertyType) != null;
+
+                        ZZLogger.Debug(ZFILE_NAME , "X1" + p.PropertyType.Name);
+                        ZZLogger.Debug(ZFILE_NAME , "X2" + tableName);
+                        ZZLogger.Debug(ZFILE_NAME , "X3" + _AttributeMapping.TableName);
+
+                        if (_AttributeMapping.Type == DbType.Object) {
+
+                            if (Type.GetTypeCode(p.PropertyType) == TypeCode.Boolean) {
+                                _AttributeMapping.Type = DbType.Boolean;
+                            } else   if (Type.GetTypeCode(p.PropertyType) == TypeCode.Byte) {
+                                _AttributeMapping.Type = DbType.Byte;
+                            } else if (Type.GetTypeCode(p.PropertyType) == TypeCode.Char) {
+                                _AttributeMapping.Type = DbType.String;
+                            } else if (Type.GetTypeCode(p.PropertyType) == TypeCode.DateTime) {
+                                _AttributeMapping.Type = DbType.DateTime;
+                            } else if (Type.GetTypeCode(p.PropertyType) == TypeCode.Decimal) {
+                                _AttributeMapping.Type = DbType.Decimal;
+                            } else if (Type.GetTypeCode(p.PropertyType) == TypeCode.Double) {
+                                _AttributeMapping.Type = DbType.Double;
+                            } else if (Type.GetTypeCode(p.PropertyType) == TypeCode.Int16) {
+                                _AttributeMapping.Type = DbType.Int16;
+                            } else if (Type.GetTypeCode(p.PropertyType) == TypeCode.Int32) {
+                                _AttributeMapping.Type = DbType.Int32;
+                            } else if (Type.GetTypeCode(p.PropertyType) == TypeCode.Int64) {
+                                _AttributeMapping.Type = DbType.Int64;
+                            } else if (Type.GetTypeCode(p.PropertyType) == TypeCode.SByte) {
+                                _AttributeMapping.Type = DbType.SByte;
+                            } else if (Type.GetTypeCode(p.PropertyType) == TypeCode.Single) {
+                                _AttributeMapping.Type = DbType.Single;
+                            } else if (Type.GetTypeCode(p.PropertyType) == TypeCode.String) {
+                                _AttributeMapping.Type = DbType.String;
+                            } else if (Type.GetTypeCode(p.PropertyType) == TypeCode.UInt16) {
+                                _AttributeMapping.Type = DbType.UInt16;
+                            } else if (Type.GetTypeCode(p.PropertyType) == TypeCode.UInt32) {
+                                _AttributeMapping.Type = DbType.UInt32;
+                            } else if (Type.GetTypeCode(p.PropertyType) == TypeCode.UInt64) {
+                                _AttributeMapping.Type = DbType.UInt64;
+                            } else {
+                                if (_AttributeMapping.Nullable) {
+                                    ZZLogger.Debug(ZFILE_NAME, p.PropertyType.Name);
+
+                                    if (p.PropertyType.Name.Contains("DateTime")) {
+                                        _AttributeMapping.Type = DbType.DateTime;
+                                    } else {
+                                        _AttributeMapping.Type = DbType.Object;
+                                    }
+                                } else {
+                                    _AttributeMapping.Type = DbType.Object;
+                                }
+                            }
+
+                            ZZLogger.Debug(ZFILE_NAME, Type.GetTypeCode(p.PropertyType));
+                            ZZLogger.Debug(ZFILE_NAME, p.Name);
+                        }
+
+                        model.AddAttributeMap(_AttributeMapping);
+
+                    }
+                }
+
+
+
+                Add(type.FullName, model);
+                cacheValue = model;
+            }
+
+            return cacheValue;
+        }
+
+        internal static ClassMapping getClassMapping<T>()
+        {
+            return UpdateClassMappingCache<T>();
+        }
+
+        internal static IList<AttributeMapping> GetExecColumns(ClassMapping des, bool add = true)
+        {
+            var columns = new List<AttributeMapping>();
+
+            if (des != null && des.AttributeMappings != null) {
+                foreach (var item in des.AttributeMappings) {
+                    if (item.Ignore || item.AutoIdentity) {
+                        continue;
+                    }
+
+                    if ((!add) &&  item.PrimaryKey) {
+                        continue;
+                    }
+
+                    if (!item.CanWrite) {
+                        continue;
+                    }
+
+                    columns.Add(item);
+
+                }
+            }
+
+            return columns;
+        }
+
+        internal static IList<AttributeMapping> GetPrimary(ClassMapping des)
+        {
+            return des.KeyAttributeMappings;
         }
     }
 }
