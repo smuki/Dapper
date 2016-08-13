@@ -11,19 +11,19 @@ namespace Volte.Data.Dapper
 {
 
     [Serializable]
-        public class NameValues {
-            const string ZFILE_NAME = "NameValues";
+        public class JSONObjects {
+            const string ZFILE_NAME = "JSONObjects";
 
             // Methods
-            public NameValues()
+            public JSONObjects()
             {
-                _Dictionary = new List<NameValue>();
+                _Dictionary = new List<JSONObject>();
             }
 
-            public NameValues(string cData)
+            public JSONObjects(string cData)
             {
-                _Dictionary  = new List<NameValue>();
-                _Dictionary2 = new List<NameValues>();
+                _Dictionary  = new List<JSONObject>();
+                _Dictionary2 = new List<JSONObjects>();
 
                 if (!string.IsNullOrEmpty(cData)) {
                     Parser(cData);
@@ -39,11 +39,11 @@ namespace Volte.Data.Dapper
 
                     for (;;) {
                         if (_Lexer.Current == '[') {
-                            NameValues variable2 = new NameValues();
+                            JSONObjects variable2 = new JSONObjects();
                             variable2.Read(_Lexer);
                             this.Add(variable2);
                         } else {
-                            NameValue variable1 = new NameValue();
+                            JSONObject variable1 = new JSONObject();
 
                             variable1.Read(_Lexer);
 
@@ -71,7 +71,7 @@ namespace Volte.Data.Dapper
 
                 if (_Dictionary.Count > 0) {
 
-                    foreach (NameValue name in _Dictionary) {
+                    foreach (JSONObject name in _Dictionary) {
                         if (i > 0) {
                             writer.Append(",");
 
@@ -84,7 +84,7 @@ namespace Volte.Data.Dapper
                 }
 
                 if (_Dictionary2.Count > 0) {
-                    foreach (NameValues name in _Dictionary2) {
+                    foreach (JSONObjects name in _Dictionary2) {
                         if (i > 0) {
                             writer.Append(",");
 
@@ -125,38 +125,38 @@ namespace Volte.Data.Dapper
                 return s.ToString();
             }
 
-            public void Add(NameValues value)
+            public void Add(JSONObjects value)
             {
                 _Dictionary2.Add(value);
             }
-            public void Remove(NameValues value)
+            public void Remove(JSONObjects value)
             {
                 _Dictionary2.Remove(value);
             }
-            public void Add(NameValue value)
+            public void Add(JSONObject value)
             {
                 _Dictionary.Add(value);
             }
 
-            public void Remove(NameValue value)
+            public void Remove(JSONObject value)
             {
                 _Dictionary.Remove(value);
             }
 
             public void Clear()
             {
-                _Dictionary  = new List<NameValue>();
-                _Dictionary2 = new List<NameValues>();
+                _Dictionary  = new List<JSONObject>();
+                _Dictionary2 = new List<JSONObjects>();
             }
 
-            public List<NameValues> ListValues
+            public List<JSONObjects> ListValues
             {
                 get {
                     return _Dictionary2;
                 }
             }
 
-            public List<NameValue> Values
+            public List<JSONObject> Values
             {
                 get {
                     return _Dictionary;
@@ -170,11 +170,11 @@ namespace Volte.Data.Dapper
                 }
             }
 
-            // NameValues
+            // JSONObjects
             private readonly StringBuilder s = new StringBuilder();
 
-            private List<NameValue> _Dictionary = new List<NameValue>();
-            private List<NameValues> _Dictionary2 = new List<NameValues>();
+            private List<JSONObject> _Dictionary = new List<JSONObject>();
+            private List<JSONObjects> _Dictionary2 = new List<JSONObjects>();
 
         }
 }

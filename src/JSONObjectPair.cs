@@ -9,10 +9,10 @@ namespace Volte.Data.Dapper
 {
 
     [Serializable]
-    internal class NameValuePair {
+    internal class JSONObjectPair {
         // Methods
-        const string ZFILE_NAME = "NameValuePair";
-        public NameValuePair()
+        const string ZFILE_NAME = "JSONObjectPair";
+        public JSONObjectPair()
         {
         }
 
@@ -20,7 +20,7 @@ namespace Volte.Data.Dapper
         {
 
             if (_Lexer.Current == '{') {
-                NameValue _VContexts = new NameValue();
+                JSONObject _VContexts = new JSONObject();
 
                 _VContexts.Read(_Lexer);
                 this.Value = _VContexts;
@@ -32,7 +32,7 @@ namespace Volte.Data.Dapper
                     _Lexer.SkipWhiteSpace();
 
                     if (_Lexer.Current == '{') {
-                        NameValue _VContexts = new NameValue();
+                        JSONObject _VContexts = new JSONObject();
                         _VContexts.Read(_Lexer);
 
                         this.Name  = name;
@@ -40,7 +40,7 @@ namespace Volte.Data.Dapper
                         this.Value = _VContexts;
 
                     } else if (_Lexer.Current == '[') {
-                        NameValues _VContexts = new NameValues();
+                        JSONObjects _VContexts = new JSONObjects();
                         _VContexts.Read(_Lexer);
 
                         this.Name  = name;
@@ -67,10 +67,10 @@ namespace Volte.Data.Dapper
                     //ZZLogger.Debug(ZFILE_NAME , "type = "+this.Type);
                     if (this.Type == "v") {
                         writer.AppendLine();
-                        ((NameValue)this.Value).Write(writer);
+                        ((JSONObject)this.Value).Write(writer);
                     } else if (this.Type == "l") {
                         writer.AppendLine();
-                        ((NameValues)this.Value).Write(writer);
+                        ((JSONObjects)this.Value).Write(writer);
                     } else if (this.Type == "t") {
                         //  this.Value.Write(writer);
                     } else {

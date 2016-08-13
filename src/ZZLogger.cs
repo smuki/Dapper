@@ -16,7 +16,7 @@ namespace Volte.Data.Dapper
 
         private readonly StringBuilder sb = new StringBuilder();
         private static ZZLogger _Logger;
-        private static Queue<NameValue> _que;
+        private static Queue<JSONObject> _que;
         private static object _PENDING       = new object();
         public static bool DebugEnabled      = true;
         public static bool SQLEnabled        = true;
@@ -32,7 +32,7 @@ namespace Volte.Data.Dapper
         public static ZZLogger getInstance()
         {
             if (_Logger == null) {
-                _que = new Queue<NameValue>();
+                _que = new Queue<JSONObject>();
 
                 _Logger = new ZZLogger();
             }
@@ -65,11 +65,11 @@ namespace Volte.Data.Dapper
             }
 
             while (true) {
-                Queue<NameValue> ToBeSend;
+                Queue<JSONObject> ToBeSend;
 
                 lock (_PENDING) {
                     ToBeSend = _que;
-                    _que     = new Queue<NameValue>();
+                    _que     = new Queue<JSONObject>();
                 }
 
                 try {
@@ -90,8 +90,8 @@ namespace Volte.Data.Dapper
 
                         StreamWriter sw = null;
 
-                        foreach (NameValue _NameValue in ToBeSend) {
-                            string cFile_Name = _NameValue.GetValue("ZZFILE_NAME");
+                        foreach (JSONObject _JSONObject in ToBeSend) {
+                            string cFile_Name = _JSONObject.GetValue("ZZFILE_NAME");
 
                             if (_ff != cFile_Name) {
                                 if (Opening) {
@@ -104,7 +104,7 @@ namespace Volte.Data.Dapper
                                 Opening = true;
                             }
 
-                            sw.WriteLine(_NameValue.GetValue("MSG"));
+                            sw.WriteLine(_JSONObject.GetValue("MSG"));
 
                             _ff = cFile_Name;
                         }
@@ -273,10 +273,10 @@ namespace Volte.Data.Dapper
         private void WriteLog(string logtype, string cModules_Name, string type, string meth, string msg, params object[] objs)
         {
             lock (_PENDING) {
-                NameValue _NameValue = new NameValue();
-                _NameValue.SetValue("ZZFILE_NAME", cModules_Name);
-                _NameValue.SetValue("MSG", FormatLog(logtype, cModules_Name, type, meth, msg, objs));
-                _que.Enqueue(_NameValue);
+                JSONObject _JSONObject = new JSONObject();
+                _JSONObject.SetValue("ZZFILE_NAME", cModules_Name);
+                _JSONObject.SetValue("MSG", FormatLog(logtype, cModules_Name, type, meth, msg, objs));
+                _que.Enqueue(_JSONObject);
             }
         }
     }

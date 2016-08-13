@@ -43,9 +43,9 @@ namespace Volte.Data.Dapper
                     } else {
                         ctemp = "N";
                     }
-                } else if (this.Text is NameValues) {
+                } else if (this.Text is JSONObjects) {
 
-                    ((NameValues)this.Text).Write(writer);
+                    ((JSONObjects)this.Text).Write(writer);
 
                 } else {
                     ctemp = Convert.ToString(this.Text);

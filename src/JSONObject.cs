@@ -13,18 +13,18 @@ namespace Volte.Data.Dapper
 {
 
     [Serializable]
-    public class NameValue {
-        const string ZFILE_NAME = "NameValue";
+    public class JSONObject {
+        const string ZFILE_NAME = "JSONObject";
 
         // Methods
-        public NameValue()
+        public JSONObject()
         {
-            _Dictionary = new Dictionary<string, NameValuePair> (StringComparer.InvariantCultureIgnoreCase);
+            _Dictionary = new Dictionary<string, JSONObjectPair> (StringComparer.InvariantCultureIgnoreCase);
         }
 
-        public NameValue(string cData)
+        public JSONObject(string cData)
         {
-            _Dictionary = new Dictionary<string, NameValuePair> (StringComparer.InvariantCultureIgnoreCase);
+            _Dictionary = new Dictionary<string, JSONObjectPair> (StringComparer.InvariantCultureIgnoreCase);
 
             if (!string.IsNullOrEmpty(cData)) {
                 Parser(cData);
@@ -39,7 +39,7 @@ namespace Volte.Data.Dapper
                 _Lexer.NextToken();
 
                 for (;;) {
-                    NameValuePair variable1 = new NameValuePair();
+                    JSONObjectPair variable1 = new JSONObjectPair();
 
                     variable1.Read(_Lexer);
 
@@ -90,7 +90,7 @@ namespace Volte.Data.Dapper
         {
             List<string> _oList = new List<string>();
 
-            foreach (KeyValuePair<string, NameValuePair> kvp in _Dictionary) {
+            foreach (KeyValuePair<string, JSONObjectPair> kvp in _Dictionary) {
                 _oList.Add(kvp.Key);
             }
 
@@ -201,46 +201,46 @@ namespace Volte.Data.Dapper
             this.SetValue(name, value, "");
         }
 
-        public bool IsNameValue(string name)
+        public bool IsJSONObject(string name)
         {
             return this.GetType(name) == "v";
         }
 
-        public bool IsNameValues(string name)
+        public bool IsJSONObjects(string name)
         {
             return this.GetType(name) == "l";
         }
 
-        public NameValue GetNameValue(string Name)
+        public JSONObject GetJSONObject(string Name)
         {
-            NameValue _NameValue = new NameValue();
+            JSONObject _JSONObject = new JSONObject();
 
             if (this.GetType(Name) == "v") {
                 if (_Dictionary.ContainsKey(Name)) {
-                    _NameValue = (NameValue) _Dictionary[Name].Value;
+                    _JSONObject = (JSONObject) _Dictionary[Name].Value;
                 }
             }
 
-            return _NameValue;
+            return _JSONObject;
         }
 
-        public NameValues GetNameValues(string Name)
+        public JSONObjects GetJSONObjects(string Name)
         {
-            NameValues _NameValues = new NameValues();
+            JSONObjects _JSONObjects = new JSONObjects();
 
             if (this.GetType(Name) == "l") {
                 if (_Dictionary.ContainsKey(Name)) {
-                    _NameValues = (NameValues)_Dictionary[Name].Value;
+                    _JSONObjects = (JSONObjects)_Dictionary[Name].Value;
                 }
             }
 
-            return _NameValues;
+            return _JSONObjects;
         }
 
         public string GetValue(string name)
         {
             if (_Dictionary.ContainsKey(name)) {
-                NameValuePair variable1 = _Dictionary[name];
+                JSONObjectPair variable1 = _Dictionary[name];
                 return variable1.Value.ToString();
             } else {
                 return "";
@@ -250,25 +250,25 @@ namespace Volte.Data.Dapper
         public string GetType(string name)
         {
             if (_Dictionary.ContainsKey(name)) {
-                NameValuePair variable1 = _Dictionary[name];
+                JSONObjectPair variable1 = _Dictionary[name];
                 return variable1.Type;
             } else {
                 return "nvarchar";
             }
         }
 
-        public void SetValue(string name, NameValues value)
+        public void SetValue(string name, JSONObjects value)
         {
-            NameValuePair variable1 = new NameValuePair();
+            JSONObjectPair variable1 = new JSONObjectPair();
             variable1.Name          = name;
             variable1.Value         = value;
             variable1.Type          = "l";
             _Dictionary[name]       = variable1;
         }
 
-        public void SetValue(string name, NameValue value)
+        public void SetValue(string name, JSONObject value)
         {
-            NameValuePair variable1 = new NameValuePair();
+            JSONObjectPair variable1 = new JSONObjectPair();
             variable1.Name          = name;
             variable1.Value         = value;
             variable1.Type          = "v";
@@ -287,7 +287,7 @@ namespace Volte.Data.Dapper
 
         public void SetBoolean(string name, bool value)
         {
-            NameValuePair variable1 = new NameValuePair();
+            JSONObjectPair variable1 = new JSONObjectPair();
             variable1.Name          = name;
             variable1.Value         = value;
             variable1.Type          = "boolean";
@@ -296,7 +296,7 @@ namespace Volte.Data.Dapper
 
         public void SetInteger(string Name, int value)
         {
-            NameValuePair variable1 = new NameValuePair();
+            JSONObjectPair variable1 = new JSONObjectPair();
             variable1.Name          = Name;
             variable1.Value         = value;
             variable1.Type          = "integer";
@@ -321,10 +321,10 @@ namespace Volte.Data.Dapper
         public void SetValue(string name, object value, string cType)
         {
             if (_Dictionary == null) {
-                _Dictionary = new Dictionary<string, NameValuePair> (StringComparer.InvariantCultureIgnoreCase);
+                _Dictionary = new Dictionary<string, JSONObjectPair> (StringComparer.InvariantCultureIgnoreCase);
             }
 
-            NameValuePair variable1 = new NameValuePair();
+            JSONObjectPair variable1 = new JSONObjectPair();
             variable1.Name          = name;
             variable1.Value         = value;
             variable1.Type          = cType;
@@ -333,7 +333,7 @@ namespace Volte.Data.Dapper
 
         public void Clear()
         {
-            _Dictionary = new Dictionary<string, NameValuePair> (StringComparer.InvariantCultureIgnoreCase);
+            _Dictionary = new Dictionary<string, JSONObjectPair> (StringComparer.InvariantCultureIgnoreCase);
         }
 
         public List<string> Names
@@ -366,7 +366,7 @@ namespace Volte.Data.Dapper
                     return null;
                 }
             } set {
-                NameValuePair variable1 = new NameValuePair();
+                JSONObjectPair variable1 = new JSONObjectPair();
 
                 variable1.Name  = name;
                 variable1.Value = value;
@@ -383,11 +383,11 @@ namespace Volte.Data.Dapper
             }
         }
 
-        // NameValue
+        // JSONObject
         public bool Indented = true;
         private readonly StringBuilder s = new StringBuilder();
 
-        private Dictionary<string, NameValuePair> _Dictionary = new Dictionary<string, NameValuePair> (StringComparer.InvariantCultureIgnoreCase);
+        private Dictionary<string, JSONObjectPair> _Dictionary = new Dictionary<string, JSONObjectPair> (StringComparer.InvariantCultureIgnoreCase);
 
     }
 }
