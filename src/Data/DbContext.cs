@@ -232,22 +232,6 @@ namespace Volte.Data.Dapper
             return  AutoCompiler<T>.ConvertToEntity(_DataReader);
         }
 
-        public List<T> Querys<T> (CriteriaRetrieve retrieve) where T: new()
-        {
-            List<T> list = new List<T>();
-            retrieve.DbName = DbName;
-            IDataReader _DataReader = _Broker.DoRetrieveDataReader(retrieve, _Streaming);
-
-            while (_DataReader.Read()) {
-                T data = StreamingInvoker<T>.ConvertToEntity(_DataReader);
-                list.Add(data);
-            }
-
-            _DataReader.Close();
-
-            return list;
-        }
-
         public dynamic Entities(string strSql)
         {
             return this.Entities(strSql, 0);
