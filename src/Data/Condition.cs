@@ -72,7 +72,7 @@ namespace Volte.Data.Dapper
         public void In(string _Name, object[] list)
         {
             if ((list == null) || (list.Length == 0)) {
-                throw new DapperException("??t?Xlist?˂t?ҫ?0?");
+                throw new DapperException("??t?Xlist??t???0?");
             }
 
             AddCondition(_Name, CriteriaOperator.In, list);
@@ -171,7 +171,7 @@ namespace Volte.Data.Dapper
         public void NotIn(string _Name, object[] list)
         {
             if ((list == null) || (list.Length == 0)) {
-                throw new DapperException("???t??list?˶?????0?");
+                throw new DapperException("???t??list???????0?");
             }
 
             AddCondition(_Name, CriteriaOperator.NotIn, list);
