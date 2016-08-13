@@ -218,15 +218,9 @@ namespace Volte.Data.Dapper
                 ZZLogger.getInstance();
             }
 
-            if (sErrMsg is LogisticException) {
-                LogisticException _ErrMsg = (LogisticException)sErrMsg;
-                string cMessage = _ErrMsg.Logistic +  _ErrMsg.Target + "Message=[" + sErrMsg.Message + "]" + "\nSource=[" + sErrMsg.Source + "]\nStackTrace=[" + sErrMsg.StackTrace + "]\nTargetSite=[" + sErrMsg.TargetSite + "]";
-                _Logger.WriteLog("ERROR", cModules_Name, "" + cMessage, objs);
-            } else {
-                string cMessage = "Message=[" + sErrMsg.Message + "]" + "\nSource=[" + sErrMsg.Source + "]\nStackTrace=[" + sErrMsg.StackTrace + "]\nTargetSite=[" + sErrMsg.TargetSite + "]";
-                _Logger.WriteLog("ERROR", cModules_Name, "" + cMessage, objs);
+            string cMessage = "Message=[" + sErrMsg.Message + "]" + "\nSource=[" + sErrMsg.Source + "]\nStackTrace=[" + sErrMsg.StackTrace + "]\nTargetSite=[" + sErrMsg.TargetSite + "]";
+            _Logger.WriteLog("ERROR", cModules_Name, "" + cMessage, objs);
 
-            }
         }
 
         public static void Error(string cModules_Name, object msg, params object[] objs)
@@ -255,13 +249,13 @@ namespace Volte.Data.Dapper
         {
             sb.Length    = 0;
             sb.AppendLine(
-                "" + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") +
-                "|" + log +
-                "|" + AppDomain.GetCurrentThreadId() +
-                "|" + type +
-                "|" + cModules_Name +
-                "|" + meth +
-                "| " + msg);
+                    "" + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") +
+                    "|" + log +
+                    "|" + AppDomain.GetCurrentThreadId() +
+                    "|" + type +
+                    "|" + cModules_Name +
+                    "|" + meth +
+                    "| " + msg);
 
             foreach (object o in objs) {
                 sb.AppendLine("|" + o);
