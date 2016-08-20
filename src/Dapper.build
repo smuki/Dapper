@@ -1,0 +1,101 @@
+﻿<?xml version="1.0"?>
+<project name="Dapper" default="build">
+    <property name="build.dir" value="..\dist\" />
+    <property name = "debug" value  = "true" />
+    <property name = "unsafe" value = "true" />
+
+    <target name="build" depends="Dapper,Odbc">
+    </target>
+
+    <target name="Dapper">
+        <property name="unsafe" value="true" />
+        <delete file="..\dist\Volte.Data.Dapper.dll" failonerror="false" />
+        <delete file="..\dist\Volte.Data.Dapper.pdb" failonerror="false" />
+        <csc target="library" output="..\dist\Volte.Data.Dapper.dll" debug="${debug}" unsafe="${unsafe}">
+            <nowarn>
+                <!-- do not report deprecation warnings -->
+                <warning number = "0618" />
+                <warning number = "0168" />
+                <warning number = "0108" />
+                <warning number = "0219" />
+                <warning number = "0252" />
+                <warning number = "0105" />
+            </nowarn>
+            <sources>
+                <include name = "Base64Coder.cs" />
+                <include name = "DapperException.cs" />
+                <include name = "DapperUtil.cs" />
+                <include name = "ExceptionTypes.cs" />
+                <include name = "LRU.cs" />
+                <include name = "SqlMapper.cs" />
+                <include name = "Util\ZZCache.cs" />
+                <include name = "Util\ZZLogger.cs" />
+                <include name = "EntityObject.cs" />
+                <include name = "Extension\AutoCompiler.cs" />
+                <include name = "Extension\ClassMapping.cs" />
+                <include name = "Extension\DBType.cs" />
+                <include name = "Extension\DapperCompiler.cs" />
+                <include name = "Extension\DapperExtension.cs" />
+                <include name = "Extension\DynamicBuilder.cs" />
+                <include name = "Extension\DynamicPropertyModel.cs" />
+                <include name = "Extension\EntityCompiler.cs" />
+                <include name = "Extension\Operation.cs" />
+                <include name = "Extension\QueryBuilder.cs" />
+                <include name = "Extension\QueryOrder.cs" />
+                <include name = "QueryRows.cs" />
+                <include name = "Extension\Setting.cs" />
+                <include name = "Extension\Settings.cs" />
+
+                <include name = "Data\Db\MsSqlServer.cs" />
+
+                <include name = "Data\ActionTypes.cs" />
+                <include name = "Data\CommanderAddNew.cs" />
+                <include name = "Data\CommanderDelete.cs" />
+                <include name = "Data\CommanderRetrieve.cs" />
+                <include name = "Data\CommanderStream.cs" />
+                <include name = "Data\CommanderUpdate.cs" />
+                <include name = "Data\Condition.cs" />
+                <include name = "Data\Criteria.cs" />
+                <include name = "Data\CriteriaDelete.cs" />
+                <include name = "Data\CriteriaObject.cs" />
+                <include name = "Data\CriteriaOperator.cs" />
+                <include name = "Data\CriteriaRetrieve.cs" />
+                <include name = "Data\CriteriaUpdate.cs" />
+                <include name = "Data\DbContext.cs" />
+                <include name = "Data\ObjectBroker.cs" />
+                <include name = "Data\ObjectCursor.cs" />
+                <include name = "Data\OrderEntry.cs" />
+                <include name = "Data\SqlValueTypes.cs" />
+                <include name = "Data\Streaming.cs" />
+                <include name = "Data\XmlConfigLoader.cs" />
+
+            </sources>
+            <references>
+                <include name="..\dist\Volte.Data.JSONObject.dll" />
+
+            </references>
+
+        </csc>
+
+    </target>
+
+    <target name="Odbc">
+        <delete file="..\dist\DbContext\Volte.Data.Dapper.Odbc.dll" failonerror="false" />
+        <delete file="..\dist\DbContext\Volte.Data.Dapper.Odbc.pdb" failonerror="false" />
+        <csc target="library" output="..\dist\DbContext\Volte.Data.Dapper.Odbc.dll" debug="${debug}">
+            <nowarn>
+                <!-- do not report deprecation warnings -->
+                <warning number = "0618" />
+                <warning number = "0219" />
+                <warning number = "0108" />
+            </nowarn>
+            <sources>
+                <include name="Data\Db\Odbc.cs" />
+            </sources>
+            <references>
+                <include name="..\dist\Volte.Data.Dapper.dll" />
+            </references>
+        </csc>
+    </target>
+
+</project>
