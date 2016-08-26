@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 
-using Volte.Data.JsonObject;
+using Volte.Data.Json;
 
 namespace Volte.Data.Dapper
 {

@@ -71,7 +71,7 @@
 
             </sources>
             <references>
-                <include name="..\dist\Volte.Data.JSONObject.dll" />
+                <include name="..\dist\Volte.Data.Json.dll" />
 
             </references>
 

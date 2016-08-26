@@ -7,7 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Diagnostics;
-using Volte.Data.JsonObject;
+using Volte.Data.Json;
 
 namespace Volte.Data.Dapper
 {

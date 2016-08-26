@@ -10,7 +10,7 @@ using System.Globalization;
 using System.IO.Compression;
 using System.Data;
 
-using Volte.Data.JsonObject;
+using Volte.Data.Json;
 
 namespace Volte.Data.Dapper
 {

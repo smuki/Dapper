@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Data;
 using System.Data.Common;
 
-using Volte.Data.JsonObject;
+using Volte.Data.Json;
 
 namespace Volte.Data.Dapper
 {
