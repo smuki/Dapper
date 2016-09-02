@@ -15,10 +15,10 @@ namespace Volte.Data.Dapper
 
         private readonly StringBuilder sb = new StringBuilder();
         private static ZZCache _Cache;
-        private static Queue<JSONObjects> _que;
+        private static Queue<JSONArray> _que;
         private static LRU<string, string> _cache         = new LRU<string, string>(5000);
         private static LRU<string, JSONTable> _cache_Cell     = new LRU<string, JSONTable>(5000);
-        private static LRU<string, JSONObjects> _JSONObject = new LRU<string, JSONObjects>(5000);
+        private static LRU<string, JSONArray> _JSONObject = new LRU<string, JSONArray>(5000);
         private static object _PENDING                    = new object();
         private static string _Cache_Location             = "";
 
@@ -28,7 +28,7 @@ namespace Volte.Data.Dapper
 
                 Initialize();
 
-                _que   = new Queue<JSONObjects>();
+                _que   = new Queue<JSONArray>();
                 _Cache = new ZZCache();
             }
 
@@ -81,17 +81,17 @@ namespace Volte.Data.Dapper
             }
         }
 
-        public static void WriteJSONObjects(string fileName, JSONObjects _Values)
+        public static void WriteJSONArray(string fileName, JSONArray _Values)
         {
             _JSONObject.SetValue(fileName, _Values);
         }
 
-        public static JSONObjects ReadJSONObjects(string fileName)
+        public static JSONArray ReadJSONArray(string fileName)
         {
-            JSONObjects _Values = _JSONObject.GetValue(fileName);
+            JSONArray _Values = _JSONObject.GetValue(fileName);
 
             if (_Values == null) {
-                _Values = new JSONObjects();
+                _Values = new JSONArray();
             }
 
             return _Values;
