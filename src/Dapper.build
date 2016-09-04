@@ -47,6 +47,7 @@
                 <include name = "Extension\Settings.cs" />
 
                 <include name = "Data\Db\MsSqlServer.cs" />
+                <include name = "Data\Db\MySql.cs" />
 
                 <include name = "Data\ActionTypes.cs" />
                 <include name = "Data\CommanderAddNew.cs" />
@@ -72,6 +73,7 @@
             </sources>
             <references>
                 <include name="..\dist\Volte.Data.Json.dll" />
+                <include name="..\lib\MySql.Data.dll" />
 
             </references>
 
