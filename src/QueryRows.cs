@@ -193,6 +193,17 @@ namespace Volte.Data.Dapper
             return Convert.ToDecimal(_obj);
         }
 
+        public decimal GetDecimal(int i)
+        {
+            object _obj = this[i];
+
+            if (DBNull.Value.Equals(_obj)) {
+                return 0;
+            }
+
+            return Convert.ToDecimal(_obj);
+        }
+
         public double GetDouble(string Name)
         {
             object _obj = this[Name];
@@ -213,6 +224,17 @@ namespace Volte.Data.Dapper
             }
 
             return Convert.ToInt32(_obj);
+        }
+
+        public string GetValue(int i)
+        {
+            object _obj = this[i];
+
+            if (DBNull.Value.Equals(_obj)) {
+                return "";
+            }
+
+            return _obj.ToString();
         }
 
         public string GetValue(string Name)

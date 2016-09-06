@@ -71,7 +71,7 @@ namespace Volte.Data.Dapper
 
             string text1 = this.ToString().Substring(0, this.ToString().LastIndexOf('.') + 1);
 
-            Console.WriteLine(text1);
+            //Console.WriteLine(text1);
             //if (_Settings.ContainsKey(DbName)) {
             //return _Settings[DbName];
             //} else {
@@ -121,7 +121,7 @@ namespace Volte.Data.Dapper
                 _Setting.ParamPrefix = ":";
             }
 
-            Console.WriteLine(text1);
+            //Console.WriteLine(text1);
 
             ZZLogger.Debug(ZFILE_NAME, text1);
 
