@@ -159,27 +159,35 @@ namespace Volte.Data.Dapper
             return -1;
         }
 
-        public bool GetBoolean(string Name)
+        private bool ConvertToBoolean(object obj)
         {
-            object _obj = this[Name];
-
-            if (DBNull.Value.Equals(_obj)) {
+            if (DBNull.Value.Equals(obj)) {
                 return false;
             }
-
-            if (_obj is bool) {
-                return (bool)_obj;
-            } else if (_obj.Equals("Y") || _obj.Equals("y")) {
+            if (obj is bool) {
+                return (bool)obj;
+            } else if (obj.Equals("Y") || obj.Equals("y")) {
                 return true;
-            } else if (_obj.Equals("True") || _obj.Equals("true")) {
+            } else if (obj.Equals("True") || obj.Equals("true")) {
                 return true;
-            } else if (_obj.Equals("N") || _obj.Equals("n")) {
+            } else if (obj.Equals("N") || obj.Equals("n")) {
                 return false;
-            } else if (_obj.Equals("False") || _obj.Equals("false")) {
+            } else if (obj.Equals("False") || obj.Equals("false")) {
                 return false;
             } else {
-                return DapperUtil.ToBoolean(_obj);
+                return DapperUtil.ToBoolean(obj);
             }
+        }
+
+        public bool GetBoolean(int i)
+        {
+            return ConvertToBoolean(this[i]);
+
+        }
+
+        public bool GetBoolean(string Name)
+        {
+            return ConvertToBoolean(this[Name]);
         }
 
         public decimal GetDecimal(string Name)
@@ -215,6 +223,17 @@ namespace Volte.Data.Dapper
             return Convert.ToDouble(_obj);
         }
 
+        public int GetInteger(int i)
+        {
+            object _obj = this[i];
+
+            if (DBNull.Value.Equals(_obj)) {
+                return 0;
+            }
+
+            return Convert.ToInt32(_obj);
+        }
+
         public int GetInteger(string Name)
         {
             object _obj = this[Name];
@@ -248,12 +267,34 @@ namespace Volte.Data.Dapper
             return _obj.ToString();
         }
 
+        public DateTime GetDateTime(int i)
+        {
+            object _obj = this[i];
+
+            if (DBNull.Value.Equals(_obj)) {
+                return DapperUtil.DateTime_MinValue;
+            }
+
+            return Convert.ToDateTime(_obj);
+        }
+
         public DateTime GetDateTime(string Name)
         {
             object _obj = this[Name];
 
             if (DBNull.Value.Equals(_obj)) {
                 return DapperUtil.DateTime_MinValue;
+            }
+
+            return Convert.ToDateTime(_obj);
+        }
+
+        public DateTime? GetDateTime2(int i)
+        {
+            object _obj = this[i];
+
+            if (DBNull.Value.Equals(_obj)) {
+                return null;
             }
 
             return Convert.ToDateTime(_obj);
