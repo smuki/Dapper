@@ -874,26 +874,6 @@ namespace Volte.Data.Dapper
             return result;
         }
 
-//        public QueryBuilder<T> OrderBy(Expression<Func<T, object>> expr)
-//        {
-//            return this.OrderBy(expr, true);
-//        }
-//        public QueryBuilder<T> OrderBy(Expression<Func<T, object>> expr, bool Asc)
-//        {
-//            var field = DapperUtil.GetPropertyByExpress<T> (_ClassMapping, expr).ColumnName;
-//            var _order_Asc = "ASC";
-//
-//            if (!Asc) {
-//                _order_Asc = "DESC";
-//            }
-//
-//            _Orders.Add(new QueryOrder() {
-//                    Field = field, Asc = _order_Asc
-//                    });
-//
-//            return this;
-//        }
-
         public QueryBuilder<T> OrderBy(string field, bool Asc = true)
         {
 
