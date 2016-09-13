@@ -47,6 +47,7 @@ namespace JitEngine.TDriver
                 string sTableName1 = RsSysRef.GetValue("post_title");
                 Console.WriteLine("----");
                 Console.WriteLine(sTableName1);
+                Console.WriteLine(RsSysRef.GetValue("post_date"));
                 RsSysRef.MoveNext();
             }
             RsSysRef.Close();
