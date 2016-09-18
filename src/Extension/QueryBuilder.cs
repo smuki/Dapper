@@ -17,16 +17,17 @@ namespace Volte.Data.Dapper
         protected List<QueryOrder> _Orders;
         protected StringBuilder _Sql;
         protected IList<DynamicPropertyModel> _Param;
-        protected string ParamPrefix = "@";
-        protected string _selectMode = "";
-        protected string _FromClause = "";
+        protected string ParamPrefix     = "@";
+        protected string _selectMode     = "";
+        protected string _FromClause     = "";
         protected string _RestrictClause = "";
-        protected string _CountClause = "";
+        protected string _CountClause    = "";
         protected int _PageIndex;
         protected List<AttributeMapping> _Fields = new List<AttributeMapping>();
         protected int _PageSize;
-        protected int _OFFSET = -1;
+        protected int _OFFSET    = -1;
         protected bool _Distinct = false;
+        protected bool _GroupBy  = false;
         protected DBType _DbType;
 
         protected static Dictionary<string, Type> DynamicParamModelCache = new Dictionary<string, Type>();
@@ -34,8 +35,9 @@ namespace Volte.Data.Dapper
         protected Dictionary<string, int> _ParamIndex    = new Dictionary<string, int>();
         internal ClassMapping _ClassMapping;
 
-        public virtual int OFFSET { get { return _OFFSET; } }
-        public virtual int TopNum { get { return _TopNum; } }
+        public virtual int  OFFSET   { get { return _OFFSET;   }  }
+        public virtual int  TopNum   { get { return _TopNum;   }  }
+
 
         public virtual List<AttributeMapping> Fields
         {
@@ -46,8 +48,10 @@ namespace Volte.Data.Dapper
             }
         }
 
-        public virtual string SelectMode { get { return _selectMode; } set { _selectMode = value; } }
-        public virtual string FromClause { get { return _FromClause; } set { _FromClause = value; } }
+        public virtual bool GroupBy      { get { return _GroupBy;    } set { _GroupBy    = value; }  }
+        public virtual bool Distinct     { get { return _Distinct;   } set { _Distinct   = value; }  }
+        public virtual string SelectMode { get { return _selectMode; } set { _selectMode = value; }  }
+        public virtual string FromClause { get { return _FromClause; } set { _FromClause = value; }  }
 
         public virtual IList<QueryOrder> Orders
         {
@@ -322,10 +326,12 @@ namespace Volte.Data.Dapper
                     _Where.Append(string.Format(" {0}", WhereSql));
                 }
 
-                StringBuilder _select = new StringBuilder();
+                StringBuilder _select  = new StringBuilder();
+                StringBuilder _GroupbyClause = new StringBuilder();
 
                 if (_Fields.Count > 0) {
                     int i = 0;
+                    int gi = 0;
 
                     foreach (AttributeMapping _att in _Fields) {
                         if (i != 0) {
@@ -347,13 +353,48 @@ namespace Volte.Data.Dapper
                             } else {
                                 _select.Append(_att.ColumnName);
                             }
-                        } else {
-                            _select.Append(_att.TableName + "." + _att.ColumnName);
 
-                            if (_att.AliasName != "") {
-                                _select.Append(" AS ");
-                                _select.Append(_att.AliasName);
+                            if (GroupBy){
+                                if (_att["TP_CODE"]=="nvarchar" || _att["TP_CODE"]=="datetime" ){
+                                    if (gi != 0) {
+                                        _GroupbyClause.Append(",");
+                                    }
+                                    _GroupbyClause.Append(_att.TableName + "." + _att.ColumnName);
+                                    gi++;
+                                }
                             }
+                        } else {
+
+                            if (GroupBy){
+                                if (_att["TP_CODE"]=="nvarchar" || _att["TP_CODE"]=="datetime" ){
+                                    if (gi != 0) {
+                                        _GroupbyClause.Append(",");
+                                    }
+                                    _GroupbyClause.Append(_att.TableName + "." + _att.ColumnName);
+                                    gi++;
+                                }
+                                if (_att["TP_CODE"]=="int" || _att["TP_CODE"]=="decimal"  || _att["TP_CODE"]=="bigint" ){
+                                    _select.Append("sum("+_att.TableName + "." + _att.ColumnName+")");
+                                    if (_att.AliasName != "") {
+                                        _select.Append(_att.AliasName);
+                                    } else {
+                                        _select.Append(_att.ColumnName);
+                                    }
+                                }else{
+                                    _select.Append(_att.TableName + "." + _att.ColumnName);
+                                    if (_att.AliasName != "") {
+                                        _select.Append(" AS ");
+                                        _select.Append(_att.AliasName);
+                                    }
+                                }
+                            }else{
+                                _select.Append(_att.TableName + "." + _att.ColumnName);
+                                if (_att.AliasName != "") {
+                                    _select.Append(" AS ");
+                                    _select.Append(_att.AliasName);
+                                }
+                            }
+
                         }
 
                         i++;
@@ -373,10 +414,17 @@ namespace Volte.Data.Dapper
                     _select.Append("*");
                 }
 
-                //ZZLogger.Debug(ZFILE_NAME, _FromClause);
+                ZZLogger.Debug(ZFILE_NAME, _FromClause);
+                ZZLogger.Debug(ZFILE_NAME, _GroupbyClause);
+                ZZLogger.Debug(ZFILE_NAME, "GroupBy = "+this.GroupBy);
 
                 if (_FromClause != "") {
                     _TableName = _FromClause;
+                }
+                if (GroupBy){
+                    if (_GroupbyClause.Length>0) {
+                        _GroupbyClause.Insert(0 , " GROUP BY ");
+                    }
                 }
 
                 if (_TopNum > 0) {
@@ -397,22 +445,23 @@ namespace Volte.Data.Dapper
 
                             sqlStr = string.Format("SELECT TOP {0} {1} FROM {2} {3} {4}", _TopNum, _select.ToString(), _TableName, _Where.ToString(), this.OrderSql);
                         }
-                    else if (_DbType == DBType.Oracle) {
-                        var strWhere = "";
+                        else if (_DbType == DBType.Oracle) {
+                            var strWhere = "";
 
-                        if (string.IsNullOrEmpty(_Where.ToString())) {
-                            strWhere = string.Format(" WHERE  ROWNUM <= {0} ", _TopNum);
+                            if (string.IsNullOrEmpty(_Where.ToString())) {
+                                strWhere = string.Format(" WHERE  ROWNUM <= {0} ", _TopNum);
+                            } else {
+                                strWhere = string.Format(" {0} AND ROWNUM <= {1} ", _Where.ToString(), _TopNum);
+                            }
+
+                            sqlStr = string.Format("SELECT * FROM {2} {3} {4}", _TableName, strWhere, this.OrderSql);
                         } else {
-                            strWhere = string.Format(" {0} AND ROWNUM <= {1} ", _Where.ToString(), _TopNum);
+                            sqlStr = string.Format("SELECT {0} FROM {1} {2} {3} LIMIT {4}", _select.ToString(), _TableName, _Where.ToString(), this.OrderSql, _TopNum);
                         }
-
-                        sqlStr = string.Format("SELECT * FROM {2} {3} {4}", _TableName, strWhere, this.OrderSql);
-                    } else {
-                        sqlStr = string.Format("SELECT {0} FROM {1} {2} {3} LIMIT {4}", _select.ToString(), _TableName, _Where.ToString(), this.OrderSql, _TopNum);
-                    }
                 } else {
+                    sqlStr = string.Format("SELECT {0} FROM {1} {2} {3} {4}" , _select.ToString() , _TableName , _Where.ToString() , _GroupbyClause.ToString() , this.OrderSql);
 
-                    sqlStr = string.Format("SELECT {0} FROM {1} {2} {3}",  _select.ToString(), _TableName, _Where.ToString(), this.OrderSql);
+                    ZZLogger.Debug(ZFILE_NAME , sqlStr);
                 }
 
                 return sqlStr;
@@ -824,26 +873,6 @@ namespace Volte.Data.Dapper
 
             return result;
         }
-
-//        public QueryBuilder<T> OrderBy(Expression<Func<T, object>> expr)
-//        {
-//            return this.OrderBy(expr, true);
-//        }
-//        public QueryBuilder<T> OrderBy(Expression<Func<T, object>> expr, bool Asc)
-//        {
-//            var field = DapperUtil.GetPropertyByExpress<T> (_ClassMapping, expr).ColumnName;
-//            var _order_Asc = "ASC";
-//
-//            if (!Asc) {
-//                _order_Asc = "DESC";
-//            }
-//
-//            _Orders.Add(new QueryOrder() {
-//                    Field = field, Asc = _order_Asc
-//                    });
-//
-//            return this;
-//        }
 
         public QueryBuilder<T> OrderBy(string field, bool Asc = true)
         {

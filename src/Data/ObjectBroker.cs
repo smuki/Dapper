@@ -50,12 +50,12 @@ namespace Volte.Data.Dapper
 
 
                     if (File.Exists(cFileName) && !_Setting.Include) {
-                        Console.WriteLine(_Setting.TypeName);
+                        //Console.WriteLine(_Setting.TypeName);
 
                         System.Reflection.Assembly objAssembly = DapperUtil.ReadAssembly(cFileName);
                         database1 = (Streaming)objAssembly.CreateInstance(_Setting.TypeName);
                     } else {
-                    		Console.WriteLine("........"+_Setting.TypeName);
+                    		//Console.WriteLine("........"+_Setting.TypeName);
                         database1 = (Streaming)base.GetType().Assembly.CreateInstance(_Setting.TypeName);
                     }
 
@@ -68,7 +68,7 @@ namespace Volte.Data.Dapper
                     throw new DapperException(text1, ExceptionTypes.XmlError);
                 }
 
-                Console.WriteLine("DbName+" + _Setting.DbName);
+                //Console.WriteLine("DbName+" + _Setting.DbName);
 
                 database1.DbName = _Setting.DbName;
                 database1.Initialize(_Setting.ConnectionString);
