@@ -320,9 +320,9 @@ namespace Volte.Data.Dapper
             _Broker.SaveChangeEntityObject(obj, _Streaming, _IsForceCommit);
         }
 
-        public void Execute(string strSql)
+        public int Execute(string strSql)
         {
-            _Streaming.DoSql(strSql);
+            return _Streaming.DoSql(strSql);
         }
 
         public DataTable RetrieveDataTable(string strSql)
