@@ -27,7 +27,7 @@ namespace JitEngine.TDriver
         public static void Main(string[] args)
         {
 
-            var connStr = @"Database='wordpress';Data Source=192.168.38.91;User ID=root;Password=1;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
+            var connStr = @"Database='hrms_l';Data Source=192.168.0.203;User ID=root;Password=;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
             var providerName = @"MySql.Data.MySqlClient";
 
             providerName = "System.Data.SqlClient";
@@ -38,16 +38,16 @@ namespace JitEngine.TDriver
             DbContext _Trans  = new DbContext("MySqlUnitTest", providerName, connStr);
 
             QueryRows RsSysRef   = new QueryRows(_Trans);
-            RsSysRef.CommandText = "SELECT * From wp_posts";
+            RsSysRef.CommandText = "SELECT * From syscaption";
             RsSysRef.Open();
 
             Console.WriteLine(RsSysRef.CommandText);
 
             while (!RsSysRef.EOF) {
-                string sTableName1 = RsSysRef.GetValue("post_title");
+                string sTableName1 = RsSysRef.GetValue("sCaptionCode");
                 Console.WriteLine("----");
                 Console.WriteLine(sTableName1);
-                Console.WriteLine(RsSysRef.GetValue("post_date"));
+                Console.WriteLine(RsSysRef.GetValue("sCaption"));
                 RsSysRef.MoveNext();
             }
             RsSysRef.Close();
