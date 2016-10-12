@@ -161,16 +161,20 @@ namespace Volte.Data.Dapper
 
         private bool ConvertToBoolean(object obj)
         {
-            if (DBNull.Value.Equals(obj)) {
+            if (DBNull.Value.Equals(obj) || obj==null) {
                 return false;
             }
             if (obj is bool) {
                 return (bool)obj;
             } else if (obj.Equals("Y") || obj.Equals("y")) {
                 return true;
+            } else if (obj.ToString()=="1") {
+                return true;
             } else if (obj.Equals("True") || obj.Equals("true")) {
                 return true;
             } else if (obj.Equals("N") || obj.Equals("n")) {
+                return false;
+            } else if (obj.ToString()=="0") {
                 return false;
             } else if (obj.Equals("False") || obj.Equals("false")) {
                 return false;

@@ -38,16 +38,18 @@ namespace JitEngine.TDriver
             DbContext _Trans  = new DbContext("MySqlUnitTest", providerName, connStr);
 
             QueryRows RsSysRef   = new QueryRows(_Trans);
-            RsSysRef.CommandText = "SELECT * From syscaption";
+            RsSysRef.CommandText = "SELECT * From sysfunctiondtl where suid='APP01020A'";
             RsSysRef.Open();
 
             Console.WriteLine(RsSysRef.CommandText);
 
             while (!RsSysRef.EOF) {
-                string sTableName1 = RsSysRef.GetValue("sCaptionCode");
+                string sTableName1 = RsSysRef.GetValue("bNewLine");
                 Console.WriteLine("----");
                 Console.WriteLine(sTableName1);
-                Console.WriteLine(RsSysRef.GetValue("sCaption"));
+                Console.WriteLine(RsSysRef.GetBoolean("bActive"));
+                Console.WriteLine("----");
+                Console.WriteLine(RsSysRef.GetValue("bActive"));
                 RsSysRef.MoveNext();
             }
             RsSysRef.Close();
