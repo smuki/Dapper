@@ -429,17 +429,7 @@ namespace Volte.Data.Dapper
 
                 if (_TopNum > 0) {
 
-                    if (Vendor == "SqlServer"){
-                        ZZLogger.Debug(ZFILE_NAME , "SqlServer");
-                        if (_OFFSET >= 0) {
-                                var strOrderSql = this.OrderSql ;
-
-                                sqlStr = " SELECT * FROM (SELECT " + _select.ToString() + ",ROW_NUMBER() OVER(" + strOrderSql + ") AS ROW_NUMBER  FROM " + _TableName + " " + _Where.ToString() + ") AS D  WHERE ROW_NUMBER BETWEEN " + (_OFFSET + 1) + " AND " + (_OFFSET + _TopNum);
-                        } else {
-
-                            sqlStr = string.Format("SELECT TOP {0} {1} FROM {2} {3} {4}", _TopNum, _select.ToString(), _TableName, _Where.ToString(), this.OrderSql);
-                        }
-                    } else if (Vendor == "Oracle") {
+                    if (Vendor == "Oracle") {
                         var strWhere = "";
 
                         if (string.IsNullOrEmpty(_Where.ToString())) {
@@ -449,12 +439,21 @@ namespace Volte.Data.Dapper
                         }
 
                         sqlStr = string.Format("SELECT * FROM {2} {3} {4}", _TableName, strWhere, this.OrderSql);
-                    } else {
+                    } else if (Vendor == "MySql") {
                         ZZLogger.Debug(ZFILE_NAME , "else");
                         if (_OFFSET >= 0) {
                             sqlStr = string.Format("SELECT {0} FROM {1} {2} {3} LIMIT {4} , {5}" , _select.ToString() , _TableName , _Where.ToString() , this.OrderSql , _OFFSET , _TopNum);
                         }else{
                             sqlStr = string.Format("SELECT {0} FROM {1} {2} {3} LIMIT {4}", _select.ToString(), _TableName, _Where.ToString(), this.OrderSql, _TopNum);
+                        }
+                    }else{
+                        if (_OFFSET >= 0) {
+                                var strOrderSql = this.OrderSql ;
+
+                                sqlStr = " SELECT * FROM (SELECT " + _select.ToString() + ",ROW_NUMBER() OVER(" + strOrderSql + ") AS ROW_NUMBER  FROM " + _TableName + " " + _Where.ToString() + ") AS D  WHERE ROW_NUMBER BETWEEN " + (_OFFSET + 1) + " AND " + (_OFFSET + _TopNum);
+                        } else {
+
+                            sqlStr = string.Format("SELECT TOP {0} {1} FROM {2} {3} {4}", _TopNum, _select.ToString(), _TableName, _Where.ToString(), this.OrderSql);
                         }
                     }
                 } else {
