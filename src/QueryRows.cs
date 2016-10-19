@@ -161,16 +161,20 @@ namespace Volte.Data.Dapper
 
         private bool ConvertToBoolean(object obj)
         {
-            if (DBNull.Value.Equals(obj)) {
+            if (DBNull.Value.Equals(obj) || obj==null) {
                 return false;
             }
             if (obj is bool) {
                 return (bool)obj;
             } else if (obj.Equals("Y") || obj.Equals("y")) {
                 return true;
+            } else if (obj.ToString()=="1") {
+                return true;
             } else if (obj.Equals("True") || obj.Equals("true")) {
                 return true;
             } else if (obj.Equals("N") || obj.Equals("n")) {
+                return false;
+            } else if (obj.ToString()=="0") {
                 return false;
             } else if (obj.Equals("False") || obj.Equals("false")) {
                 return false;
@@ -223,11 +227,33 @@ namespace Volte.Data.Dapper
             return Convert.ToDouble(_obj);
         }
 
+        public long GetLong(int i)
+        {
+            object _obj = this[i];
+
+            if (_obj==null || DBNull.Value.Equals(_obj)) {
+                return 0;
+            }
+
+            return Convert.ToInt64(_obj);
+        }
+
+        public long GetLong(string Name)
+        {
+            object _obj = this[Name];
+
+            if (_obj==null || DBNull.Value.Equals(_obj)) {
+                return 0;
+            }
+
+            return Convert.ToInt64(_obj);
+        }
+
         public int GetInteger(int i)
         {
             object _obj = this[i];
 
-            if (DBNull.Value.Equals(_obj)) {
+            if (_obj==null || DBNull.Value.Equals(_obj)) {
                 return 0;
             }
 
@@ -238,7 +264,7 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[Name];
 
-            if (DBNull.Value.Equals(_obj)) {
+            if (_obj==null || DBNull.Value.Equals(_obj)) {
                 return 0;
             }
 

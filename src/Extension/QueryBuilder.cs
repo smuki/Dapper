@@ -28,7 +28,7 @@ namespace Volte.Data.Dapper
         protected int _OFFSET    = -1;
         protected bool _Distinct = false;
         protected bool _GroupBy  = false;
-        protected DBType _DbType;
+        protected string Vendor;
 
         protected static Dictionary<string, Type> DynamicParamModelCache = new Dictionary<string, Type>();
         protected Dictionary<string, object> ParamValues = new Dictionary<string, object>();
@@ -428,36 +428,34 @@ namespace Volte.Data.Dapper
                 }
 
                 if (_TopNum > 0) {
-                    if (_DbType == DBType.SqlServer || _DbType == DBType.SqlServerCE)
-                        if (_OFFSET >= 0) {
-                            if (_DbType == DBType.SqlServer) {
-                                var strOrderSql = this.OrderSql ;
-                                sqlStr = string.Format("SELECT {0} FROM (SELECT {0},ROW_NUMBER() OVER({1}) AS ROW_NUMBER FROM {4} {3} ) T WHERE ROW_NUMBER={2} {1}", _select.ToString(), strOrderSql, _OFFSET, _Where.ToString(), _TableName);
 
+                    if (Vendor == "Oracle") {
+                        var strWhere = "";
+
+                        if (string.IsNullOrEmpty(_Where.ToString())) {
+                            strWhere = string.Format(" WHERE  ROWNUM <= {0} ", _TopNum);
+                        } else {
+                            strWhere = string.Format(" {0} AND ROWNUM <= {1} ", _Where.ToString(), _TopNum);
+                        }
+
+                        sqlStr = string.Format("SELECT * FROM {2} {3} {4}", _TableName, strWhere, this.OrderSql);
+                    } else if (Vendor == "MySql") {
+                        ZZLogger.Debug(ZFILE_NAME , "else");
+                        if (_OFFSET >= 0) {
+                            sqlStr = string.Format("SELECT {0} FROM {1} {2} {3} LIMIT {4} , {5}" , _select.ToString() , _TableName , _Where.ToString() , this.OrderSql , _OFFSET , _TopNum);
+                        }else{
+                            sqlStr = string.Format("SELECT {0} FROM {1} {2} {3} LIMIT {4}", _select.ToString(), _TableName, _Where.ToString(), this.OrderSql, _TopNum);
+                        }
+                    }else{
+                        if (_OFFSET >= 0) {
+                                var strOrderSql = this.OrderSql ;
 
                                 sqlStr = " SELECT * FROM (SELECT " + _select.ToString() + ",ROW_NUMBER() OVER(" + strOrderSql + ") AS ROW_NUMBER  FROM " + _TableName + " " + _Where.ToString() + ") AS D  WHERE ROW_NUMBER BETWEEN " + (_OFFSET + 1) + " AND " + (_OFFSET + _TopNum);
-
-                            } else {
-
-                                sqlStr = string.Format("SELECT TOP {0} {1} FROM {2} {3} {4}", _TopNum, _select.ToString(), _TableName, _Where.ToString(), this.OrderSql);
-                            }
                         } else {
 
                             sqlStr = string.Format("SELECT TOP {0} {1} FROM {2} {3} {4}", _TopNum, _select.ToString(), _TableName, _Where.ToString(), this.OrderSql);
                         }
-                        else if (_DbType == DBType.Oracle) {
-                            var strWhere = "";
-
-                            if (string.IsNullOrEmpty(_Where.ToString())) {
-                                strWhere = string.Format(" WHERE  ROWNUM <= {0} ", _TopNum);
-                            } else {
-                                strWhere = string.Format(" {0} AND ROWNUM <= {1} ", _Where.ToString(), _TopNum);
-                            }
-
-                            sqlStr = string.Format("SELECT * FROM {2} {3} {4}", _TableName, strWhere, this.OrderSql);
-                        } else {
-                            sqlStr = string.Format("SELECT {0} FROM {1} {2} {3} LIMIT {4}", _select.ToString(), _TableName, _Where.ToString(), this.OrderSql, _TopNum);
-                        }
+                    }
                 } else {
                     sqlStr = string.Format("SELECT {0} FROM {1} {2} {3} {4}" , _select.ToString() , _TableName , _Where.ToString() , _GroupbyClause.ToString() , this.OrderSql);
 
@@ -474,11 +472,9 @@ namespace Volte.Data.Dapper
                 var sqlPage = "";
                 var orderStr = string.IsNullOrEmpty(this.OrderSql) ? "ORDER BY " + _ClassMapping.AttributeMappings.FirstOrDefault().ColumnName : this.OrderSql;
 
-                if (_DbType == DBType.SqlServer || _DbType == DBType.Oracle) {
-                    var tP = _DbType == DBType.Oracle ? _ClassMapping.TableName + ".*" : "*";
+                if (Vendor == "SqlServer" || Vendor == "Oracle") {
+                    var tP = Vendor == "Oracle" ? _ClassMapping.TableName + ".*" : "*";
                     sqlPage = string.Format("SELECT * FROM (SELECT ROW_NUMBER() OVER ({0}) rid, {1} {2}) p_paged WHERE rid>{3} AND rid<={4}", orderStr, tP, this.WhereSql, ((_PageIndex - 1) * _PageSize), ((_PageIndex - 1) * _PageSize + _PageSize));
-                } else if (_DbType == DBType.SqlServerCE) {
-                    sqlPage = string.Format("SELECT * FROM {0} {1} {2} OFFSET {3} ROWS FETCH NEXT {4} ROWS ONLY", _ClassMapping.TableName, this.WhereSql, orderStr, (_PageIndex - 1) * _PageSize, (_PageIndex - 1) * _PageSize + _PageSize);
                 } else {
                     sqlPage = string.Format("SELECT * FROM {0} {1} {2} LIMIT {1} OFFSET {2}", _ClassMapping.TableName, this.WhereSql, orderStr, (_PageIndex - 1) * _PageSize, (_PageIndex - 1) * _PageSize + _PageSize);
                 }
@@ -548,8 +544,8 @@ namespace Volte.Data.Dapper
         public QueryBuilder OrderClause(string field)
         {
             _Orders.Add(new QueryOrder() {
-                Field = field, Asc = ""
-            });
+                    Field = field, Asc = ""
+                    });
             return this;
         }
 
@@ -563,8 +559,8 @@ namespace Volte.Data.Dapper
             }
 
             _Orders.Add(new QueryOrder() {
-                Field = field, Asc = _order_Asc
-            });
+                    Field = field, Asc = _order_Asc
+                    });
             return this;
         }
 
@@ -605,28 +601,28 @@ namespace Volte.Data.Dapper
         protected string GetOpStr(Operation method)
         {
             switch (method) {
-            case Operation.Contains:
-            case Operation.StartsWith:
-            case Operation.EndsWith:
-                return "LIKE";
+                case Operation.Contains:
+                case Operation.StartsWith:
+                case Operation.EndsWith:
+                    return "LIKE";
 
-            case Operation.Equal:
-                return "=";
+                case Operation.Equal:
+                    return "=";
 
-            case Operation.Greater:
-                return ">";
+                case Operation.Greater:
+                    return ">";
 
-            case Operation.GreaterOrEqual:
-                return ">=";
+                case Operation.GreaterOrEqual:
+                    return ">=";
 
-            case Operation.Less:
-                return "<";
+                case Operation.Less:
+                    return "<";
 
-            case Operation.LessOrEqual:
-                return "<=";
+                case Operation.LessOrEqual:
+                    return "<=";
 
-            case Operation.NotEqual:
-                return "<>";
+                case Operation.NotEqual:
+                    return "<>";
 
             }
 
@@ -716,32 +712,32 @@ namespace Volte.Data.Dapper
         private object CreateParam(Operation method, object value)
         {
             switch (method) {
-            case Operation.Contains:
-                return string.Format("%{0}%", value);
+                case Operation.Contains:
+                    return string.Format("%{0}%", value);
 
-            case Operation.StartsWith:
-                return string.Format("{0}%", value);
+                case Operation.StartsWith:
+                    return string.Format("{0}%", value);
 
-            case Operation.EndsWith:
-                return string.Format("%{0}", value);
+                case Operation.EndsWith:
+                    return string.Format("%{0}", value);
 
-            case Operation.Equal:
-                return value;
+                case Operation.Equal:
+                    return value;
 
-            case Operation.Greater:
-                return value;
+                case Operation.Greater:
+                    return value;
 
-            case Operation.GreaterOrEqual:
-                return value;
+                case Operation.GreaterOrEqual:
+                    return value;
 
-            case Operation.Less:
-                return value;
+                case Operation.Less:
+                    return value;
 
-            case Operation.LessOrEqual:
-                return value;
+                case Operation.LessOrEqual:
+                    return value;
 
-            case Operation.NotEqual:
-                return value;
+                case Operation.NotEqual:
+                    return value;
 
             }
 
@@ -762,41 +758,41 @@ namespace Volte.Data.Dapper
             //Console.WriteLine(model.Name+"="+value);
 
             switch (method) {
-            case Operation.Contains:
-                this.ParamValues.Add(model.Name, string.Format("%{0}%", value));
-                break;
+                case Operation.Contains:
+                    this.ParamValues.Add(model.Name, string.Format("%{0}%", value));
+                    break;
 
-            case Operation.StartsWith:
-                this.ParamValues.Add(model.Name, string.Format("{0}%", value));
-                break;
+                case Operation.StartsWith:
+                    this.ParamValues.Add(model.Name, string.Format("{0}%", value));
+                    break;
 
-            case Operation.EndsWith:
-                this.ParamValues.Add(model.Name, string.Format("%{0}", value));
-                break;
+                case Operation.EndsWith:
+                    this.ParamValues.Add(model.Name, string.Format("%{0}", value));
+                    break;
 
-            case Operation.Equal:
-                this.ParamValues.Add(model.Name, value);
-                break;
+                case Operation.Equal:
+                    this.ParamValues.Add(model.Name, value);
+                    break;
 
-            case Operation.Greater:
-                this.ParamValues.Add(model.Name, value);
-                break;
+                case Operation.Greater:
+                    this.ParamValues.Add(model.Name, value);
+                    break;
 
-            case Operation.GreaterOrEqual:
-                this.ParamValues.Add(model.Name, value);
-                break;
+                case Operation.GreaterOrEqual:
+                    this.ParamValues.Add(model.Name, value);
+                    break;
 
-            case Operation.Less:
-                this.ParamValues.Add(model.Name, value);
-                break;
+                case Operation.Less:
+                    this.ParamValues.Add(model.Name, value);
+                    break;
 
-            case Operation.LessOrEqual:
-                this.ParamValues.Add(model.Name, value);
-                break;
+                case Operation.LessOrEqual:
+                    this.ParamValues.Add(model.Name, value);
+                    break;
 
-            case Operation.NotEqual:
-                this.ParamValues.Add(model.Name, value);
-                break;
+                case Operation.NotEqual:
+                    this.ParamValues.Add(model.Name, value);
+                    break;
 
             }
 
@@ -869,7 +865,7 @@ namespace Volte.Data.Dapper
             var result = new QueryBuilder<T>();
 
             result.ParamPrefix = db.ParamPrefix;
-            result._DbType = db.DbType;
+            result.Vendor      = db.Vendor;
 
             return result;
         }
@@ -884,16 +880,16 @@ namespace Volte.Data.Dapper
             }
 
             _Orders.Add(new QueryOrder() {
-                Field = field, Asc = _order_Asc
-            });
+                    Field = field, Asc = _order_Asc
+                    });
             return this;
         }
 
         public QueryBuilder<T> OrderClause(string field)
         {
             _Orders.Add(new QueryOrder() {
-                Field = field, Asc = ""
-            });
+                    Field = field, Asc = ""
+                    });
             return this;
         }
     }

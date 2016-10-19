@@ -32,22 +32,22 @@ namespace Volte.Data.Dapper
         public DbContext(string _DbName, string connStr)
         {
 
-            _dbName           = _DbName;
+            _dbName          = _DbName;
             Setting _Setting = Settings.Instance().GetValue(_DbName, "MsSqlServer", connStr);
             _dbType          = _Setting.DbType;
-            _Broker           = ObjectBroker.Instance();
-            _Streaming        = _Broker.getStreaming(_DbName).GetCopy();
+            _Broker          = ObjectBroker.Instance();
+            _Streaming       = _Broker.getStreaming(_DbName).GetCopy();
             _Streaming.Open();
         }
 
         public DbContext(string _DbName, string providerName, string connStr)
         {
 
-            _dbName           = _DbName;
+            _dbName          = _DbName;
             Setting _Setting = Settings.Instance().GetValue(_DbName, providerName, connStr);
             _dbType          = _Setting.DbType;
-            _Broker           = ObjectBroker.Instance();
-            _Streaming        = _Broker.getStreaming(_DbName).GetCopy();
+            _Broker          = ObjectBroker.Instance();
+            _Streaming       = _Broker.getStreaming(_DbName).GetCopy();
             _Streaming.Open();
         }
 
@@ -320,9 +320,9 @@ namespace Volte.Data.Dapper
             _Broker.SaveChangeEntityObject(obj, _Streaming, _IsForceCommit);
         }
 
-        public void Execute(string strSql)
+        public int Execute(string strSql)
         {
-            _Streaming.DoSql(strSql);
+            return _Streaming.DoSql(strSql);
         }
 
         public DataTable RetrieveDataTable(string strSql)
@@ -418,24 +418,27 @@ namespace Volte.Data.Dapper
         }
 
         // Properties
-        public bool IsForceCommit { get { return _IsForceCommit; } set { _IsForceCommit = value; }  }
-        public bool Writeable     { get { return _Writeable;     } set { _Writeable     = value; }  }
+        public bool IsForceCommit { get { return _IsForceCommit; } set { _IsForceCommit = value; }  } 
+        public bool Writeable     { get { return _Writeable;     } set { _Writeable     = value; }  } 
 
-        public IDbConnection DbConnection   { get { return _Streaming.Connection;      }  }
-        public IDbTransaction DbTransaction { get { return _Streaming.Transaction;     }  }
-        public DBType DbType                { get { return _dbType;                    }  }
-        public bool Transaction             { get { return _Transaction;               }  }
-        public string ParamPrefix           { get { return _Streaming.ParameterPrefix; }  }
-        public string DbName                { get { return _dbName;                    }  }
+        public IDbConnection DbConnection   { get { return _Streaming.Connection;      }  } 
+        public IDbTransaction DbTransaction { get { return _Streaming.Transaction;     }  } 
+        public DBType DbType                { get { return _dbType; }  } 
+        public string Vendor                { get { return _Streaming.Vendor; }  } 
+        public bool Transaction             { get { return _Transaction;               }  } 
+        public string ParamPrefix           { get { return _Streaming.ParameterPrefix; }  } 
+        public string DbName                { get { return _dbName;                    }  } 
+        public string dbAdapter             { get { return _dbAdapter;                 }  } 
 
         // Fields
         private readonly StringBuilder _Fields    = new StringBuilder();
         private readonly EntityCompiler _Compiler = new EntityCompiler();
         private string _dbName;
-        private DBType _dbType        = DBType.SqlServer;
-        private bool _Transaction     = false;
-        private bool _Writeable       = false;
-        private bool _IsForceCommit   = true;
+        private string _dbAdapter   = "";
+        private DBType _dbType      = DBType.SqlServer;
+        private bool _Transaction   = false;
+        private bool _Writeable     = false;
+        private bool _IsForceCommit = true;
         private ObjectBroker _Broker;
         private Streaming _Streaming;
     }
