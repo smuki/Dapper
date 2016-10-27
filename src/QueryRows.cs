@@ -42,7 +42,32 @@ namespace Volte.Data.Dapper
             }
 
             try {
+
+                ZZLogger.Error(ZFILE_NAME, "item.Key="+_Parameters.Count);
+
+                foreach (var item in _Parameters) {
+
+                    ZZLogger.Error(ZFILE_NAME, "item.Key="+item.Key);
+                    ZZLogger.Error(ZFILE_NAME, "item.Value="+item.Value);
+
+                    IDataParameter parameter1 = cmd.CreateParameter();
+                    parameter1.ParameterName  = _DbContext.ParamPrefix + item.Key;
+
+                    object obj1 = item.Value;
+
+                    if (obj1 == null) {
+                        parameter1.Value = DBNull.Value;
+                    } else {
+                        parameter1.Value = obj1;
+                    }
+
+                    cmd.Parameters.Add(parameter1);
+
+
+                }
+
                 IDataReader _DataReader = cmd.ExecuteReader();
+
                 _Fill(_DataReader);
             } catch (Exception e) {
                 ZZLogger.Error(ZFILE_NAME, _CommandText);
@@ -390,6 +415,10 @@ namespace Volte.Data.Dapper
         private object[] _Row        = new object[1];
         private object[] _Prev       = new object[1];
         private List<object[]> _Data = new List<object[]>();
+
+        private Dictionary<string, object> _Parameters = new Dictionary<string, object>();
+
+        public Dictionary<string, object> Parameters { get { return _Parameters; } set { _Parameters = value; }  }
 
         public int Top            { get { return _Top;         } set { _Top         = value; }  }
         public bool KeepPrev      { get { return _KeepPrev;    } set { _KeepPrev    = value; }  }

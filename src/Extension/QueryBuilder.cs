@@ -37,7 +37,7 @@ namespace Volte.Data.Dapper
 
         public virtual int  OFFSET   { get { return _OFFSET;   }  }
         public virtual int  TopNum   { get { return _TopNum;   }  }
-
+        public virtual Dictionary<string, object> Parameters { get { return ParamValues;   }  }
 
         public virtual List<AttributeMapping> Fields
         {
