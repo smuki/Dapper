@@ -355,7 +355,7 @@ namespace Volte.Data.Dapper
                             }
 
                             if (GroupBy){
-                                if (_att["TP_CODE"]=="nvarchar" || _att["TP_CODE"]=="datetime" ){
+                                if (_att.DataType=="nvarchar" || _att.DataType=="datetime" ){
                                     if (gi != 0) {
                                         _GroupbyClause.Append(",");
                                     }
@@ -366,14 +366,14 @@ namespace Volte.Data.Dapper
                         } else {
 
                             if (GroupBy){
-                                if (_att["TP_CODE"]=="nvarchar" || _att["TP_CODE"]=="datetime" ){
+                                if (_att.DataType=="nvarchar" || _att.DataType=="datetime" ){
                                     if (gi != 0) {
                                         _GroupbyClause.Append(",");
                                     }
                                     _GroupbyClause.Append(_att.TableName + "." + _att.ColumnName);
                                     gi++;
                                 }
-                                if (_att["TP_CODE"]=="int" || _att["TP_CODE"]=="decimal"  || _att["TP_CODE"]=="bigint" ){
+                                if (_att.DataType=="int" || _att.DataType=="decimal"  || _att.DataType=="bigint" ){
                                     _select.Append("sum("+_att.TableName + "." + _att.ColumnName+")");
                                     if (_att.AliasName != "") {
                                         _select.Append(_att.AliasName);
