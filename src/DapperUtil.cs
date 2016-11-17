@@ -11,6 +11,7 @@ using System.IO.Compression;
 using System.Data;
 
 using Volte.Data.Json;
+using Volte.Utils;
 
 namespace Volte.Data.Dapper
 {
@@ -28,13 +29,6 @@ namespace Volte.Data.Dapper
         public DapperUtil()
         {
 
-        }
-
-        public static DateTime DateTime_MinValue
-        {
-            get {
-                return DateTime.MinValue;
-            }
         }
 
         public static System.Reflection.Assembly ReadAssembly(string _AssemblyFile)
@@ -111,7 +105,7 @@ namespace Volte.Data.Dapper
 
         public static bool IsNullOrEmpty(DateTime cValue)
         {
-            return cValue == DapperUtil.DateTime_MinValue;
+            return cValue == Util.DateTime_MinValue;
         }
 
         public static bool IsNullOrEmpty(string cValue)
@@ -531,98 +525,8 @@ namespace Volte.Data.Dapper
         public static string EscapeString(string text)
         {
             StringBuilder ss = new StringBuilder();
-            EscapeString(ss, text);
+            Util.EscapeString(ss, text);
             return ss.ToString();
-        }
-
-        public static void EscapeString(StringBuilder ss, string text)
-        {
-            foreach (char ch in text) {
-                switch (ch) {
-                case '"':
-                    ss.Append("\\\"");
-                    break;
-
-                case '\\':
-                    ss.Append(@"\\");
-                    break;
-
-                case '\b':
-                    ss.Append(@"\b");
-                    break;
-
-                case '\f':
-                    ss.Append(@"\f");
-                    break;
-
-                case '\n':
-                    ss.Append(@"\n");
-                    break;
-
-                case '\r':
-                    ss.Append(@"\r");
-                    break;
-
-                case '\t':
-                    ss.Append(@"\t");
-                    break;
-
-                default:
-                    if (char.IsLetterOrDigit(ch)) {
-                        ss.Append(ch);
-                    } else if (char.IsPunctuation(ch)) {
-                        ss.Append(ch);
-                    } else if (char.IsSeparator(ch)) {
-                        ss.Append(ch);
-                    } else if (char.IsWhiteSpace(ch)) {
-                        ss.Append(ch);
-                    } else if (char.IsSymbol(ch)) {
-                        ss.Append(ch);
-                    } else {
-                        ss.Append("\\u");
-                        ss.Append(((int) ch).ToString("X4", NumberFormatInfo.InvariantInfo));
-                    }
-
-                    break;
-                }
-            }
-        }
-
-        public static string DotNetType(string datatype)
-        {
-            string type = datatype;
-
-            switch (datatype.Trim().ToLower()) {
-            case "boolean":
-                type = "bool";
-                break;
-
-            case "datetime":
-                type = "DateTime?";
-                break;
-
-            case "float":
-            case "decimal":
-                type = "decimal";
-                break;
-
-            case "int":
-                type = "int";
-                break;
-
-            case "image":
-                type = "System.Byte[]";
-                break;
-
-            case "ntext":
-            case "picture":
-            case "nvarchar":
-            case "label":
-                type = "string";
-                break;
-            }
-
-            return type;
         }
 
         public static string WhereIn(string s)

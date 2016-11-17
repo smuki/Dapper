@@ -74,8 +74,8 @@
             <references>
                 <include name="..\dist\Volte.Data.Json.dll" />
                 <include name="..\dist\Volte.Data.Dapper.dll" />
+                <include name="..\dist\Volte.Utils.dll" />
                 <include name="..\lib\MySql.Data.dll" />
-
             </references>
 
         </csc>

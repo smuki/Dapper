@@ -3,6 +3,7 @@ using System.Data;
 using System.IO;
 
 using Volte.Data.Json;
+using Volte.Utils;
 
 namespace Volte.Data.Dapper
 {
@@ -34,7 +35,7 @@ namespace Volte.Data.Dapper
 
                     if (obj1 == null) {
                         parameter1.Value = DBNull.Value;
-                    } else if (map1.Type == DbType.DateTime && (DateTime) obj1 <= DapperUtil.DateTime_MinValue) {
+                    } else if (map1.Type == DbType.DateTime && (DateTime) obj1 <= Util.DateTime_MinValue) {
                         parameter1.Value = DBNull.Value;
                     } else {
                         parameter1.Value = obj1;

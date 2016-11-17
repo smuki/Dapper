@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using Volte.Data.Json;
+using Volte.Utils;
 
 namespace Volte.Data.Dapper
 {
@@ -14,9 +15,9 @@ namespace Volte.Data.Dapper
         public CommanderUpdate(Streaming _streaming, ClassMapping cm) : base(_streaming, cm)
         {
             var xxx = DBNull.Value;
-            DateTime x = DapperUtil.DateTime_MinValue;
+            DateTime x = Util.DateTime_MinValue;
 
-            if (x == DapperUtil.DateTime_MinValue) {
+            if (x == Util.DateTime_MinValue) {
                 xxx = DBNull.Value;
             }
 
@@ -47,7 +48,7 @@ namespace Volte.Data.Dapper
 
                         if (obj1 == null) {
                             parameter1.Value = DBNull.Value;
-                        } else if (map1.Type == DbType.DateTime && (DateTime) obj1 <= DapperUtil.DateTime_MinValue) {
+                        } else if (map1.Type == DbType.DateTime && (DateTime) obj1 <= Util.DateTime_MinValue) {
                             parameter1.Value = DBNull.Value;
                         } else {
                             parameter1.Value = obj1;

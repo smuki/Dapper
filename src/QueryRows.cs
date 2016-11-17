@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 
 using Volte.Data.Dapper;
+using Volte.Utils;
 
 namespace Volte.Data.Dapper
 {
@@ -323,7 +324,7 @@ namespace Volte.Data.Dapper
             object _obj = this[i];
 
             if (DBNull.Value.Equals(_obj)) {
-                return DapperUtil.DateTime_MinValue;
+                return Util.DateTime_MinValue;
             }
 
             return Convert.ToDateTime(_obj);
@@ -334,7 +335,7 @@ namespace Volte.Data.Dapper
             object _obj = this[Name];
 
             if (DBNull.Value.Equals(_obj)) {
-                return DapperUtil.DateTime_MinValue;
+                return Util.DateTime_MinValue;
             }
 
             return Convert.ToDateTime(_obj);
