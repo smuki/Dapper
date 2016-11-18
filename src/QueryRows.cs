@@ -85,10 +85,11 @@ namespace Volte.Data.Dapper
         internal void _Fill(IDataReader _DataReader)
         {
             _RecordCount = -1;
-            _fieldCount = _DataReader.FieldCount;
-            _Ordinal    = new Dictionary<string , int>();
-            _Type       = new Dictionary<string , string>();
-            _Columns    = new List<string>();
+            _fieldCount  = _DataReader.FieldCount;
+            _Ordinal     = new Dictionary<string , int>();
+            _Names       = new Dictionary<int , string>();
+            _Type        = new Dictionary<string , string>();
+            _Columns     = new List<string>();
 
             Dictionary<string, int> _t_name = new Dictionary<string, int>();
 
@@ -103,6 +104,7 @@ namespace Volte.Data.Dapper
                     _t_name[s] = 0;
                 }
 
+                _Names[i] = s;
                 _Columns.Add(s);
                 _Type[s] = _DataReader.GetFieldType(i).ToString();
                 _Ordinal[s] = i;
@@ -367,6 +369,10 @@ namespace Volte.Data.Dapper
         {
             return _Type[Name];
         }
+        public string GetType(int i)
+        {
+            return _Type[_Names[i]];
+        }
 
         public object this[string name]
         {
@@ -405,6 +411,7 @@ namespace Volte.Data.Dapper
         private List<string>  _Columns;
         private DbContext _DbContext;
         private Dictionary<string, int> _Ordinal;
+        private Dictionary<int, string> _Names;
         private Dictionary<string, string> _Type;
         private IDbConnection _dbConnecttion;
         private bool _KeepPrev       = false;
