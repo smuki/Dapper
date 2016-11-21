@@ -20,6 +20,7 @@ namespace Volte.Data.Dapper
         const string ZFILE_NAME = "DbContext";
         public DbContext(string _DbName)
         {
+            if (!string.IsNullOrEmpty(_DbName)){
             _dbName        = _DbName;
             _Writeable     = false;
             _Transaction   = false;
@@ -27,6 +28,7 @@ namespace Volte.Data.Dapper
             _Broker        = ObjectBroker.Instance();
             _Streaming     = _Broker.getStreaming(_DbName).GetCopy();
             _Streaming.Open();
+            }
         }
 
         public DbContext(string _DbName, string connStr)
