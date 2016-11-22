@@ -16,5 +16,6 @@ namespace Volte.Data.Dapper
         EndsWith       = 8,
         NotEqual       = 9,
         Expression     = 10,
+        WhereIn        = 11,
     }
 }

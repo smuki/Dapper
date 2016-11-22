@@ -564,6 +564,22 @@ namespace Volte.Data.Dapper
             return this;
         }
 
+        private string WhereIn(string s)
+        {
+            string _r = "";
+            s = s + ",";
+            string[] aSegment = s.Split(',');
+
+            foreach (string Segment in aSegment) {
+                if (_r != "") {
+                    _r = _r + ",";
+                }
+
+                _r = _r + "'" + Segment + "'";
+            }
+
+            return _r;
+        }
 
         public QueryBuilder Where(string whereClause, bool isAnd = true)
         {
@@ -646,6 +662,9 @@ namespace Volte.Data.Dapper
                 _value = string.Format("{0}%", _value);
             } else if (operation == Operation.EndsWith) {
                 _value = string.Format("%{0}", _value);
+            } else if (operation == Operation.WhereIn) {
+                string s = " "+field+" IN(" + DapperUtil.WhereIn(value) + ") ";
+                return Where(s);
             }
 
             return _WhereClause(field, operation, "N'" + _value + "'", isAnd);
