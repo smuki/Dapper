@@ -567,15 +567,18 @@ namespace Volte.Data.Dapper
         private string WhereIn(string s)
         {
             string _r = "";
-            s = s + ",";
+            s = s + ",X1_X2_X3";
             string[] aSegment = s.Split(',');
 
             foreach (string Segment in aSegment) {
-                if (_r != "") {
-                    _r = _r + ",";
-                }
+                if (!string.IsNullOrEmpty(Segment)){
 
-                _r = _r + "'" + Segment + "'";
+                    if (_r != "") {
+                        _r = _r + ",";
+                    }
+
+                    _r = _r + "'" + Segment + "'";
+                }
             }
 
             return _r;

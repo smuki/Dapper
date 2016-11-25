@@ -17,7 +17,7 @@ namespace Volte.Data.Dapper
         private static ZZCache _Cache;
         private static Queue<JSONArray> _que;
         private static LRU<string, string> _cache         = new LRU<string, string>(5000);
-        private static LRU<string, JSONTable> _cache_Cell     = new LRU<string, JSONTable>(5000);
+        private static LRU<string, JSONTable> _cache_Cell = new LRU<string, JSONTable>(5000);
         private static LRU<string, JSONArray> _JSONObject = new LRU<string, JSONArray>(5000);
         private static object _PENDING                    = new object();
         private static string _Cache_Location             = "";
@@ -76,7 +76,7 @@ namespace Volte.Data.Dapper
                 if (File.Exists(_fileName)) {
                     return "T";
                 } else {
-                    return "S";
+                    return "";
                 }
             }
         }
