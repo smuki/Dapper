@@ -249,16 +249,16 @@ namespace Volte.Data.Dapper
                     char c = old[i];
 
                     switch (c) {
-                    case '\'':
-                    case '\\':
-                    case ';': {
-                        break;
-                    }
+                        case '\'':
+                        case '\\':
+                        case ';': {
+                                      break;
+                                  }
 
-                    default: {
-                        sb.Append(c);
-                        break;
-                    }
+                        default: {
+                                     sb.Append(c);
+                                     break;
+                                 }
                     }
                 }
 
@@ -532,15 +532,17 @@ namespace Volte.Data.Dapper
         public static string WhereIn(string s)
         {
             string _r = "";
-            s = s + ",";
+            s = s + ",X1_X2_X3";
             string[] aSegment = s.Split(',');
 
             foreach (string Segment in aSegment) {
-                if (_r != "") {
-                    _r = _r + ",";
-                }
+                if (!string.IsNullOrEmpty(Segment)){
+                    if (_r != "") {
+                        _r = _r + ",";
+                    }
 
-                _r = _r + "'" + Segment + "'";
+                    _r = _r + "'" + AntiSQLInjection(Segment) + "'";
+                }
             }
 
             return _r;

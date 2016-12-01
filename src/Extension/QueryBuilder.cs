@@ -450,7 +450,7 @@ namespace Volte.Data.Dapper
                         if (_OFFSET >= 0) {
                                 var strOrderSql = this.OrderSql ;
 
-                                sqlStr = " SELECT * FROM (SELECT " + _select.ToString() + ",ROW_NUMBER() OVER(" + strOrderSql + ") AS ROW_NUMBER  FROM " + _TableName + " " + _Where.ToString() + ") AS D  WHERE ROW_NUMBER BETWEEN " + (_OFFSET + 1) + " AND " + (_OFFSET + _TopNum);
+                                sqlStr = " SELECT * FROM (SELECT " + _select.ToString() + ",ROW_NUMBER() OVER(" + strOrderSql + ") AS ROW_NUMBER  FROM " + _TableName + " " + _Where.ToString() + _GroupbyClause.ToString()+ ") AS D  WHERE ROW_NUMBER BETWEEN " + (_OFFSET + 1) + " AND " + (_OFFSET + _TopNum);
                         } else {
 
                             sqlStr = string.Format("SELECT TOP {0} {1} FROM {2} {3} {4}", _TopNum, _select.ToString(), _TableName, _Where.ToString(), this.OrderSql);
@@ -666,7 +666,7 @@ namespace Volte.Data.Dapper
             } else if (operation == Operation.EndsWith) {
                 _value = string.Format("%{0}", _value);
             } else if (operation == Operation.WhereIn) {
-                string s = " "+field+" IN(" + DapperUtil.WhereIn(value) + ") ";
+                string s = " "+field+" IN(" + this.WhereIn(value) + ") ";
                 return Where(s);
             }
 
