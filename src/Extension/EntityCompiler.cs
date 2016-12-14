@@ -12,6 +12,8 @@
     using System.IO;
     using System.Threading;
 
+    using Volte.Data.Json;
+
     internal class EntityCompiler {
         const string ZFILE_NAME = "EntityCompiler";
         public static object _PENDING = new object();

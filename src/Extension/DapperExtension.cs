@@ -5,7 +5,7 @@ using System.Text;
 using System.Data;
 using System.Text.RegularExpressions;
 
-using Volte.Data.Dapper;
+using Volte.Data.Json;
 
 namespace Volte.Data.Dapper
 {

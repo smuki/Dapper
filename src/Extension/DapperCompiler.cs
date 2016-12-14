@@ -11,6 +11,7 @@
     using System.Text;
     using System.IO;
     using System.Threading;
+    using Volte.Data.Json;
 
     public class DapperCompiler {
         const string ZFILE_NAME = "DapperCompiler";
