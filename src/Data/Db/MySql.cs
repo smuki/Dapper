@@ -2,7 +2,7 @@ using System;
 using System.Data;
 using MySql.Data.MySqlClient;
 
-using Volte.Data.Dapper;
+using Volte.Data.Json;
 
 namespace Volte.Data.Dapper
 {

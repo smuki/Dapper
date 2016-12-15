@@ -46,6 +46,13 @@ namespace Volte.Data.Dapper
             length2 = length + paddingCount;
         }
 
+        public static string Encode(string cString)
+        {
+            byte[] by  = Encoding.Unicode.GetBytes(cString.ToCharArray());
+            string str = Coder.Encode(by);
+            return str;
+        }
+
         public string Encode(byte[] input)
         {
             Encoderinit(input);
@@ -95,22 +102,22 @@ namespace Volte.Data.Dapper
             }
 
 
-            switch (paddingCount) {
-            case 0:
-                break;
+          //  switch (paddingCount) {
+          //  case 0:
+          //      break;
 
-            case 1:
-                result[blockCount * 4 - 1] = '=';
-                break;
+          //  case 1:
+          //      result[blockCount * 4 - 1] = '=';
+          //      break;
 
-            case 2:
-                result[blockCount * 4 - 1] = '=';
-                result[blockCount * 4 - 2] = '=';
-                break;
+          //  case 2:
+          //      result[blockCount * 4 - 1] = '=';
+          //      result[blockCount * 4 - 2] = '=';
+          //      break;
 
-            default:
-                break;
-            }
+          //  default:
+          //      break;
+          //  }
 
             return new string(result);
         }

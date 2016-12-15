@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 
-using Volte.Data.Dapper;
+using Volte.Data.Json;
 using Volte.Utils;
 
 namespace Volte.Data.Dapper
