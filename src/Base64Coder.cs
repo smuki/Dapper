@@ -139,7 +139,12 @@ namespace Volte.Data.Dapper
             length2 = blockCount * 3;
         }
 
-        public byte[] Decode(string strInput)
+        public static string Decode(string cString)
+        {
+            return Encoding.Unicode.GetString(Coder.DecodeByte(cString));
+        }
+
+        public byte[] DecodeByte(string strInput)
         {
             Decoderinit(strInput.ToCharArray());
 
