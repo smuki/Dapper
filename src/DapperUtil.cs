@@ -268,12 +268,12 @@ namespace Volte.Data.Dapper
 
         public static string Compress(string str)
         {
-            return Base64Coder.Coder.Encode(Compress(Encoding.UTF8.GetBytes(str)));
+            return Util.Base64UrlEncodeByte(Compress(Encoding.UTF8.GetBytes(str)));
         }
 
         public static string Decompress(string str)
         {
-            return Encoding.UTF8.GetString(Decompress(Base64Coder.Coder.DecodeByte(str)));
+            return Encoding.UTF8.GetString(Decompress(Util.Base64UrlDecodeByte(str)));
         }
 
         internal static string BuildForConditions(ClassMapping _classMapping, Streaming rdb, List<Condition> conditions)

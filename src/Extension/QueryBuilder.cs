@@ -69,9 +69,9 @@ namespace Volte.Data.Dapper
                 if (_Param != null && _Param.Count > 0) {
                     foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping)) {
                         if (sb.Length == 0) {
-                            sb.Append(string.Format(" {0}={1}", p.ColumnName, ParamPrefix + (p.TableName +"."+ p.ColumnName)));
+                            sb.Append(string.Format(" {0}={1}", p.ColumnName, ParamPrefix + p.Name));
                         } else {
-                            sb.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +(p.TableName +"."+ p.ColumnName)));
+                            sb.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +p.Name));
                         }
                     }
                 }
@@ -242,9 +242,9 @@ namespace Volte.Data.Dapper
 
                     foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping)) {
                         if (i == 0) {
-                            sql.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix +(p.TableName +"."+ p.ColumnName)));
+                            sql.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix +p.Name));
                         } else {
-                            sql.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +(p.TableName +"."+ p.ColumnName)));
+                            sql.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +p.Name));
                         }
 
                         i++;
@@ -285,9 +285,9 @@ namespace Volte.Data.Dapper
 
                     foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping)) {
                         if (i == 0) {
-                            sql.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix +(p.TableName +"."+ p.ColumnName)));
+                            sql.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix +p.Name));
                         } else {
-                            sql.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +(p.TableName +"."+ p.ColumnName)));
+                            sql.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +p.Name));
                         }
 
                         i++;
@@ -314,9 +314,9 @@ namespace Volte.Data.Dapper
 
                         foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping)) {
                             if (i == 0) {
-                                _Where.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix +(p.TableName +"."+ p.ColumnName)));
+                                _Where.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix +p.Name));
                             } else {
-                                _Where.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +(p.TableName +"."+ p.ColumnName)));
+                                _Where.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +p.Name));
                             }
 
                             i++;
@@ -501,9 +501,9 @@ namespace Volte.Data.Dapper
 
                         foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping)) {
                             if (i == 0) {
-                                _Where.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix +(p.TableName +"."+ p.ColumnName)));
+                                _Where.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix +p.Name));
                             } else {
-                                _Where.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +(p.TableName +"."+ p.ColumnName)));
+                                _Where.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +p.Name));
                             }
 
                             i++;

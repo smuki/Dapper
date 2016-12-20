@@ -22,7 +22,6 @@
                 <warning number = "0105" />
             </nowarn>
             <sources>
-                <include name = "Base64Coder.cs" />
                 <include name = "DapperException.cs" />
                 <include name = "DapperUtil.cs" />
                 <include name = "ExceptionTypes.cs" />
