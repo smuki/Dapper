@@ -30,13 +30,14 @@ namespace Volte.Data.Dapper
             if (_Cache == null) {
                 _que   = new Queue<JSONTable>();
                 _Cache = new ZZCache();
+                _Cache.Running();
                 Initialize();
             }
 
             return _Cache;
         }
 
-        internal ZZCache()
+        internal void Running()
         {
             _worker = new Thread(new ThreadStart(_Do_Worker));
             _worker.IsBackground = true;
@@ -63,6 +64,9 @@ namespace Volte.Data.Dapper
                     ZZLogger.Debug(ZFILE_NAME, ex);
                 }
             }
+
+            ZZCache.getInstance().Running();
+
         }
 
         public static string Type(string fileName)
@@ -108,6 +112,7 @@ namespace Volte.Data.Dapper
 
             _que.Enqueue(_JSONTable);
 
+            ZZLogger.Debug(ZFILE_NAME , _JSONTable.ToString());
 
         }
 
@@ -122,8 +127,10 @@ namespace Volte.Data.Dapper
             while (true) {
 
                 try {
+                    ZZLogger.Debug(ZFILE_NAME , _Cache_Location);
                     if (_que.Count > 0) {
                         lock (_PENDING) {
+                            Initialize();
                             JSONTable _JSONTable= _que.Dequeue();
 
                             try {
