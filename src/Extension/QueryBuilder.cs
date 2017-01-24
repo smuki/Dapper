@@ -16,6 +16,7 @@ namespace Volte.Data.Dapper
         protected int _TopNum;
         protected List<QueryOrder> _Orders;
         protected StringBuilder _Sql;
+        protected StringBuilder _Sql;
         protected IList<DynamicPropertyModel> _Param;
         protected string ParamPrefix     = "@";
         protected string _selectMode     = "";
@@ -338,7 +339,7 @@ namespace Volte.Data.Dapper
                             _select.Append(",");
                         }
 
-                        if (_att["Expression"] != "" || _att.TableName == "VARIABLE") {
+                        if (_att["Expression"] != "" || _att.TableName == "variable") {
 
                             if (_att["Expression"] != "") {
                                 _select.Append(_att["Expression"]);
