@@ -16,7 +16,7 @@ namespace Volte.Data.Dapper
         protected int _TopNum;
         protected List<QueryOrder> _Orders;
         protected StringBuilder _Sql;
-        protected StringBuilder _Sql;
+        protected StringBuilder _PendingSql;
         protected IList<DynamicPropertyModel> _Param;
         protected string ParamPrefix     = "@";
         protected string _selectMode     = "";
@@ -65,7 +65,19 @@ namespace Volte.Data.Dapper
         {
             get {
                 var sb = new StringBuilder();
-                var arr = _Sql.ToString().Split(' ').Where(m => !string.IsNullOrEmpty(m)).ToList();
+
+                StringBuilder _sb2=new StringBuilder();
+
+                if (_Sql.Length > 0) {
+                    _sb2.Append(" ( ");
+                    _sb2.Append(_Sql);
+                    _sb2.Append(" ) ");
+                }
+                _sb2.Append(_PendingSql);
+
+                ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _sb2.ToString());
+
+                var arr = _sb2.ToString().Split(' ').Where(m => !string.IsNullOrEmpty(m)).ToList();
 
                 if (_Param != null && _Param.Count > 0) {
                     foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping)) {
@@ -89,6 +101,7 @@ namespace Volte.Data.Dapper
                     sb.Append(" ");
                     sb.Append(arr[i]);
                 }
+                ZZLogger.Debug(ZFILE_NAME ,"Pending="+ sb.ToString());
 
                 if (sb.Length > 0) {
                     sb.Insert(0, " WHERE ");
@@ -102,11 +115,21 @@ namespace Volte.Data.Dapper
         {
             get {
                 var sb = new StringBuilder();
-                var arr = _Sql.ToString().Split(' ').Where(m => !string.IsNullOrEmpty(m)).ToList();
 
-                if (arr.Count > 0) {
-                    sb.Append("WHERE");
+                StringBuilder _sb2=new StringBuilder();
+
+
+                if (_Sql.Length > 0) {
+                    _sb2.Append(" ( ");
+                    _sb2.Append(_Sql);
+                    _sb2.Append(" ) ");
                 }
+
+                _sb2.Append(_PendingSql);
+
+                ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _sb2.ToString());
+
+                var arr = _sb2.ToString().Split(' ').Where(m => !string.IsNullOrEmpty(m)).ToList();
 
                 for (int i = 0; i < arr.Count; i++) {
                     if (i == 0 && (arr[i] == "AND" || arr[i] == "OR")) {
@@ -119,6 +142,10 @@ namespace Volte.Data.Dapper
 
                     sb.Append(" ");
                     sb.Append(arr[i]);
+                }
+                ZZLogger.Debug(ZFILE_NAME ,"Pending="+ sb.ToString());
+                if (sb.Length > 0) {
+                    sb.Insert(0, " WHERE ");
                 }
 
                 return sb.ToString();
@@ -520,7 +547,8 @@ namespace Volte.Data.Dapper
 
         protected QueryBuilder()
         {
-            _Sql = new StringBuilder();
+            _Sql        = new StringBuilder();
+            _PendingSql = new StringBuilder();
         }
 
         public QueryBuilder Top(int top)
@@ -583,6 +611,22 @@ namespace Volte.Data.Dapper
             }
 
             return _r;
+        }
+
+        public QueryBuilder PendingWhere(string whereClause, bool isAnd = true)
+        {
+            if (whereClause.Trim() != "") {
+
+                var cn = isAnd ? "AND" : "OR";
+                _PendingSql.Append(" ");
+                _PendingSql.Append(cn);
+                _PendingSql.Append(" ");
+                _PendingSql.Append(whereClause);
+                _PendingSql.Append(" ");
+
+            }
+
+            return this;
         }
 
         public QueryBuilder Where(string whereClause, bool isAnd = true)
