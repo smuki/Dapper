@@ -29,6 +29,7 @@ namespace Volte.Data.Dapper
         protected int _OFFSET    = -1;
         protected bool _Distinct = false;
         protected bool _GroupBy  = false;
+        protected JSONObject _PrivateData = new JSONObject();
         protected string Vendor;
 
         protected static Dictionary<string, Type> DynamicParamModelCache = new Dictionary<string, Type>();
@@ -49,10 +50,11 @@ namespace Volte.Data.Dapper
             }
         }
 
-        public virtual bool GroupBy      { get { return _GroupBy;    } set { _GroupBy    = value; }  }
-        public virtual bool Distinct     { get { return _Distinct;   } set { _Distinct   = value; }  }
-        public virtual string SelectMode { get { return _selectMode; } set { _selectMode = value; }  }
-        public virtual string FromClause { get { return _FromClause; } set { _FromClause = value; }  }
+        public virtual JSONObject PrivateData { get { return _PrivateData; } set { _PrivateData = value; }  } 
+        public virtual bool GroupBy           { get { return _GroupBy;     } set { _GroupBy     = value; }  } 
+        public virtual bool Distinct          { get { return _Distinct;    } set { _Distinct    = value; }  } 
+        public virtual string SelectMode      { get { return _selectMode;  } set { _selectMode  = value; }  } 
+        public virtual string FromClause      { get { return _FromClause;  } set { _FromClause  = value; }  } 
 
         public virtual IList<QueryOrder> Orders
         {
@@ -68,12 +70,30 @@ namespace Volte.Data.Dapper
 
                 StringBuilder _sb2=new StringBuilder();
 
-                if (_Sql.Length > 0) {
-                    _sb2.Append(" ( ");
-                    _sb2.Append(_Sql);
-                    _sb2.Append(" ) ");
+                string sPendingSql=_PendingSql.ToString();
+                if (sPendingSql.IndexOf("{{WhereClause}}")>=0)
+                {
+
+                    StringBuilder _sb1=new StringBuilder();
+                    if (_Sql.Length > 0) {
+                        _sb1.Append(" ( ");
+                        _sb1.Append(_Sql);
+                        _sb1.Append(" ) ");
+                    }
+                    sPendingSql = sPendingSql.Replace("{{WhereClause}}" , _sb1.ToString());
+                    _sb2.Append(sPendingSql);
+
+                }else if (sPendingSql.IndexOf("{{Ignore}}")>=0) {
+                    sPendingSql = sPendingSql.Replace("{{Ignore}}" , "");
+                    _sb2.Append(sPendingSql);
+                }else{
+                    if (_Sql.Length > 0) {
+                        _sb2.Append(" ( ");
+                        _sb2.Append(_Sql);
+                        _sb2.Append(" ) ");
+                    }
+                    _sb2.Append(_PendingSql);
                 }
-                _sb2.Append(_PendingSql);
 
                 ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _sb2.ToString());
 
@@ -118,14 +138,30 @@ namespace Volte.Data.Dapper
 
                 StringBuilder _sb2=new StringBuilder();
 
+                string sPendingSql=_PendingSql.ToString();
+                if (sPendingSql.IndexOf("{{WhereClause}}")>=0)
+                {
 
-                if (_Sql.Length > 0) {
-                    _sb2.Append(" ( ");
-                    _sb2.Append(_Sql);
-                    _sb2.Append(" ) ");
+                    StringBuilder _sb1=new StringBuilder();
+                    if (_Sql.Length > 0) {
+                        _sb1.Append(" ( ");
+                        _sb1.Append(_Sql);
+                        _sb1.Append(" ) ");
+                    }
+                    sPendingSql = sPendingSql.Replace("{{WhereClause}}" , _sb1.ToString());
+                    _sb2.Append(sPendingSql);
+
+                }else if (sPendingSql.IndexOf("{{Ignore}}")>=0) {
+                    sPendingSql = sPendingSql.Replace("{{Ignore}}" , "");
+                    _sb2.Append(sPendingSql);
+                }else{
+                    if (_Sql.Length > 0) {
+                        _sb2.Append(" ( ");
+                        _sb2.Append(_Sql);
+                        _sb2.Append(" ) ");
+                    }
+                    _sb2.Append(_PendingSql);
                 }
-
-                _sb2.Append(_PendingSql);
 
                 ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _sb2.ToString());
 
