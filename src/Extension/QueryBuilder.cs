@@ -69,8 +69,14 @@ namespace Volte.Data.Dapper
 
                 string _sb2 = _Sql.ToString();
 
+                ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _PrivateData.ToString());
+
                 if (_sb2.IndexOf("{{sPublic}}")>=0) {
                     _sb2 = _sb2.Replace("{{sPublic}}" , _PrivateData.GetValue("sPublic"));
+                }
+
+                if (_sb2.IndexOf("{{sDept}}")>=0) {
+                    _sb2 = _sb2.Replace("{{sDept}}" , _PrivateData.GetValue("sDept"));
                 }
 
                 ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _sb2);
@@ -101,9 +107,9 @@ namespace Volte.Data.Dapper
                 }
                 ZZLogger.Debug(ZFILE_NAME ,"Pending="+ sb.ToString());
 
-                if (sb.Length > 0) {
-                    sb.Insert(0, " WHERE ");
-                }
+                //if (sb.Length > 0) {
+                    //sb.Insert(0, " WHERE ");
+                //}
 
                 return sb.ToString();
             }
@@ -116,8 +122,13 @@ namespace Volte.Data.Dapper
 
                 string _sb2 = _Sql.ToString();
 
+                ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _PrivateData.ToString());
+
                 if (_sb2.IndexOf("{{sPublic}}")>=0) {
                     _sb2 = _sb2.Replace("{{sPublic}}" , _PrivateData.GetValue("sPublic"));
+                }
+                if (_sb2.IndexOf("{{sDept}}")>=0) {
+                    _sb2 = _sb2.Replace("{{sDept}}" , _PrivateData.GetValue("sDept"));
                 }
 
                 var arr = _sb2.Split(' ').Where(m => !string.IsNullOrEmpty(m)).ToList();
@@ -136,10 +147,11 @@ namespace Volte.Data.Dapper
                 }
                 ZZLogger.Debug(ZFILE_NAME ,"Pending="+ sb.ToString());
                 if (sb.Length > 0) {
-                    sb.Insert(0, " WHERE ");
+                    return " WHERE (" + sb.ToString()+")";
+                }else{
+                    return "";
                 }
 
-                return sb.ToString();
             }
         }
 
