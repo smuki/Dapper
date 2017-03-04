@@ -369,6 +369,11 @@ namespace Volte.Data.Dapper
         {
             return _Type[Name];
         }
+        public string GetName(int i)
+        {
+            return _Names[i];
+        }
+
         public string GetType(int i)
         {
             return _Type[_Names[i]];
