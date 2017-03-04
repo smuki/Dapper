@@ -107,10 +107,6 @@ namespace Volte.Data.Dapper
                 }
                 ZZLogger.Debug(ZFILE_NAME ,"Pending="+ sb.ToString());
 
-                //if (sb.Length > 0) {
-                    //sb.Insert(0, " WHERE ");
-                //}
-
                 return sb.ToString();
             }
         }
