@@ -44,8 +44,6 @@ namespace Volte.Data.Dapper
 
             try {
 
-                ZZLogger.Error(ZFILE_NAME, "item.Key="+_Parameters.Count);
-
                 foreach (var item in _Parameters) {
 
                     ZZLogger.Error(ZFILE_NAME, "item.Key="+item.Key);
@@ -71,8 +69,10 @@ namespace Volte.Data.Dapper
 
                 _Fill(_DataReader);
             } catch (Exception e) {
+                ZZLogger.Error(ZFILE_NAME, e);
                 ZZLogger.Error(ZFILE_NAME, _CommandText);
-                throw e;
+                //throw e;
+                throw new Exception(_CommandText+" - "+e.Message);
             }
 
         }
