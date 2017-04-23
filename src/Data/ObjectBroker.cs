@@ -598,7 +598,7 @@ namespace Volte.Data.Dapper
             return obj.Verified;
         }
 
-        public int SaveChangeEntityObject(EntityObject obj, Streaming _Streaming, bool isForceCommit)
+        public int SaveChange(EntityObject obj , Streaming _Streaming , bool isForceCommit)
         {
 
             int num1                   = 0;
