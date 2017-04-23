@@ -319,7 +319,7 @@ namespace Volte.Data.Dapper
         {
             obj.DbName = DbName;
             _BeginTransaction();
-            _Broker.SaveChangeEntityObject(obj, _Streaming, _IsForceCommit);
+            _Broker.SaveChange(obj, _Streaming, _IsForceCommit);
         }
 
         public int Execute(string strSql)
