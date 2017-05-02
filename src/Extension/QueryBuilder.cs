@@ -69,7 +69,7 @@ namespace Volte.Data.Dapper
 
                 string _sb2 = _Sql.ToString();
 
-                ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _PrivateData.ToString());
+                //ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _PrivateData.ToString());
 
                 if (_sb2.IndexOf("{{sPublic}}")>=0) {
                     _sb2 = _sb2.Replace("{{sPublic}}" , _PrivateData.GetValue("sPublic"));
@@ -79,7 +79,7 @@ namespace Volte.Data.Dapper
                     _sb2 = _sb2.Replace("{{sDept}}" , _PrivateData.GetValue("sDept"));
                 }
 
-                ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _sb2);
+                //ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _sb2);
 
                 var arr = _sb2.Split(' ').Where(m => !string.IsNullOrEmpty(m)).ToList();
 
@@ -105,7 +105,7 @@ namespace Volte.Data.Dapper
                     sb.Append(" ");
                     sb.Append(arr[i]);
                 }
-                ZZLogger.Debug(ZFILE_NAME ,"Pending="+ sb.ToString());
+                //ZZLogger.Debug(ZFILE_NAME ,"Pending="+ sb.ToString());
 
                 return sb.ToString();
             }
@@ -118,7 +118,7 @@ namespace Volte.Data.Dapper
 
                 string _sb2 = _Sql.ToString();
 
-                ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _PrivateData.ToString());
+                //ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _PrivateData.ToString());
 
                 if (_sb2.IndexOf("{{sPublic}}")>=0) {
                     _sb2 = _sb2.Replace("{{sPublic}}" , _PrivateData.GetValue("sPublic"));
@@ -141,7 +141,7 @@ namespace Volte.Data.Dapper
                     sb.Append(" ");
                     sb.Append(arr[i]);
                 }
-                ZZLogger.Debug(ZFILE_NAME ,"Pending="+ sb.ToString());
+                //ZZLogger.Debug(ZFILE_NAME ,"Pending="+ sb.ToString());
                 if (sb.Length > 0) {
                     return " WHERE (" + sb.ToString()+")";
                 }else{
@@ -159,7 +159,7 @@ namespace Volte.Data.Dapper
                 int i = 0;
 
                 foreach (QueryOrder item in this.Orders) {
-                    ZZLogger.Debug(ZFILE_NAME, "X" + item.Field);
+                    //ZZLogger.Debug(ZFILE_NAME, "X" + item.Field);
 
                     if (i == 0) {
                         sb.Append(" ");
@@ -441,9 +441,9 @@ namespace Volte.Data.Dapper
                     _select.Append("*");
                 }
 
-                ZZLogger.Debug(ZFILE_NAME, _FromClause);
-                ZZLogger.Debug(ZFILE_NAME, _GroupbyClause);
-                ZZLogger.Debug(ZFILE_NAME, "GroupBy = "+this.GroupBy);
+                //ZZLogger.Debug(ZFILE_NAME, _FromClause);
+                //ZZLogger.Debug(ZFILE_NAME, _GroupbyClause);
+                //ZZLogger.Debug(ZFILE_NAME, "GroupBy = "+this.GroupBy);
 
                 if (_FromClause != "") {
                     _TableName = _FromClause;
@@ -467,7 +467,7 @@ namespace Volte.Data.Dapper
 
                         sqlStr = string.Format("SELECT * FROM {2} {3} {4}", _TableName, strWhere, this.OrderSql);
                     } else if (Vendor == "MySql") {
-                        ZZLogger.Debug(ZFILE_NAME , "else");
+                        //ZZLogger.Debug(ZFILE_NAME , "else");
                         if (_OFFSET >= 0) {
                             sqlStr = string.Format("SELECT {0} FROM {1} {2} {3} LIMIT {4} , {5}" , _select.ToString() , _TableName , _Where.ToString() , this.OrderSql , _OFFSET , _TopNum);
                         }else{
@@ -486,7 +486,7 @@ namespace Volte.Data.Dapper
                 } else {
                     sqlStr = string.Format("SELECT {0} FROM {1} {2} {3} {4}" , _select.ToString() , _TableName , _Where.ToString() , _GroupbyClause.ToString() , this.OrderSql);
 
-                    ZZLogger.Debug(ZFILE_NAME , sqlStr);
+                    //ZZLogger.Debug(ZFILE_NAME , sqlStr);
                 }
 
                 return sqlStr;
@@ -684,7 +684,7 @@ namespace Volte.Data.Dapper
         {
             string _value = DapperUtil.AntiSQLInjection(value);
 
-            ZZLogger.Debug(ZFILE_NAME, _value);
+            //ZZLogger.Debug(ZFILE_NAME, _value);
 
             if (operation == Operation.Contains) {
                 _value = string.Format("%{0}%", _value);
@@ -730,7 +730,7 @@ namespace Volte.Data.Dapper
             _Sql.Append(" ");
             _Sql.Append(value.ToString());
 
-            ZZLogger.Debug(ZFILE_NAME, _Sql);
+            //ZZLogger.Debug(ZFILE_NAME, _Sql);
             return this;
         }
 
@@ -876,8 +876,9 @@ namespace Volte.Data.Dapper
                 var pmodel = new DynamicPropertyModel();
                 pmodel.Name = item.Name;
 
-                //ZZLogger.Debug(ZFILE_NAME, item.Nullable);
-                //ZZLogger.Debug(ZFILE_NAME, item.Type);
+                //ZZLogger.Debug(ZFILE_NAME , item.Nullable);
+                //ZZLogger.Debug(ZFILE_NAME   , item.Type);
+                //ZZLogger.Debug(ZFILE_NAME   , pmodel);
 
                 if (item.Nullable && item.Type == DbType.DateTime) {
                     pmodel.PropertyType = typeof(DateTime?);

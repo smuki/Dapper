@@ -46,8 +46,8 @@ namespace Volte.Data.Dapper
 
                 foreach (var item in _Parameters) {
 
-                    ZZLogger.Error(ZFILE_NAME, "item.Key="+item.Key);
-                    ZZLogger.Error(ZFILE_NAME, "item.Value="+item.Value);
+                    //ZZLogger.Error(ZFILE_NAME, "item.Key="+item.Key);
+                    //ZZLogger.Error(ZFILE_NAME, "item.Value="+item.Value);
 
                     IDataParameter parameter1 = cmd.CreateParameter();
                     parameter1.ParameterName  = _DbContext.ParamPrefix + item.Key;
