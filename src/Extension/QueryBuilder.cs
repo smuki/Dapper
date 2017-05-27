@@ -876,11 +876,11 @@ namespace Volte.Data.Dapper
                 var pmodel = new DynamicPropertyModel();
                 pmodel.Name = item.Name;
 
-                //ZZLogger.Debug(ZFILE_NAME , item.Nullable);
-                //ZZLogger.Debug(ZFILE_NAME   , item.Type);
-                //ZZLogger.Debug(ZFILE_NAME   , pmodel);
 
                 if (item.Nullable && item.Type == DbType.DateTime) {
+		                ZZLogger.Debug(ZFILE_NAME , item.Nullable);
+		                ZZLogger.Debug(ZFILE_NAME   , item.Type);
+		                ZZLogger.Debug(ZFILE_NAME   , pmodel);
                     pmodel.PropertyType = typeof(DateTime?);
                 } else {
                     //ZZLogger.Debug(ZFILE_NAME, item.Name);

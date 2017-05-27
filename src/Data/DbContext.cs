@@ -21,13 +21,13 @@ namespace Volte.Data.Dapper
         public DbContext(string _DbName)
         {
             if (!string.IsNullOrEmpty(_DbName)){
-            _dbName        = _DbName;
-            _Writeable     = false;
-            _Transaction   = false;
-            _IsForceCommit = false;
-            _Broker        = ObjectBroker.Instance();
-            _Streaming     = _Broker.getStreaming(_DbName).GetCopy();
-            _Streaming.Open();
+                _dbName        = _DbName;
+                _Writeable     = false;
+                _Transaction   = false;
+                _IsForceCommit = false;
+                _Broker        = ObjectBroker.Instance();
+                _Streaming     = _Broker.getStreaming(_DbName).GetCopy();
+                _Streaming.Open();
             }
         }
 
@@ -69,6 +69,9 @@ namespace Volte.Data.Dapper
         }
         public void Close()
         {
+            if (_Streaming== null || _Streaming.Connection == null) {
+                return;
+            }
             _Streaming.Close();
         }
 
@@ -420,17 +423,17 @@ namespace Volte.Data.Dapper
         }
 
         // Properties
-        public bool IsForceCommit { get { return _IsForceCommit; } set { _IsForceCommit = value; }  } 
-        public bool Writeable     { get { return _Writeable;     } set { _Writeable     = value; }  } 
+        public bool IsForceCommit { get { return _IsForceCommit; } set { _IsForceCommit = value; }  }
+        public bool Writeable     { get { return _Writeable;     } set { _Writeable     = value; }  }
 
-        public IDbConnection DbConnection   { get { return _Streaming.Connection;      }  } 
-        public IDbTransaction DbTransaction { get { return _Streaming.Transaction;     }  } 
-        public DBType DbType                { get { return _dbType; }  } 
-        public string Vendor                { get { return _Streaming.Vendor; }  } 
-        public bool Transaction             { get { return _Transaction;               }  } 
-        public string ParamPrefix           { get { return _Streaming.ParameterPrefix; }  } 
-        public string DbName                { get { return _dbName;                    }  } 
-        public string dbAdapter             { get { return _dbAdapter;                 }  } 
+        public IDbConnection DbConnection   { get { return _Streaming.Connection;      }  }
+        public IDbTransaction DbTransaction { get { return _Streaming.Transaction;     }  }
+        public DBType DbType                { get { return _dbType; }  }
+        public string Vendor                { get { return _Streaming.Vendor; }  }
+        public bool Transaction             { get { return _Transaction;               }  }
+        public string ParamPrefix           { get { return _Streaming.ParameterPrefix; }  }
+        public string DbName                { get { return _dbName;                    }  }
+        public string dbAdapter             { get { return _dbAdapter;                 }  }
 
         // Fields
         private readonly StringBuilder _Fields    = new StringBuilder();
