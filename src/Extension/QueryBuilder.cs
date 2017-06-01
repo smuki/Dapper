@@ -49,11 +49,11 @@ namespace Volte.Data.Dapper
             }
         }
 
-        public virtual JSONObject PrivateData { get { return _PrivateData; } set { _PrivateData = value; }  } 
-        public virtual bool GroupBy           { get { return _GroupBy;     } set { _GroupBy     = value; }  } 
-        public virtual bool Distinct          { get { return _Distinct;    } set { _Distinct    = value; }  } 
-        public virtual string SelectMode      { get { return _selectMode;  } set { _selectMode  = value; }  } 
-        public virtual string FromClause      { get { return _FromClause;  } set { _FromClause  = value; }  } 
+        public virtual JSONObject PrivateData { get { return _PrivateData; } set { _PrivateData = value; }  }
+        public virtual bool GroupBy           { get { return _GroupBy;     } set { _GroupBy     = value; }  }
+        public virtual bool Distinct          { get { return _Distinct;    } set { _Distinct    = value; }  }
+        public virtual string SelectMode      { get { return _selectMode;  } set { _selectMode  = value; }  }
+        public virtual string FromClause      { get { return _FromClause;  } set { _FromClause  = value; }  }
 
         public virtual IList<QueryOrder> Orders
         {
@@ -71,11 +71,11 @@ namespace Volte.Data.Dapper
 
                 //ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _PrivateData.ToString());
 
-                if (_sb2.IndexOf("{{sPublic}}")>=0) {
+                if (_sb2.IndexOf("{{sPublic}}")>=0) {
                     _sb2 = _sb2.Replace("{{sPublic}}" , _PrivateData.GetValue("sPublic"));
                 }
 
-                if (_sb2.IndexOf("{{sDept}}")>=0) {
+                if (_sb2.IndexOf("{{sDept}}")>=0) {
                     _sb2 = _sb2.Replace("{{sDept}}" , _PrivateData.GetValue("sDept"));
                 }
 
@@ -120,10 +120,10 @@ namespace Volte.Data.Dapper
 
                 //ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _PrivateData.ToString());
 
-                if (_sb2.IndexOf("{{sPublic}}")>=0) {
+                if (_sb2.IndexOf("{{sPublic}}")>=0) {
                     _sb2 = _sb2.Replace("{{sPublic}}" , _PrivateData.GetValue("sPublic"));
                 }
-                if (_sb2.IndexOf("{{sDept}}")>=0) {
+                if (_sb2.IndexOf("{{sDept}}")>=0) {
                     _sb2 = _sb2.Replace("{{sDept}}" , _PrivateData.GetValue("sDept"));
                 }
 
@@ -475,9 +475,9 @@ namespace Volte.Data.Dapper
                         }
                     }else{
                         if (_OFFSET >= 0) {
-                                var strOrderSql = this.OrderSql ;
+                            var strOrderSql = this.OrderSql ;
 
-                                sqlStr = " SELECT * FROM (SELECT " + _select.ToString() + ",ROW_NUMBER() OVER(" + strOrderSql + ") AS ROW_NUMBER  FROM " + _TableName + " " + _Where.ToString() + _GroupbyClause.ToString()+ ") AS D  WHERE ROW_NUMBER BETWEEN " + (_OFFSET + 1) + " AND " + (_OFFSET + _TopNum);
+                            sqlStr = " SELECT * FROM (SELECT " + _select.ToString() + ",ROW_NUMBER() OVER(" + strOrderSql + ") AS ROW_NUMBER  FROM " + _TableName + " " + _Where.ToString() + _GroupbyClause.ToString()+ ") AS D  WHERE ROW_NUMBER BETWEEN " + (_OFFSET + 1) + " AND " + (_OFFSET + _TopNum);
                         } else {
 
                             sqlStr = string.Format("SELECT TOP {0} {1} FROM {2} {3} {4}", _TopNum, _select.ToString(), _TableName, _Where.ToString(), this.OrderSql);
@@ -876,11 +876,10 @@ namespace Volte.Data.Dapper
                 var pmodel = new DynamicPropertyModel();
                 pmodel.Name = item.Name;
 
-
                 if (item.Nullable && item.Type == DbType.DateTime) {
-		                ZZLogger.Debug(ZFILE_NAME , item.Nullable);
-		                ZZLogger.Debug(ZFILE_NAME   , item.Type);
-		                ZZLogger.Debug(ZFILE_NAME   , pmodel);
+                    ZZLogger.Debug(ZFILE_NAME , item.Nullable);
+                    ZZLogger.Debug(ZFILE_NAME   , item.Type);
+                    ZZLogger.Debug(ZFILE_NAME   , pmodel);
                     pmodel.PropertyType = typeof(DateTime?);
                 } else {
                     //ZZLogger.Debug(ZFILE_NAME, item.Name);
