@@ -90,6 +90,8 @@ namespace Volte.Data.Dapper
                 _Setting.Include = true;
             } else if (providerName.StartsWith("MySql")) {
                 _Setting.DbType = DBType.MySql;
+            } else if (providerName.StartsWith("Vertica")) {
+                _Setting.DbType = DBType.Vertica;
             } else if (providerName.StartsWith("SqlCe")) {
                 _Setting.DbType = DBType.SqlServerCE;
             } else if (providerName.StartsWith("Npgsql")) {
@@ -104,6 +106,8 @@ namespace Volte.Data.Dapper
             // else try with provider name
             else if (providerName.IndexOf("MySql", StringComparison.InvariantCultureIgnoreCase) >= 0) {
                 _Setting.DbType = DBType.MySql;
+            }else if (providerName.IndexOf("Vertica", StringComparison.InvariantCultureIgnoreCase) >= 0) {
+                _Setting.DbType = DBType.Vertica;
             } else if (providerName.IndexOf("SqlServerCe", StringComparison.InvariantCultureIgnoreCase) >= 0) {
                 _Setting.DbType = DBType.SqlServerCE;
             } else if (providerName.IndexOf("Npgsql", StringComparison.InvariantCultureIgnoreCase) >= 0) {

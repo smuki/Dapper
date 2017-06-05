@@ -47,6 +47,7 @@
 
                 <include name = "Data\Db\MsSqlServer.cs" />
                 <include name = "Data\Db\MySql.cs" />
+                <include name = "Data\Db\Vertica.cs" />
 
                 <include name = "Data\ActionTypes.cs" />
                 <include name = "Data\CommanderAddNew.cs" />
@@ -75,6 +76,7 @@
                 <include name="..\dist\Volte.Data.Dapper.dll" />
                 <include name="..\dist\Volte.Utils.dll" />
                 <include name="..\lib\MySql.Data.dll" />
+                <include name="..\lib\Vertica.Data.dll" />
             </references>
 
         </csc>

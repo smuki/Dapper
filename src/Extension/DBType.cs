@@ -15,6 +15,7 @@ namespace Volte.Data.Dapper
         MySql,
         PostgreSQL,
         Oracle,
+        Vertica,
         SQLite
     }
 }
