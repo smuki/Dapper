@@ -57,6 +57,10 @@ namespace Volte.Data.Dapper
             ObjectBroker.Instance().Clear();
         }
 
+        public bool ContainsKey(string DbName)
+        {
+            return _Settings.ContainsKey(DbName);
+        }
 
         public Setting GetValue(string DbName)
         {
