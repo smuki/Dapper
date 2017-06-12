@@ -34,7 +34,7 @@ namespace Volte.Data.Dapper
                 }
             }
 
-            ZZLogger.Sql("DELETE_LOG", delete_command);
+            ZZLogger.Debug("DELETE_LOG", delete_command);
 
             if (this.ThisClassMapping.TimestampAttribute != null) {
 
