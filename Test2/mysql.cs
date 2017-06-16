@@ -1,5 +1,4 @@
 using System;
-//using System.Web;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +17,7 @@ using System.Drawing.Imaging;
 using System.Data;
 
 using Volte.Data.Dapper;
+using Volte.Data.Json;
 
 namespace JitEngine.TDriver
 {
@@ -27,7 +27,7 @@ namespace JitEngine.TDriver
         public static void Main(string[] args)
         {
 
-            var connStr = @"Database='hrms_l';Data Source=192.168.0.203;User ID=root;Password=;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
+            var connStr = @"Database='designer';Data Source=192.168.2.6;User ID=root;Password=;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
             var providerName = @"MySql.Data.MySqlClient";
 
             providerName = "System.Data.SqlClient";
@@ -37,22 +37,34 @@ namespace JitEngine.TDriver
 
             DbContext _Trans  = new DbContext("MySqlUnitTest", providerName, connStr);
 
+
+        }
+
+        public static JSONArray Exp(DbContext _Trans , int nLevel , string sDept , string sCode)
+        {
+
+            nLevel++;
             QueryRows RsSysRef   = new QueryRows(_Trans);
-            RsSysRef.CommandText = "SELECT * From sysfunctiondtl where suid='APP01020A'";
+            RsSysRef.CommandText = "SELECT * From analysis where sCategory='YKB-Dept' AND  sParent='"+sCode+"'";
             RsSysRef.Open();
 
             Console.WriteLine(RsSysRef.CommandText);
+            JSONArray _JSONArray = new JSONArray();
 
             while (!RsSysRef.EOF) {
-                string sTableName1 = RsSysRef.GetValue("bNewLine");
-                Console.WriteLine("----");
-                Console.WriteLine(sTableName1);
-                Console.WriteLine(RsSysRef.GetBoolean("bActive"));
-                Console.WriteLine("----");
-                Console.WriteLine(RsSysRef.GetValue("bActive"));
+
+                JSONObject _JSONObject = new JSONObject();
+                _JSONObject.SetValue("sCode" , RsSysRef.GetValue("sAnalysis"));
+                _JSONObject.SetValue("sDept" , sDept);
+                _JSONArray.Add(_JSONObject);
+
+                JSONArray _a = Exp(_Trans , nLevel , RsSysRef.GetValue("sAnalysis") , RsSysRef.GetValue("sAnalysis"));
+
+
                 RsSysRef.MoveNext();
             }
             RsSysRef.Close();
+            return _JSONArray;
 
         }
 
