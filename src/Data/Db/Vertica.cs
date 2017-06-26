@@ -65,7 +65,7 @@ namespace Volte.Data.Dapper
                 cmd.CommandText = this.TopWhere(cmd.CommandText, top);
             }
 
-            //ZZLogger.Sql(ZFILE_NAME, " getDataReader", cmd.CommandText);
+            ZZLogger.Debug(ZFILE_NAME, " getDataReader", cmd.CommandText);
 
             cmd.Connection  = this.Connection;
             cmd.Transaction = this.Transaction;
