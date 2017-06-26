@@ -179,7 +179,7 @@ namespace Volte.Data.Dapper
                 criteria1.BuildStringForRetrieve(_classMapping, _Streaming);
                 command1.CommandText = criteria1.SQLString(_classMapping, _Streaming);
 
-                ZZLogger.Sql(ZFILE_NAME, _DbName , "DoRetrieveDataReader=" + command1.CommandText);
+                //ZZLogger.Sql(ZFILE_NAME, _DbName , "DoRetrieveDataReader=" + command1.CommandText);
 
                 table1 = _Streaming.GetDataReader(command1, criteria1.Top);
 
@@ -216,7 +216,7 @@ namespace Volte.Data.Dapper
 
                 command1.CommandText = criteria1.SQLString(_classMapping, _Streaming);
 
-                ZZLogger.Sql(ZFILE_NAME, _DbName, command1.CommandText);
+                //ZZLogger.Sql(ZFILE_NAME, _DbName, command1.CommandText);
 
                 table1 = _Streaming.AsDataTable(command1, criteria1.Top);
             } catch (Exception e) {
@@ -520,9 +520,9 @@ namespace Volte.Data.Dapper
                 }
 
                 try {
-                    ZZLogger.Sql(ZFILE_NAME, "Bef", command1.CommandText);
+                    //ZZLogger.Sql(ZFILE_NAME, "Bef", command1.CommandText);
                     num1 = _Streaming.DoCommand(command1);
-                    ZZLogger.Sql(ZFILE_NAME, dbName, command1.CommandText);
+                    //ZZLogger.Sql(ZFILE_NAME, dbName, command1.CommandText);
 
                 } catch (Exception exception1) {
                     string text1 = "";
@@ -537,10 +537,10 @@ namespace Volte.Data.Dapper
                 command1.CommandText = criteria2.SQLString(_classMapping, _Streaming);
 
                 try {
-                    ZZLogger.Sql(ZFILE_NAME, "Bef", command1.CommandText);
+                    //ZZLogger.Sql(ZFILE_NAME, "Bef", command1.CommandText);
 
                     num1 = _Streaming.DoCommand(command1);
-                    ZZLogger.Sql(ZFILE_NAME, dbName, command1.CommandText);
+                    //ZZLogger.Sql(ZFILE_NAME, dbName, command1.CommandText);
                 } catch (Exception exception2) {
                     string text2 = "";
                     ExceptionTypes types2 = _Streaming.ErrorHandler(exception2, out text2);
@@ -562,7 +562,7 @@ namespace Volte.Data.Dapper
             IDbCommand command1  = _Streaming.GetCommand();
             command1.CommandText = cSQLString;
 
-            ZZLogger.Sql(ZFILE_NAME, DbName + " getDataReader", cSQLString);
+            //ZZLogger.Sql(ZFILE_NAME, DbName + " getDataReader", cSQLString);
 
             return _Streaming.GetDataReader(command1, m_Top);
         }
@@ -575,9 +575,9 @@ namespace Volte.Data.Dapper
 
             try {
                 IDbCommand command1 = _classMapping.GetSelectSqlFor(_Streaming, obj);
-                ZZLogger.Sql(ZFILE_NAME, dbName + "BEF", command1.CommandText);
+                //ZZLogger.Sql(ZFILE_NAME, dbName + "BEF", command1.CommandText);
                 IDataReader reader1 = _Streaming.GetDataReader(command1, 0);
-                ZZLogger.Sql(ZFILE_NAME, dbName + "AFT", command1.CommandText);
+                //ZZLogger.Sql(ZFILE_NAME, dbName + "AFT", command1.CommandText);
 
                 if (reader1.Read()) {
                     this.SetObject(obj, reader1, _classMapping);
@@ -609,16 +609,16 @@ namespace Volte.Data.Dapper
 
             try {
                 if (obj.Verified) {
-                    ZZLogger.Sql(ZFILE_NAME, dbName + " PropertyChanged " + obj.PropertyChanged.Count);
+                    //ZZLogger.Sql(ZFILE_NAME, dbName + " PropertyChanged " + obj.PropertyChanged.Count);
 
                     if (obj.PropertyChanged.Count > 0) {
 
                         command1 = _classMapping.UpdateSqlClause(_Streaming, obj);
-                        ZZLogger.Sql(ZFILE_NAME, dbName + " BEF", command1.CommandText);
+                        //ZZLogger.Sql(ZFILE_NAME, dbName + " BEF", command1.CommandText);
                         num1 = _Streaming.DoCommand(command1);
-                        ZZLogger.Sql(ZFILE_NAME, dbName + " AFT", command1.CommandText);
+                        //ZZLogger.Sql(ZFILE_NAME, dbName + " AFT", command1.CommandText);
                     } else {
-                        ZZLogger.Sql(ZFILE_NAME, dbName + " Skip ");
+                        //ZZLogger.Sql(ZFILE_NAME, dbName + " Skip ");
                         return 0;
                     }
                 } else {
@@ -626,9 +626,9 @@ namespace Volte.Data.Dapper
                     command1 = _classMapping.GetInsertSqlFor(_Streaming, obj);
 
                     if (_classMapping.AutoIdentityIndex < 0) {
-                        ZZLogger.Sql(ZFILE_NAME, dbName + "  " + command1.CommandText);
+                        //ZZLogger.Sql(ZFILE_NAME, dbName + "  " + command1.CommandText);
                         num1 = _Streaming.DoCommand(command1);
-                        ZZLogger.Sql(ZFILE_NAME, dbName + "  " + num1);
+                        //ZZLogger.Sql(ZFILE_NAME, dbName + "  " + num1);
                     } else {
                         object obj2;
                         num1 = _Streaming.InsertRecord(command1, out obj2);

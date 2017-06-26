@@ -426,20 +426,19 @@ namespace Volte.Data.Dapper
         public bool IsForceCommit { get { return _IsForceCommit; } set { _IsForceCommit = value; }  }
         public bool Writeable     { get { return _Writeable;     } set { _Writeable     = value; }  }
 
-        public IDbConnection DbConnection   { get { return _Streaming.Connection;      }  }
-        public IDbTransaction DbTransaction { get { return _Streaming.Transaction;     }  }
-        public DBType DbType                { get { return _dbType; }  }
-        public string Vendor                { get { return _Streaming.Vendor; }  }
-        public bool Transaction             { get { return _Transaction;               }  }
-        public string ParamPrefix           { get { return _Streaming.ParameterPrefix; }  }
-        public string DbName                { get { return _dbName;                    }  }
-        public string dbAdapter             { get { return _dbAdapter;                 }  }
+        public IDbConnection DbConnection   { get { return _Streaming.Connection;       }  }
+        public IDbTransaction DbTransaction { get { return _Streaming.Transaction;      }  }
+        public DBType DbType                { get { return _dbType;                     }  }
+        public string Vendor                { get { return _Streaming.Vendor;           }  }
+        public bool Transaction             { get { return _Transaction;                }  }
+        public string ParamPrefix           { get { return _Streaming.ParameterPrefix;  }  }
+        public string DbName                { get { return _dbName;                     }  }
+        public string dbAdapter             { get { return _Streaming.ConnectionString; }  }
 
         // Fields
         private readonly StringBuilder _Fields    = new StringBuilder();
         private readonly EntityCompiler _Compiler = new EntityCompiler();
         private string _dbName;
-        private string _dbAdapter   = "";
         private DBType _dbType      = DBType.SqlServer;
         private bool _Transaction   = false;
         private bool _Writeable     = false;

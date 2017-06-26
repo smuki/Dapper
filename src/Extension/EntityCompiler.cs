@@ -42,7 +42,7 @@
                 string type = _DataReader.GetFieldType(i).ToString().Replace("System.", "");
 
                 if (type == "DateTime") {
-                    _code.AppendLine("private " + type + " _" + fName + "=DapperUtil.DateTime_MinValue;");
+                    _code.AppendLine("private " + type + " _" + fName + "=DateTime.MinValue;");
                 } else if (type == "decimal") {
                     _code.AppendLine("private " + type + " _" + fName + "=0;");
                 } else if (type == "Int32") {
