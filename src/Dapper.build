@@ -48,6 +48,7 @@
                 <include name = "Data\Db\MsSqlServer.cs" />
                 <include name = "Data\Db\MySql.cs" />
                 <include name = "Data\Db\Vertica.cs" />
+                <include name = "Data\Db\xxx_MongoDB.cs" />
 
                 <include name = "Data\ActionTypes.cs" />
                 <include name = "Data\CommanderAddNew.cs" />

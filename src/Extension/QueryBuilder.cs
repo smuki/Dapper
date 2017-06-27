@@ -873,11 +873,19 @@ namespace Volte.Data.Dapper
             foreach (var item in model.AttributeMappings)
             {
                 ZZLogger.Debug(ZFILE_NAME , item.Nullable);
-                ZZLogger.Debug(ZFILE_NAME   , item.Type);
-                ZZLogger.Debug(ZFILE_NAME   , item.Name);
-                ZZLogger.Debug(ZFILE_NAME   , t);
+                ZZLogger.Debug(ZFILE_NAME , item.Type);
+                ZZLogger.Debug(ZFILE_NAME , item.Name);
+                ZZLogger.Debug(ZFILE_NAME , model.ClassType);
+                ZZLogger.Debug(ZFILE_NAME , t);
+                ZZLogger.Debug(ZFILE_NAME , "hash1 = "+ t.GetHashCode());
+                ZZLogger.Debug(ZFILE_NAME , "hash2 = "+model.ClassType.GetHashCode());
+                ZZLogger.Debug(ZFILE_NAME , model.ClassType.GetProperty(item.Name).ToString());
 
                 var value = model.ClassType.GetProperty(item.Name).GetValue(t, null);
+                //System.Reflection.PropertyInfo propertyInfo = model.ClassType.GetProperty(item.Name);
+                //ZZLogger.Debug(ZFILE_NAME   , propertyInfo);
+                //var value = propertyInfo.GetValue(t, null);
+                //var value= model.ClassType.GetValue(item.Name);
                 var pmodel = new DynamicPropertyModel();
                 pmodel.Name = item.Name;
 
