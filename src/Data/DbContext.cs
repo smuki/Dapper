@@ -115,6 +115,23 @@ namespace Volte.Data.Dapper
             return _JSONObject;
         }
 
+        public IDbCommand DbCommand(string strSql)
+        {
+            return DbCommand(strSql , CommandBehavior.Default);
+        }
+
+        public IDbCommand DbCommand(string strSql, CommandBehavior behavior)
+        {
+            IDbCommand cmd  = _Streaming.Connection.CreateCommand();
+            cmd.CommandText = strSql;
+
+            if (this.Transaction) {
+                cmd.Transaction = _Streaming.Transaction;
+            }
+
+            return cmd;
+        }
+
         public IDataReader DataReader(string strSql)
         {
             return DataReader(strSql , CommandBehavior.Default);

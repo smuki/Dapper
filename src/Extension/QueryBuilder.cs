@@ -881,7 +881,16 @@ namespace Volte.Data.Dapper
                 ZZLogger.Debug(ZFILE_NAME , "hash2 = "+model.ClassType.GetHashCode());
                 ZZLogger.Debug(ZFILE_NAME , model.ClassType.GetProperty(item.Name).ToString());
 
-                var value = model.ClassType.GetProperty(item.Name).GetValue(t, null);
+                var otherProp = typeof(T).GetProperty(item.Name);
+
+                var value = otherProp.GetValue(t, null);
+
+                ZZLogger.Debug(ZFILE_NAME,value);
+
+                //var value = model.ClassType.GetProperty(item.Name).GetValue(t, null);
+
+                ZZLogger.Debug(ZFILE_NAME,value);
+
                 //System.Reflection.PropertyInfo propertyInfo = model.ClassType.GetProperty(item.Name);
                 //ZZLogger.Debug(ZFILE_NAME   , propertyInfo);
                 //var value = propertyInfo.GetValue(t, null);
