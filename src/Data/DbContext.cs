@@ -96,18 +96,30 @@ namespace Volte.Data.Dapper
             foreach (DataRow myDataRow in myDataTable.Rows) {
                 string _TableName = "";
                 string _ColumnName = "";
+                string _DataType = "";
+                string _ColumnSize = "10";
 
+                ZZLogger.Debug(ZFILE_NAME , "-----");
                 foreach (DataColumn myDataColumn in myDataTable.Columns) {
+
+                    ZZLogger.Debug(ZFILE_NAME , myDataColumn.ToString()+"=="+myDataRow[myDataColumn].ToString());
                     if (myDataColumn.ToString() == "BaseColumnName") {
                         _ColumnName = myDataRow[myDataColumn].ToString();
                     } else if (myDataColumn.ToString() == "BaseTableName") {
                         _TableName = myDataRow[myDataColumn].ToString();
+                    } else if (myDataColumn.ToString() == "DataTypeName") {
+
+                       _DataType = myDataRow[myDataColumn].ToString();
+                    } else if (myDataColumn.ToString() == "ColumnSize") {
+                       _ColumnSize = myDataRow[myDataColumn].ToString();
                     }
                 }
 
                 JSONObject _Column = new JSONObject();
                 _Column.SetValue("sTableName"  , _TableName);
                 _Column.SetValue("sColumnName" , _ColumnName);
+                _Column.SetValue("sDataType"   , _DataType);
+                _Column.SetValue("nColumnSize" , _ColumnSize);
                 _JSONObject.Add(_Column);
 
             }

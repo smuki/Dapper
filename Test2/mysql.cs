@@ -27,7 +27,7 @@ namespace JitEngine.TDriver
         public static void Main(string[] args)
         {
 
-            var connStr = @"Database='designer';Data Source=192.168.2.6;User ID=root;Password=;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
+            var connStr = @"Database='ekb400';Data Source=192.168.2.224;User ID=root;Password=root;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
             var providerName = @"MySql.Data.MySqlClient";
 
             providerName = "System.Data.SqlClient";
@@ -37,34 +37,83 @@ namespace JitEngine.TDriver
 
             DbContext _Trans  = new DbContext("MySqlUnitTest", providerName, connStr);
 
+            Exp(_Trans,"zZU5Rjr+Jk1k00");
 
         }
 
-        public static JSONArray Exp(DbContext _Trans , int nLevel , string sDept , string sCode)
+        public static void Exp(DbContext _Trans , string sCode)
         {
 
-            nLevel++;
             QueryRows RsSysRef   = new QueryRows(_Trans);
-            RsSysRef.CommandText = "SELECT * From analysis where sCategory='YKB-Dept' AND  sParent='"+sCode+"'";
+            RsSysRef.CommandText = "SELECT * From flow_flow where corporationid='"+sCode+"' order by corporationId,id";
             RsSysRef.Open();
 
-            Console.WriteLine(RsSysRef.CommandText);
-            JSONArray _JSONArray = new JSONArray();
-
+            Console.WriteLine("");
+            Console.WriteLine("flows");
             while (!RsSysRef.EOF) {
+                _Trans.Execute("update flow_flow set $updatetime=date_add($updatetime, interval 1 second) where id='"+RsSysRef.GetValue("id")+"'");
 
-                JSONObject _JSONObject = new JSONObject();
-                _JSONObject.SetValue("sCode" , RsSysRef.GetValue("sAnalysis"));
-                _JSONObject.SetValue("sDept" , sDept);
-                _JSONArray.Add(_JSONObject);
-
-                JSONArray _a = Exp(_Trans , nLevel , RsSysRef.GetValue("sAnalysis") , RsSysRef.GetValue("sAnalysis"));
-
-
+                Console.Write(".");
                 RsSysRef.MoveNext();
             }
             RsSysRef.Close();
-            return _JSONArray;
+
+            RsSysRef   = new QueryRows(_Trans);
+            RsSysRef.CommandText = "SELECT id From organization_staff  where corporationid='"+sCode+"' order by corporationId,id";
+            RsSysRef.Open();
+
+            Console.WriteLine("");
+            Console.WriteLine("staff");
+            while (!RsSysRef.EOF) {
+                _Trans.Execute("update organization_staff set $updatetime=date_add($updatetime, interval 1 second) where id='"+RsSysRef.GetValue("id")+"'");
+
+                Console.Write(".");
+                RsSysRef.MoveNext();
+            }
+            RsSysRef.Close();
+
+            RsSysRef   = new QueryRows(_Trans);
+            RsSysRef.CommandText = "SELECT id From organization_department where corporationid='"+sCode+"'  order by corporationId,id";
+            RsSysRef.Open();
+
+            Console.WriteLine("");
+            Console.WriteLine("department");
+            while (!RsSysRef.EOF) {
+                _Trans.Execute("update organization_department set $updatetime=date_add($updatetime, interval 1 second) where id='"+RsSysRef.GetValue("id")+"'");
+
+                Console.Write(".");
+                RsSysRef.MoveNext();
+            }
+            RsSysRef.Close();
+
+            RsSysRef   = new QueryRows(_Trans);
+            RsSysRef.CommandText = "SELECT * From flow_feeType where corporationid='"+sCode+"'  order by corporationId,id";
+            RsSysRef.Open();
+
+            Console.WriteLine("");
+            Console.WriteLine("flow_feeType");
+            while (!RsSysRef.EOF) {
+                _Trans.Execute("update flow_feeType set $updatetime=date_add($updatetime, interval 1 second) where id='"+RsSysRef.GetValue("id")+"'");
+
+                Console.Write(".");
+                RsSysRef.MoveNext();
+            }
+            RsSysRef.Close();
+
+            RsSysRef   = new QueryRows(_Trans);
+            RsSysRef.CommandText = "SELECT * From basedata_dimensionItem where corporationid='"+sCode+"'  order by corporationId,id";
+            RsSysRef.Open();
+
+            Console.WriteLine("");
+            Console.WriteLine("basedata_dimensionItem");
+            while (!RsSysRef.EOF) {
+                _Trans.Execute("update basedata_dimensionItem set $updatetime=date_add($updatetime, interval 1 second) where id='"+RsSysRef.GetValue("id")+"'");
+
+                Console.Write(".");
+                RsSysRef.MoveNext();
+            }
+            RsSysRef.Close();
+
 
         }
 

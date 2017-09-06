@@ -72,6 +72,9 @@ namespace Volte.Data.Dapper
                 ZZLogger.Error(ZFILE_NAME, e);
                 ZZLogger.Error(ZFILE_NAME, _CommandText);
                 //throw e;
+            		string cMessage = "Message=[" + e.Message + "]" + "\nSource=[" + e.Source + "]\nStackTrace=[" + e.StackTrace + "]\nTargetSite=[" + e.TargetSite + "]";
+                ZZLogger.Error(ZFILE_NAME, cMessage);
+                
                 throw new Exception(_CommandText+" - "+e.Message);
             }
 
@@ -111,6 +114,8 @@ namespace Volte.Data.Dapper
             }
 
             _Data          = new List<object[]>();
+
+            ZZLogger.Error(ZFILE_NAME,"_fieldCount="+ _fieldCount);
 
             while (_DataReader.Read()) {
                 object[] values = new object[_fieldCount];

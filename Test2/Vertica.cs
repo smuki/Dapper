@@ -27,23 +27,23 @@ namespace JitEngine.TDriver
         public static void Main(string[] args)
         {
 
-            string connectString = "DATABASE=hose;HOST=192.168.2.235;USER=dbadmin;Password=1";
+            string connectString = "DATABASE=sa;HOST=127.0.0.1;USER=vertica;Password=SensorsData2015";
 
             VerticaConnection  _conn = new VerticaConnection(connectString);
 
             _conn.Open();
             //Perform some operations
             VerticaCommand command = _conn.CreateCommand();
-            for (int i=1;i<20;i++){
-                command = _conn.CreateCommand();
-                command.CommandText =
-                    "INSERT into test values('w"+i+"', '"+i+"', "+i+", "+i+")";
-                Int32 rowsAdded = command.ExecuteNonQuery();
-                Console.WriteLine( rowsAdded + " rows added!");
-            }
+         //   for (int i=1;i<20;i++){
+         //       command = _conn.CreateCommand();
+         //       command.CommandText =
+         //           "INSERT into test values('w"+i+"', '"+i+"', "+i+", "+i+")";
+         //       Int32 rowsAdded = command.ExecuteNonQuery();
+         //       Console.WriteLine( rowsAdded + " rows added!");
+         //   }
 
             command = _conn.CreateCommand();
-            command.CommandText ="SELECT cus_id,cus_order FROM test";
+            command.CommandText ="select id,amount from bi_flow_flows where corporationid='zZU5Rjr+Jk1k00';";
             VerticaDataReader dr = command.ExecuteReader();
 
             Console.WriteLine("\n\n Fat Content\t  Product Description");
@@ -61,32 +61,32 @@ namespace JitEngine.TDriver
             _conn.Close();
 
             //            var connStr = @"Database='hrms_l';Data Source=192.168.0.203;User ID=root;Password=;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
-                        var providerName = @"MySql.Data.MySqlClient";
+           //             var providerName = @"MySql.Data.MySqlClient";
             //
             //            providerName = "System.Data.SqlClient";
-                        providerName = @"Vertica";
+            //            providerName = @"Vertica";
 
-                        Settings.Instance().GetValue("VerticaUnitTest" , providerName , connectString);
+            //            Settings.Instance().GetValue("VerticaUnitTest" , providerName , connectString);
 
-                        DbContext _Trans  = new DbContext("VerticaUnitTest");
+            //            DbContext _Trans  = new DbContext("VerticaUnitTest");
 
-                        QueryRows RsSysRef   = new QueryRows(_Trans);
-                        RsSysRef.CommandText = "SELECT * From test";
-                        RsSysRef.Open();
+            //            QueryRows RsSysRef   = new QueryRows(_Trans);
+            //            RsSysRef.CommandText = "SELECT * From test";
+            //            RsSysRef.Open();
 
-                        Console.WriteLine(RsSysRef.CommandText);
+            //            Console.WriteLine(RsSysRef.CommandText);
 
-                        while (!RsSysRef.EOF) {
-                            string sTableName1 = RsSysRef.GetValue("cus_id");
-                            Console.Write("----");
-                            Console.Write(sTableName1);
-                            //Console.WriteLine(RsSysRef.GetBoolean("cus_order"));
+            //            while (!RsSysRef.EOF) {
+            //                string sTableName1 = RsSysRef.GetValue("cus_id");
+            //                Console.Write("----");
+            //                Console.Write(sTableName1);
+            //                //Console.WriteLine(RsSysRef.GetBoolean("cus_order"));
 
-                            Console.Write("----");
-                            Console.Write(RsSysRef.GetValue("cus_order"));
-                            RsSysRef.MoveNext();
-                        }
-                        RsSysRef.Close();
+            //                Console.Write("----");
+            //                Console.Write(RsSysRef.GetValue("cus_order"));
+            //                RsSysRef.MoveNext();
+            //            }
+            //            RsSysRef.Close();
                         //_Trans.Execute("delete from test");
 
         }
