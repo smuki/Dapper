@@ -133,6 +133,7 @@ namespace Volte.Data.Dapper
             //Console.WriteLine(text1);
 
             ZZLogger.Debug(ZFILE_NAME, text1);
+            ZZLogger.Debug(ZFILE_NAME, "["+DbName+"]");
 
             ObjectBroker.Instance().RegisterDbConnectionInfo(_Setting);
 

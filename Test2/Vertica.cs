@@ -27,7 +27,7 @@ namespace JitEngine.TDriver
         public static void Main(string[] args)
         {
 
-            string connectString = "DATABASE=sa;HOST=127.0.0.1;USER=vertica;Password=SensorsData2015";
+            string connectString = "DATABASE=docker;HOST=192.168.2.219;USER=dbadmin;Password=";
 
             VerticaConnection  _conn = new VerticaConnection(connectString);
 
@@ -43,7 +43,7 @@ namespace JitEngine.TDriver
          //   }
 
             command = _conn.CreateCommand();
-            command.CommandText ="select id,amount from bi_flow_flows where corporationid='zZU5Rjr+Jk1k00';";
+            command.CommandText ="select id,amount from bi_flow_flows";
             VerticaDataReader dr = command.ExecuteReader();
 
             Console.WriteLine("\n\n Fat Content\t  Product Description");

@@ -872,24 +872,24 @@ namespace Volte.Data.Dapper
 
             foreach (var item in model.AttributeMappings)
             {
-                ZZLogger.Debug(ZFILE_NAME , item.Nullable);
-                ZZLogger.Debug(ZFILE_NAME , item.Type);
-                ZZLogger.Debug(ZFILE_NAME , item.Name);
-                ZZLogger.Debug(ZFILE_NAME , model.ClassType);
-                ZZLogger.Debug(ZFILE_NAME , t);
-                ZZLogger.Debug(ZFILE_NAME , "hash1 = "+ t.GetHashCode());
-                ZZLogger.Debug(ZFILE_NAME , "hash2 = "+model.ClassType.GetHashCode());
-                ZZLogger.Debug(ZFILE_NAME , model.ClassType.GetProperty(item.Name).ToString());
+                //ZZLogger.Debug(ZFILE_NAME , item.Nullable);
+                //ZZLogger.Debug(ZFILE_NAME , item.Type);
+                //ZZLogger.Debug(ZFILE_NAME , item.Name);
+                //ZZLogger.Debug(ZFILE_NAME , model.ClassType);
+                //ZZLogger.Debug(ZFILE_NAME , t);
+                //ZZLogger.Debug(ZFILE_NAME , "hash1 = "+ t.GetHashCode());
+                //ZZLogger.Debug(ZFILE_NAME , "hash2 = "+model.ClassType.GetHashCode());
+                //ZZLogger.Debug(ZFILE_NAME , model.ClassType.GetProperty(item.Name).ToString());
 
                 var otherProp = typeof(T).GetProperty(item.Name);
 
                 var value = otherProp.GetValue(t, null);
 
-                ZZLogger.Debug(ZFILE_NAME,value);
+                //ZZLogger.Debug(ZFILE_NAME,value);
 
                 //var value = model.ClassType.GetProperty(item.Name).GetValue(t, null);
 
-                ZZLogger.Debug(ZFILE_NAME,value);
+                //ZZLogger.Debug(ZFILE_NAME,value);
 
                 //System.Reflection.PropertyInfo propertyInfo = model.ClassType.GetProperty(item.Name);
                 //ZZLogger.Debug(ZFILE_NAME   , propertyInfo);
@@ -899,9 +899,9 @@ namespace Volte.Data.Dapper
                 pmodel.Name = item.Name;
 
                 if (item.Nullable && item.Type == DbType.DateTime) {
-                    ZZLogger.Debug(ZFILE_NAME , item.Nullable);
-                    ZZLogger.Debug(ZFILE_NAME   , item.Type);
-                    ZZLogger.Debug(ZFILE_NAME   , pmodel);
+                    //ZZLogger.Debug(ZFILE_NAME , item.Nullable);
+                    //ZZLogger.Debug(ZFILE_NAME   , item.Type);
+                    //ZZLogger.Debug(ZFILE_NAME   , pmodel);
                     pmodel.PropertyType = typeof(DateTime?);
                 } else {
                     //ZZLogger.Debug(ZFILE_NAME, item.Name);
