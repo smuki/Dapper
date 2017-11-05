@@ -72,9 +72,9 @@ namespace Volte.Data.Dapper
                 ZZLogger.Error(ZFILE_NAME, e);
                 ZZLogger.Error(ZFILE_NAME, _CommandText);
                 //throw e;
-            		string cMessage = "Message=[" + e.Message + "]" + "\nSource=[" + e.Source + "]\nStackTrace=[" + e.StackTrace + "]\nTargetSite=[" + e.TargetSite + "]";
+                string cMessage = "Message=[" + e.Message + "]" + "\nSource=[" + e.Source + "]\nStackTrace=[" + e.StackTrace + "]\nTargetSite=[" + e.TargetSite + "]";
                 ZZLogger.Error(ZFILE_NAME, cMessage);
-                
+
                 throw new Exception(_CommandText+" - "+e.Message);
             }
 
@@ -417,9 +417,27 @@ namespace Volte.Data.Dapper
             _Prev = null;
         }
 
+        public JSONObject Props
+        {
+            get
+            {
+                if (__sProps==null){
+                    string _Props=this.GetValue("sProps");
+                    try{
+                        __sProps = new JSONObject(_Props);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
+                return __sProps;
+            }
+        }
+
         private readonly StringBuilder _Fields = new StringBuilder();
         private List<string>  _Columns;
         private DbContext _DbContext;
+        private JSONObject __sProps = null;
         private Dictionary<string, int> _Ordinal;
         private Dictionary<int, string> _Names;
         private Dictionary<string, string> _Type;
