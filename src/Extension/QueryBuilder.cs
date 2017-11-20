@@ -382,7 +382,7 @@ namespace Volte.Data.Dapper
                             }
 
                             if (GroupBy){
-                                if (_att.DataType=="nvarchar" || _att.DataType=="datetime" ){
+                                if (_att.DataType=="string" || _att.DataType=="datetime" ){
                                     if (gi != 0) {
                                         _GroupbyClause.Append(",");
                                     }
@@ -393,7 +393,7 @@ namespace Volte.Data.Dapper
                         } else {
 
                             if (GroupBy){
-                                if (_att.DataType=="nvarchar" || _att.DataType=="datetime" ){
+                                if (_att.DataType=="string" || _att.DataType=="datetime" ){
                                     if (gi != 0) {
                                         _GroupbyClause.Append(",");
                                     }
