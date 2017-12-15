@@ -28,7 +28,6 @@ namespace Volte.Data.Dapper
         protected int _OFFSET    = -1;
         protected bool _Distinct = false;
         protected bool _GroupBy  = false;
-        protected JSONObject _PrivateData = new JSONObject();
         protected string Vendor;
 
         protected static Dictionary<string, Type> DynamicParamModelCache = new Dictionary<string, Type>();
@@ -49,7 +48,6 @@ namespace Volte.Data.Dapper
             }
         }
 
-        public virtual JSONObject PrivateData { get { return _PrivateData; } set { _PrivateData = value; }  }
         public virtual bool GroupBy           { get { return _GroupBy;     } set { _GroupBy     = value; }  }
         public virtual bool Distinct          { get { return _Distinct;    } set { _Distinct    = value; }  }
         public virtual string SelectMode      { get { return _selectMode;  } set { _selectMode  = value; }  }
@@ -68,18 +66,6 @@ namespace Volte.Data.Dapper
                 var sb = new StringBuilder();
 
                 string _sb2 = _Sql.ToString();
-
-                //ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _PrivateData.ToString());
-
-                if (_sb2.IndexOf("{{sPublic}}")>=0) {
-                    _sb2 = _sb2.Replace("{{sPublic}}" , _PrivateData.GetValue("sPublic"));
-                }
-
-                if (_sb2.IndexOf("{{sDept}}")>=0) {
-                    _sb2 = _sb2.Replace("{{sDept}}" , _PrivateData.GetValue("sDept"));
-                }
-
-                //ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _sb2);
 
                 var arr = _sb2.Split(' ').Where(m => !string.IsNullOrEmpty(m)).ToList();
 
@@ -118,15 +104,6 @@ namespace Volte.Data.Dapper
 
                 string _sb2 = _Sql.ToString();
 
-                //ZZLogger.Debug(ZFILE_NAME ,"Pending="+ _PrivateData.ToString());
-
-                if (_sb2.IndexOf("{{sPublic}}")>=0) {
-                    _sb2 = _sb2.Replace("{{sPublic}}" , _PrivateData.GetValue("sPublic"));
-                }
-                if (_sb2.IndexOf("{{sDept}}")>=0) {
-                    _sb2 = _sb2.Replace("{{sDept}}" , _PrivateData.GetValue("sDept"));
-                }
-
                 var arr = _sb2.Split(' ').Where(m => !string.IsNullOrEmpty(m)).ToList();
 
                 for (int i = 0; i < arr.Count; i++) {
@@ -141,7 +118,7 @@ namespace Volte.Data.Dapper
                     sb.Append(" ");
                     sb.Append(arr[i]);
                 }
-                //ZZLogger.Debug(ZFILE_NAME ,"Pending="+ sb.ToString());
+
                 if (sb.Length > 0) {
                     return " WHERE (" + sb.ToString()+")";
                 }else{

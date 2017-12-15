@@ -97,6 +97,7 @@ namespace Volte.Data.Dapper
                 string _TableName = "";
                 string _ColumnName = "";
                 string _DataType = "";
+                string _DataTypeName = "";
                 string _ColumnSize = "10";
 
                 ZZLogger.Debug(ZFILE_NAME , "-----");
@@ -109,10 +110,17 @@ namespace Volte.Data.Dapper
                         _TableName = myDataRow[myDataColumn].ToString();
                     } else if (myDataColumn.ToString() == "DataTypeName") {
 
+                       _DataTypeName = myDataRow[myDataColumn].ToString();
+                    } else if (myDataColumn.ToString() == "DataType") {
+
                        _DataType = myDataRow[myDataColumn].ToString();
                     } else if (myDataColumn.ToString() == "ColumnSize") {
                        _ColumnSize = myDataRow[myDataColumn].ToString();
                     }
+                }
+                if (_DataTypeName!=""){
+
+                    _DataType = _DataTypeName;
                 }
 
                 JSONObject _Column = new JSONObject();
