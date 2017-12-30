@@ -363,6 +363,28 @@ namespace Volte.Data.Dapper
             return Convert.ToDateTime(_obj);
         }
 
+        public bool IsNull(int i)
+        {
+            object _obj = this[i];
+
+            if (DBNull.Value.Equals(_obj)) {
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        public bool IsNull(string Name)
+        {
+            object _obj = this[Name];
+
+            if (DBNull.Value.Equals(_obj)) {
+                return true;
+            }else{
+                return false;
+            }
+        }
+
         public string GetType(string Name)
         {
             return _Type[Name];
