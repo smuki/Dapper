@@ -29,7 +29,7 @@ namespace JitEngine.TDriver
 
             var connStr = @"Database='ekbbi';Port=4000;Data Source=127.0.0.1;User ID=root;Password=D4uEQV/vPD@z3AyhtU;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
 
-            connStr = @"Database='ekbbi420';Port=8066;Data Source=127.0.0.1;User ID=ekbdbbi002;Password=D4uEQV/vPD@z3AyhtU;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
+            connStr = @"Database='bi';Port=3306;Data Source=127.0.0.1;User ID=root;Password=1;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
 
             var providerName = @"MySql.Data.MySqlClient";
 
@@ -40,8 +40,8 @@ namespace JitEngine.TDriver
 
 //VJ
             string patten="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            for (int  i=0;i<36;i++){
-                for (int  j=0;j<36;j++){
+            for (int  i=0;i<1;i++){
+                for (int  j=0;j<1;j++){
                     try{
 
                         string sql1=@"INSERT INTO `bi_flow_flows`(`id`, `flowId`, `active`, `corporationid`, `formType`, `flowType`, `sense`, `ownerId`, `payeeId`, `consumptionReasons`, `paymentChannel`, `specificationVersionId`, `specificationId`, `amount`, `CODE`, `submitDate`, `payDate`, `description`, `expenseMoney`, `loanMoney`, `repaymentDate`, `loanDate`, `loanDepartment`, `title`, `expenseDate`, `feeDate`, `writtenOffMoney`, `expenseDepartment`, `payMoney`, `submitterId`, `state`, `invoice`, `feeTypeId`, `project`, `u_d0001`, `u_d0002`, `u_d0003`, `u_d0004`, `u_d0005`, `u_d0006`, `u_d0007`, `u_d0008`, `u_d0009`, `u_d0010`, `u_d0011`, `u_d0012`, `u_d0013`, `u_d0014`, `u_d0015`, `u_d0016`, `u_d0017`, `u_d0018`, `u_d0019`, `u_d0020`, `u_d0021`, `u_d0022`, `u_d0023`, `u_d0024`, `u_d0025`, `u_d0026`, `u_d0027`, `u_d0028`, `u_d0029`, `u_d0030`, `u_n0001`, `u_n0002`, `u_n0003`, `u_n0004`, `u_n0005`, `u_n0006`, `u_n0007`, `u_n0008`, `u_n0009`, `u_n0010`, `u_n0011`, `u_n0012`, `u_n0013`, `u_n0014`, `u_n0015`, `u_n0016`, `u_n0017`, `u_n0018`, `u_n0019`, `u_n0020`, `u_f0001`, `u_f0002`, `u_f0003`, `u_f0004`, `u_f0005`, `u_f0006`, `u_f0007`, `u_f0008`, `u_f0009`, `u_f0010`, `u_f0011`, `u_f0012`, `u_f0013`, `u_f0014`, `u_f0015`, `u_f0016`, `u_f0017`, `u_f0018`, `u_f0019`, `u_f0020`, `u_b0001`, `u_b0002`, `u_b0003`, `u_b0004`, `u_b0005`, `u_b0006`, `u_b0007`, `u_b0008`, `u_b0009`, `u_b0010`, `u_b0011`, `u_b0012`, `u_b0013`, `u_b0014`, `u_b0015`, `u_b0016`, `u_b0017`, `u_b0018`, `u_b0019`, `u_b0020`, `formSpecificationId`, `feeTypeSpecificationId`, `paymentAccountId`, `apportionMoney`, `apportionPercent`, `requisitionMoney`, `requisitionDate`, `feeDatePeriod_end`, `feeDatePeriod_start`, `datePeriod_start`, `datePeriod_end`, `expenseLink`, `city`, `fromCity`, `toCity`, `payerId`, `updateTime`, `nature`, `department`)
@@ -77,15 +77,15 @@ select CONCAT('@',sKey), CONCAT('@',corporationid),`tableName`, `NAME`, `label`,
 
                         Push(new DbContext("MySqlUnitTest", providerName, connStr),sql1);
 
-                        Push(new DbContext("MySqlUnitTest", providerName, connStr),sql2);
-
-                        Push(new DbContext("MySqlUnitTest", providerName, connStr),sql3);
-
-                        Push(new DbContext("MySqlUnitTest", providerName, connStr),sql4);
-                        
-                        Push(new DbContext("MySqlUnitTest", providerName, connStr),sql5);
-                        
-                        Push(new DbContext("MySqlUnitTest", providerName, connStr),sql6);
+                       // Push(new DbContext("MySqlUnitTest", providerName, connStr),sql2);
+                       //
+                       // Push(new DbContext("MySqlUnitTest", providerName, connStr),sql3);
+                       //
+                       // Push(new DbContext("MySqlUnitTest", providerName, connStr),sql4);
+                       // 
+                       // Push(new DbContext("MySqlUnitTest", providerName, connStr),sql5);
+                       // 
+                       // Push(new DbContext("MySqlUnitTest", providerName, connStr),sql6);
 
                     }
                     catch (Exception ErrMsg)
