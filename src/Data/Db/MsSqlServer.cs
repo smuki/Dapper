@@ -1,9 +1,6 @@
 using System;
 using System.Data;
-using System.IO;
 using System.Data.SqlClient;
-
-using Volte.Data.Dapper;
 
 namespace Volte.Data.Dapper
 {

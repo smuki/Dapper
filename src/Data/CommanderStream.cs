@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
 using System.Text;
-using System.Collections.Generic;
 using System.Data;
-
-using Volte.Data.Dapper;
 
 namespace Volte.Data.Dapper
 {

@@ -91,7 +91,6 @@ namespace Volte.Data.Dapper
                     sb.Append(" ");
                     sb.Append(arr[i]);
                 }
-                //ZZLogger.Debug(ZFILE_NAME ,"Pending="+ sb.ToString());
 
                 return sb.ToString();
             }
@@ -136,7 +135,6 @@ namespace Volte.Data.Dapper
                 int i = 0;
 
                 foreach (QueryOrder item in this.Orders) {
-                    //ZZLogger.Debug(ZFILE_NAME, "X" + item.Field);
 
                     if (i == 0) {
                         sb.Append(" ");
@@ -157,7 +155,6 @@ namespace Volte.Data.Dapper
                 return sb.ToString();
             }
         }
-
         public object Param
         {
             get {
@@ -204,7 +201,6 @@ namespace Volte.Data.Dapper
                 }
             }
         }
-
         public virtual string InsertSql
         {
             get {
@@ -226,7 +222,6 @@ namespace Volte.Data.Dapper
                 }
 
                 sql.Append(") ");
-                //Console.WriteLine(sql.ToString());
                 return sql.ToString();
             }
         }
@@ -238,10 +233,7 @@ namespace Volte.Data.Dapper
 
                 sql.Append(string.Format("DELETE FROM {0} ", _ClassMapping.TableName));
 
-                //ZZLogger.Debug(ZFILE_NAME, "[" + this.WhereSql + "]");
-
                 if (string.IsNullOrEmpty(this.WhereSql)) {
-                    //ZZLogger.Debug(ZFILE_NAME, "XX2" + sql.ToString());
                     int i = 0;
 
                     foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping)) {
@@ -250,20 +242,16 @@ namespace Volte.Data.Dapper
                         } else {
                             sql.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +p.Name));
                         }
-
                         i++;
-                        //ZZLogger.Debug(ZFILE_NAME, "XX" + i + sql.ToString());
                     }
                 } else {
                     sql.Append(string.Format(" {0}", this.WhereSql));
                 }
 
-                //ZZLogger.Debug(ZFILE_NAME, sql.ToString());
                 return sql.ToString();
 
             }
         }
-
         public virtual string UpdateSql
         {
             get {
@@ -418,10 +406,6 @@ namespace Volte.Data.Dapper
                     _select.Append("*");
                 }
 
-                //ZZLogger.Debug(ZFILE_NAME, _FromClause);
-                //ZZLogger.Debug(ZFILE_NAME, _GroupbyClause);
-                //ZZLogger.Debug(ZFILE_NAME, "GroupBy = "+this.GroupBy);
-
                 if (_FromClause != "") {
                     _TableName = _FromClause;
                 }
@@ -444,7 +428,6 @@ namespace Volte.Data.Dapper
 
                         sqlStr = string.Format("SELECT * FROM {2} {3} {4}", _TableName, strWhere, this.OrderSql);
                     } else if (Vendor == "MySql") {
-                        //ZZLogger.Debug(ZFILE_NAME , "else");
                         if (_OFFSET >= 0) {
                             sqlStr = string.Format("SELECT {0} FROM {1} {2} {3} LIMIT {4} , {5}" , _select.ToString() , _TableName , _Where.ToString() , this.OrderSql , _OFFSET , _TopNum);
                         }else{
@@ -463,13 +446,11 @@ namespace Volte.Data.Dapper
                 } else {
                     sqlStr = string.Format("SELECT {0} FROM {1} {2} {3} {4}" , _select.ToString() , _TableName , _Where.ToString() , _GroupbyClause.ToString() , this.OrderSql);
 
-                    //ZZLogger.Debug(ZFILE_NAME , sqlStr);
                 }
 
                 return sqlStr;
             }
         }
-
         public virtual string PageSql
         {
             get {
@@ -486,7 +467,6 @@ namespace Volte.Data.Dapper
                 return sqlPage;
             }
         }
-
         public virtual string RecordCount
         {
             get {
@@ -525,7 +505,6 @@ namespace Volte.Data.Dapper
         {
             _Sql        = new StringBuilder();
         }
-
         public QueryBuilder Top(int top)
         {
             _TopNum = top;
@@ -552,7 +531,6 @@ namespace Volte.Data.Dapper
                     });
             return this;
         }
-
         public QueryBuilder OrderBy(string field, bool Asc = true)
         {
 
@@ -587,7 +565,6 @@ namespace Volte.Data.Dapper
 
             return _r;
         }
-
         public QueryBuilder Where(string whereClause, bool isAnd = true)
         {
             if (whereClause.Trim() != "") {
@@ -600,10 +577,8 @@ namespace Volte.Data.Dapper
                 _Sql.Append(" ");
 
             }
-
             return this;
         }
-
         public QueryBuilder LeftParen(bool isAnd = true)
         {
             var cn = isAnd ? "AND" : "OR";
@@ -613,14 +588,12 @@ namespace Volte.Data.Dapper
             _Sql.Append("(");
             return this;
         }
-
         public QueryBuilder RightParen()
         {
             _Sql.Append(" ");
             _Sql.Append(")");
             return this;
         }
-
         protected string GetOpStr(Operation method)
         {
             switch (method) {
@@ -661,8 +634,6 @@ namespace Volte.Data.Dapper
         {
             string _value = DapperUtil.AntiSQLInjection(value);
 
-            //ZZLogger.Debug(ZFILE_NAME, _value);
-
             if (operation == Operation.Contains) {
                 _value = string.Format("%{0}%", _value);
             } else if (operation == Operation.StartsWith) {
@@ -676,7 +647,6 @@ namespace Volte.Data.Dapper
 
             return _WhereClause(field, operation, "N'" + _value + "'", isAnd);
         }
-
         public QueryBuilder WhereClause(string field, Operation operation, DateTime value, bool isAnd = true)
         {
             return _WhereClause(field, operation, "'" + value.ToString("yyyy-MM-dd") + "'", isAnd);
@@ -707,11 +677,8 @@ namespace Volte.Data.Dapper
             _Sql.Append(" ");
             _Sql.Append(value.ToString());
 
-            //ZZLogger.Debug(ZFILE_NAME, _Sql);
             return this;
         }
-
-
         public QueryBuilder OrWhere(string field, Operation operation, object value)
         {
             return Where(field, operation, value, false);
@@ -734,7 +701,6 @@ namespace Volte.Data.Dapper
 
             return this;
         }
-
         private object CreateParam(Operation method, object value)
         {
             switch (method) {
@@ -780,8 +746,6 @@ namespace Volte.Data.Dapper
             model.Name = field + GetParamIndex(field);
             model.PropertyType = value.GetType();
             _Param.Add(model);
-
-            //Console.WriteLine(model.Name+"="+value);
 
             switch (method) {
                 case Operation.Contains:
@@ -849,39 +813,16 @@ namespace Volte.Data.Dapper
 
             foreach (var item in model.AttributeMappings)
             {
-                //ZZLogger.Debug(ZFILE_NAME , item.Nullable);
-                //ZZLogger.Debug(ZFILE_NAME , item.Type);
-                //ZZLogger.Debug(ZFILE_NAME , item.Name);
-                //ZZLogger.Debug(ZFILE_NAME , model.ClassType);
-                //ZZLogger.Debug(ZFILE_NAME , t);
-                //ZZLogger.Debug(ZFILE_NAME , "hash1 = "+ t.GetHashCode());
-                //ZZLogger.Debug(ZFILE_NAME , "hash2 = "+model.ClassType.GetHashCode());
-                //ZZLogger.Debug(ZFILE_NAME , model.ClassType.GetProperty(item.Name).ToString());
-
                 var otherProp = typeof(T).GetProperty(item.Name);
 
                 var value = otherProp.GetValue(t, null);
 
-                //ZZLogger.Debug(ZFILE_NAME,value);
-
-                //var value = model.ClassType.GetProperty(item.Name).GetValue(t, null);
-
-                //ZZLogger.Debug(ZFILE_NAME,value);
-
-                //System.Reflection.PropertyInfo propertyInfo = model.ClassType.GetProperty(item.Name);
-                //ZZLogger.Debug(ZFILE_NAME   , propertyInfo);
-                //var value = propertyInfo.GetValue(t, null);
-                //var value= model.ClassType.GetValue(item.Name);
                 var pmodel = new DynamicPropertyModel();
                 pmodel.Name = item.Name;
 
                 if (item.Nullable && item.Type == DbType.DateTime) {
-                    //ZZLogger.Debug(ZFILE_NAME , item.Nullable);
-                    //ZZLogger.Debug(ZFILE_NAME   , item.Type);
-                    //ZZLogger.Debug(ZFILE_NAME   , pmodel);
                     pmodel.PropertyType = typeof(DateTime?);
                 } else {
-                    //ZZLogger.Debug(ZFILE_NAME, item.Name);
                     pmodel.PropertyType = value.GetType();
                 }
 

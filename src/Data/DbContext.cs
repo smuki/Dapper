@@ -112,14 +112,12 @@ namespace Volte.Data.Dapper
 
                        _DataTypeName = myDataRow[myDataColumn].ToString();
                     } else if (myDataColumn.ToString() == "DataType") {
-
                        _DataType = myDataRow[myDataColumn].ToString();
                     } else if (myDataColumn.ToString() == "ColumnSize") {
                        _ColumnSize = myDataRow[myDataColumn].ToString();
                     }
                 }
                 if (_DataTypeName!=""){
-
                     _DataType = _DataTypeName;
                 }
 
