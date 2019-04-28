@@ -399,6 +399,16 @@ namespace Volte.Data.Dapper
             return _Type[_Names[i]];
         }
 
+        public void SetParameter(string name , string value)
+        {
+            _Parameters[name] = value;
+        }
+
+        public void SetParameter(string name , int value)
+        {
+            _Parameters[name] = value;
+        }
+
         public object this[string name]
         {
             get {

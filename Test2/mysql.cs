@@ -27,9 +27,9 @@ namespace JitEngine.TDriver
         public static void Main(string[] args)
         {
 
-            var connStr = @"Database='ekbbi';Port=4000;Data Source=127.0.0.1;User ID=root;Password=D4uEQV/vPD@z3AyhtU;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
+            var connStr = @"Database='bi';Port=4000;Data Source=127.0.0.1;User ID=root;Password=D4uEQV/vPD@z3AyhtU;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
 
-            connStr = @"Database='bi';Port=3306;Data Source=127.0.0.1;User ID=root;Password=1;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
+            connStr = @"Database='bi';Port=3306;Data Source=192.168.2.3;User ID=root;Password=123456;CharSet=utf8;SslMode=None;Convert Zero Datetime=True;Allow Zero Datetime=True";
 
             var providerName = @"MySql.Data.MySqlClient";
 
@@ -39,6 +39,7 @@ namespace JitEngine.TDriver
             Settings.Instance().GetValue("MySqlUnitTest" , providerName , connStr);
 
 //VJ
+            /*
             string patten="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             for (int  i=0;i<1;i++){
                 for (int  j=0;j<1;j++){
@@ -75,7 +76,7 @@ select CONCAT('@',sKey), CONCAT('@',corporationid),`tableName`, `NAME`, `label`,
 
                         Console.WriteLine(s);
 
-                        Push(new DbContext("MySqlUnitTest", providerName, connStr),sql1);
+                        //Push(new DbContext("MySqlUnitTest", providerName, connStr),sql1);
 
                        // Push(new DbContext("MySqlUnitTest", providerName, connStr),sql2);
                        //
@@ -97,7 +98,9 @@ select CONCAT('@',sKey), CONCAT('@',corporationid),`tableName`, `NAME`, `label`,
                 }
 
             }
-            //Exp(_Trans,"zZU5Rjr+Jk1k00");
+
+*/
+            Exp(new DbContext("MySqlUnitTest", providerName, connStr),"zZU5Rjr+Jk1k00");
 
         }
 
@@ -121,74 +124,24 @@ select CONCAT('@',sKey), CONCAT('@',corporationid),`tableName`, `NAME`, `label`,
         {
 
             QueryRows RsSysRef   = new QueryRows(_Trans);
-            RsSysRef.CommandText = "SELECT * From flow_flow where corporationid='"+sCode+"' order by corporationId,id";
+            RsSysRef.CommandText = "SELECT * From define_tables where corporationid=@sCode and id=@id order by corporationId,id";
+            RsSysRef.SetParameter("sCode","a");
+            RsSysRef.SetParameter("id","22");
             RsSysRef.Open();
 
             Console.WriteLine("");
             Console.WriteLine("flows");
+            Console.WriteLine("------------");
             while (!RsSysRef.EOF) {
-                _Trans.Execute("update flow_flow set $updatetime=date_add($updatetime, interval 1 second) where id='"+RsSysRef.GetValue("id")+"'");
 
-                Console.Write(".");
+                Console.WriteLine(RsSysRef.GetValue("tableName"));
                 RsSysRef.MoveNext();
             }
+                            Console.Write("--------");
+
             RsSysRef.Close();
 
-            RsSysRef   = new QueryRows(_Trans);
-            RsSysRef.CommandText = "SELECT id From organization_staff  where corporationid='"+sCode+"' order by corporationId,id";
-            RsSysRef.Open();
-
-            Console.WriteLine("");
-            Console.WriteLine("staff");
-            while (!RsSysRef.EOF) {
-                _Trans.Execute("update organization_staff set $updatetime=date_add($updatetime, interval 1 second) where id='"+RsSysRef.GetValue("id")+"'");
-
-                Console.Write(".");
-                RsSysRef.MoveNext();
-            }
-            RsSysRef.Close();
-
-            RsSysRef   = new QueryRows(_Trans);
-            RsSysRef.CommandText = "SELECT id From organization_department where corporationid='"+sCode+"'  order by corporationId,id";
-            RsSysRef.Open();
-
-            Console.WriteLine("");
-            Console.WriteLine("department");
-            while (!RsSysRef.EOF) {
-                _Trans.Execute("update organization_department set $updatetime=date_add($updatetime, interval 1 second) where id='"+RsSysRef.GetValue("id")+"'");
-
-                Console.Write(".");
-                RsSysRef.MoveNext();
-            }
-            RsSysRef.Close();
-
-            RsSysRef   = new QueryRows(_Trans);
-            RsSysRef.CommandText = "SELECT * From flow_feeType where corporationid='"+sCode+"'  order by corporationId,id";
-            RsSysRef.Open();
-
-            Console.WriteLine("");
-            Console.WriteLine("flow_feeType");
-            while (!RsSysRef.EOF) {
-                _Trans.Execute("update flow_feeType set $updatetime=date_add($updatetime, interval 1 second) where id='"+RsSysRef.GetValue("id")+"'");
-
-                Console.Write(".");
-                RsSysRef.MoveNext();
-            }
-            RsSysRef.Close();
-
-            RsSysRef   = new QueryRows(_Trans);
-            RsSysRef.CommandText = "SELECT * From basedata_dimensionItem where corporationid='"+sCode+"'  order by corporationId,id";
-            RsSysRef.Open();
-
-            Console.WriteLine("");
-            Console.WriteLine("basedata_dimensionItem");
-            while (!RsSysRef.EOF) {
-                _Trans.Execute("update basedata_dimensionItem set $updatetime=date_add($updatetime, interval 1 second) where id='"+RsSysRef.GetValue("id")+"'");
-
-                Console.Write(".");
-                RsSysRef.MoveNext();
-            }
-            RsSysRef.Close();
+           
 
 
         }
