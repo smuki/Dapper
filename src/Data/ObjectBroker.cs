@@ -165,10 +165,6 @@ namespace Volte.Data.Dapper
             CriteriaRetrieve criteria1 = obj;
             string _DbName = criteria1.DbName;
 
-            if (DateTime.Now.ToOADate() > 49741) {
-                return null;
-            }
-
             ClassMapping _classMapping = this.GetClassMapping(_DbName, criteria1);
 
             try {
@@ -200,10 +196,6 @@ namespace Volte.Data.Dapper
             DataTable table1;
             CriteriaRetrieve criteria1 = obj;
             string _DbName             = criteria1.DbName;
-
-            if (DateTime.Now.ToOADate() > 49741) {
-                return null;
-            }
 
             ClassMapping _classMapping = this.GetClassMapping(_DbName, criteria1);
 

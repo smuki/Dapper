@@ -18,6 +18,11 @@ namespace Volte.Data.Dapper
     public class DbContext : IDisposable {
         // Methods
         const string ZFILE_NAME = "DbContext";
+
+        public DbContext()
+        {
+        }
+
         public DbContext(string _DbName)
         {
             if (!string.IsNullOrEmpty(_DbName)){

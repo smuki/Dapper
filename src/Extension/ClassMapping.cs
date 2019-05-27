@@ -41,9 +41,6 @@ namespace Volte.Data.Dapper
         {
             _hashAttributeMaps[attribute.Name] = attribute;
 
-            ZZLogger.Debug(ZFILE_NAME, attribute.TableName);
-            ZZLogger.Debug(ZFILE_NAME, _TableName);
-
             if (string.IsNullOrEmpty(_TableName) && !string.IsNullOrEmpty(attribute.TableName)) {
                 _TableName = attribute.TableName;
             }
@@ -78,9 +75,7 @@ namespace Volte.Data.Dapper
 
         public AttributeMapping AttributeMapping(string name, bool isSuperClassInc)
         {
-            ZZLogger.Debug(ZFILE_NAME, name);
             AttributeMapping map1 = _hashAttributeMaps[name];
-            ZZLogger.Debug(ZFILE_NAME, name);
 
             if (map1 == null) {
                 string xException = " " + name + "";
