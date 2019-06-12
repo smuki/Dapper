@@ -365,9 +365,40 @@ namespace Volte.Data.Dapper
             _Broker.SaveChange(obj, _Streaming, _IsForceCommit);
         }
 
-        public int Execute(string strSql)
+        public int Execute(string sCommandText)
         {
-            return _Streaming.DoSql(strSql);
+            return _Streaming.DoSql(sCommandText);
+        }
+
+        public int Execute(string sCommandText , Dictionary<string , object> Parameters)
+        {
+
+            if (Parameters.Count>0){
+                _BeginTransaction();
+                IDbCommand cmd  = _Streaming.Connection.CreateCommand();
+                cmd.CommandText = sCommandText;
+                cmd.Transaction = _Streaming.Transaction;
+
+                foreach (var item in Parameters) {
+
+                    IDataParameter parameter1 = cmd.CreateParameter();
+                    parameter1.ParameterName  = this.ParamPrefix + item.Key;
+
+                    object obj1 = item.Value;
+
+                    if (obj1 == null) {
+                        parameter1.Value = DBNull.Value;
+                    } else {
+                        parameter1.Value = obj1;
+                    }
+
+                    cmd.Parameters.Add(parameter1);
+                }
+                return Convert.ToInt32(cmd.ExecuteNonQuery());
+            }else{
+
+                return _Streaming.DoSql(sCommandText);
+            }
         }
 
         public DataTable RetrieveDataTable(string strSql)
