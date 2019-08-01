@@ -370,6 +370,56 @@ namespace Volte.Data.Dapper
             return _Streaming.DoSql(sCommandText);
         }
 
+        public int Execute(string sCommandText , JSONObject Parameters)
+        {
+
+            _BeginTransaction();
+            IDbCommand cmd  = _Streaming.Connection.CreateCommand();
+            cmd.CommandText = sCommandText;
+            cmd.Transaction = _Streaming.Transaction;
+
+            JSONObject type = Parameters.GetJSONObject("_");
+            foreach (string item in Parameters.Names) {
+
+                if (item!="_"){
+                    IDataParameter parameter1 = cmd.CreateParameter();
+                    parameter1.ParameterName  = this.ParamPrefix + item;
+
+                    if (type.GetValue(item).ToLower()=="bit"){
+
+                        parameter1.DbType = System.Data.DbType.Boolean;
+                        parameter1.Value  = Parameters.GetBoolean(item);
+
+                    }else if (type.GetValue(item).ToLower()=="datetime"){
+
+                        if (Parameters.GetValue(item)== "") {
+
+                            parameter1.Value = DBNull.Value;
+                        }else{
+                            parameter1.DbType = System.Data.DbType.DateTime;
+                            parameter1.Value  = Parameters.GetBoolean(item);
+                        }
+
+                    }else if (type.GetValue(item).ToLower()=="decimal"){
+
+                        if (Parameters.GetValue(item)== "") {
+
+                            parameter1.Value = DBNull.Value;
+                        }else{
+                            parameter1.DbType = System.Data.DbType.Decimal;
+                            parameter1.Value  = Parameters.GetDecimal(item);
+                        }
+
+                    }else{
+                        parameter1.Value = Parameters.GetValue(item);
+                    }
+
+                    cmd.Parameters.Add(parameter1);
+                }
+            }
+            return Convert.ToInt32(cmd.ExecuteNonQuery());
+        }
+
         public int Execute(string sCommandText , Dictionary<string , object> Parameters)
         {
 
