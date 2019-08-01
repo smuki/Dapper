@@ -275,6 +275,38 @@ namespace Volte.Data.Dapper
             return Encoding.UTF8.GetString(Decompress(Util.Base64UrlDecodeByte(str)));
         }
 
+        public static string Compress(string str , string password)
+        {
+            byte[] byKey = null;
+            byte[] IV = { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
+
+            byKey = Encoding.UTF8.GetBytes(password.Substring(0, 8));
+            DESCryptoServiceProvider des = new DESCryptoServiceProvider();
+            byte[] vByteArray = Compress(Encoding.UTF8.GetBytes(str));
+            MemoryStream ms = new MemoryStream();
+            CryptoStream cs = new CryptoStream(ms, des.CreateEncryptor(byKey, IV), CryptoStreamMode.Write);
+            cs.Write(vByteArray, 0, vByteArray.Length);
+            cs.FlushFinalBlock();
+            return Convert.ToBase64String(ms.ToArray());
+        }
+
+        public static string Decompress(string str , string password)
+        {
+            byte[] byKey = null;
+            byte[] IV = { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
+            byte[] vByteArray = new Byte[str.Length];
+
+            byKey = Encoding.UTF8.GetBytes(password.Substring(0, 8));
+            DESCryptoServiceProvider des = new DESCryptoServiceProvider();
+            vByteArray = Convert.FromBase64String(str);
+            MemoryStream ms = new MemoryStream();
+            CryptoStream cs = new CryptoStream(ms, des.CreateDecryptor(byKey, IV), CryptoStreamMode.Write);
+            cs.Write(vByteArray, 0, vByteArray.Length);
+            cs.FlushFinalBlock();
+            Encoding encoding = new UTF8Encoding();
+            return encoding.GetString(Decompress(ms.ToArray()));
+        }
+
         internal static string BuildForConditions(ClassMapping _classMapping, Streaming rdb, List<Condition> conditions)
         {
             string cWhereClause = "";
