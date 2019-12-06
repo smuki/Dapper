@@ -250,14 +250,21 @@ namespace Volte.Data.Dapper
                     switch (c) {
                         case '\'':
                         case '\\':
-                        case ';': {
-                                      break;
-                                  }
+                            {
+                                break;
+                            }
+                        case ';':
+                            {
+                                sb.Append('\\');
+                                sb.Append(c);
+                                break;
+                            }
 
-                        default: {
-                                     sb.Append(c);
-                                     break;
-                                 }
+                        default:
+                            {
+                                sb.Append(c);
+                                break;
+                            }
                     }
                 }
 
