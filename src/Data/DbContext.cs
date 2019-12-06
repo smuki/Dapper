@@ -397,7 +397,7 @@ namespace Volte.Data.Dapper
                             parameter1.Value = DBNull.Value;
                         }else{
                             parameter1.DbType = System.Data.DbType.DateTime;
-                            parameter1.Value  = Parameters.GetBoolean(item);
+                            parameter1.Value  = Parameters.GetDateTime(item);
                         }
 
                     }else if (type.GetValue(item).ToLower()=="decimal"){
