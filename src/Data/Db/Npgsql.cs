@@ -21,7 +21,7 @@ namespace Volte.Data.Dapper
 
         private Npgsql(string name, string connectionString)
         {
-            this.Vendor = "MySql";
+            this.Vendor = "Npgsql";
             this.ConnectionString = connectionString;
             this.Connection = new NpgsqlConnection(connectionString);
             this.QuotationMarksStart = "`";
