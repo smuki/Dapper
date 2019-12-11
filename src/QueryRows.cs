@@ -38,7 +38,7 @@ namespace Volte.Data.Dapper
             IDbCommand cmd = this.DbConnecttion.CreateCommand();
             cmd.CommandText = _CommandText;
             cmd.CommandTimeout = this.CommandTimeout;
-            
+
             if (_DbContext.Transaction) {
                 cmd.Transaction = _DbContext.DbTransaction;
             }
@@ -470,7 +470,7 @@ namespace Volte.Data.Dapper
         private IDbConnection _dbConnecttion;
         private bool _KeepPrev       = false;
         private int  _Pointer        = -1;
-        private int  _CommandTimeout = 180;
+        private int  _CommandTimeout = 120;
         private int  _RecordCount    = -1;
         private int  _fieldCount     = -1;
         private int  _Top            = 0;
