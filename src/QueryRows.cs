@@ -37,7 +37,8 @@ namespace Volte.Data.Dapper
 
             IDbCommand cmd = this.DbConnecttion.CreateCommand();
             cmd.CommandText = _CommandText;
-
+            cmd.CommandTimeout = this.CommandTimeout;
+            
             if (_DbContext.Transaction) {
                 cmd.Transaction = _DbContext.DbTransaction;
             }
@@ -469,6 +470,7 @@ namespace Volte.Data.Dapper
         private IDbConnection _dbConnecttion;
         private bool _KeepPrev       = false;
         private int  _Pointer        = -1;
+        private int  _CommandTimeout = 180;
         private int  _RecordCount    = -1;
         private int  _fieldCount     = -1;
         private int  _Top            = 0;
@@ -481,9 +483,10 @@ namespace Volte.Data.Dapper
 
         public Dictionary<string, object> Parameters { get { return _Parameters; } set { _Parameters = value; }  }
 
-        public int Top            { get { return _Top;         } set { _Top         = value; }  }
-        public bool KeepPrev      { get { return _KeepPrev;    } set { _KeepPrev    = value; }  }
-        public string CommandText { get { return _CommandText; } set { _CommandText = value; }  }
+        public int CommandTimeout { get { return _CommandTimeout;} set { _CommandTimeout = value; }  }
+        public int Top            { get { return _Top;           } set { _Top            = value; }  }
+        public bool KeepPrev      { get { return _KeepPrev;      } set { _KeepPrev       = value; }  }
+        public string CommandText { get { return _CommandText;   } set { _CommandText    = value; }  }
 
         public IDbConnection DbConnecttion { get { return _dbConnecttion;              }  }
         public List<string> Columns        { get { return _Columns;                    }  }
