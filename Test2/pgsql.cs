@@ -36,13 +36,13 @@ namespace JitEngine.TDriver
             providerName = "System.Data.SqlClient";
             providerName = @"MySql";
 
-						connStr = "Server=192.168.2.86;Port=26257;User Id=root;Password=;Database=testdb;";  
+            connStr = "Server=127.0.0.1;Port=5432;User Id=postgres;Password=1;Database=db1;";
             providerName = @"Npgsql";
 
             Settings.Instance().GetValue("MySqlUnitTest" , providerName , connStr);
 						string sSql="";
             Exp(new DbContext("MySqlUnitTest", providerName, connStr),sSql);
-            
+
         }
 
         public static void Exp(DbContext _Trans , string sSql)
