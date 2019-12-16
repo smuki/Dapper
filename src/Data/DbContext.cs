@@ -374,9 +374,10 @@ namespace Volte.Data.Dapper
         {
 
             _BeginTransaction();
-            IDbCommand cmd  = _Streaming.Connection.CreateCommand();
-            cmd.CommandText = sCommandText;
-            cmd.Transaction = _Streaming.Transaction;
+            IDbCommand cmd     = _Streaming.Connection.CreateCommand();
+            cmd.CommandText    = sCommandText;
+            cmd.CommandTimeout = CommandTimeout;
+            cmd.Transaction    = _Streaming.Transaction;
 
             JSONObject type = Parameters.GetJSONObject("_");
             foreach (string item in Parameters.Names) {
@@ -544,8 +545,9 @@ namespace Volte.Data.Dapper
         }
 
         // Properties
-        public bool IsForceCommit { get { return _IsForceCommit; } set { _IsForceCommit = value; }  }
-        public bool Writeable     { get { return _Writeable;     } set { _Writeable     = value; }  }
+        public bool IsForceCommit  { get { return _IsForceCommit;  } set { _IsForceCommit  = value; }  } 
+        public bool Writeable      { get { return _Writeable;      } set { _Writeable      = value; }  } 
+        public int  CommandTimeout { get { return _CommandTimeout; } set { _CommandTimeout = value;      }  }
 
         public IDbConnection DbConnection   { get { return _Streaming.Connection;       }  }
         public IDbTransaction DbTransaction { get { return _Streaming.Transaction;      }  }
@@ -560,10 +562,11 @@ namespace Volte.Data.Dapper
         private readonly StringBuilder _Fields    = new StringBuilder();
         private readonly EntityCompiler _Compiler = new EntityCompiler();
         private string _dbName;
-        private DBType _dbType      = DBType.SqlServer;
-        private bool _Transaction   = false;
-        private bool _Writeable     = false;
-        private bool _IsForceCommit = true;
+        private DBType _dbType       = DBType.SqlServer;
+        private bool _Transaction    = false;
+        private int  _CommandTimeout = 120;
+        private bool _Writeable      = false;
+        private bool _IsForceCommit  = true;
         private ObjectBroker _Broker;
         private Streaming _Streaming;
     }
