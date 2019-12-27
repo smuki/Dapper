@@ -12,7 +12,7 @@ namespace Volte.Data.Dapper
         // Methods
         public CommanderAddNew(Streaming _streaming, ClassMapping cm) : base(_streaming, cm)
         {
-            this.getSQLClause();
+            this.GetSQLClause();
         }
 
         public override IDbCommand BuildForObject(Streaming _streaming, EntityObject obj)
@@ -59,7 +59,7 @@ namespace Volte.Data.Dapper
             return command1;
         }
 
-        private void getSQLClause()
+        private void GetSQLClause()
         {
             this.AddSqlClause("INSERT INTO ");
             this.AddSqlClause(this.Streaming.QuotationMarksStart + this.ThisClassMapping.TableName + this.Streaming.QuotationMarksEnd);

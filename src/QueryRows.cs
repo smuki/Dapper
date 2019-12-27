@@ -67,7 +67,6 @@ namespace Volte.Data.Dapper
             } catch (Exception e) {
                 ZZLogger.Error(ZFILE_NAME, e);
                 ZZLogger.Error(ZFILE_NAME, _CommandText);
-                //throw e;
                 string cMessage = "Message=[" + e.Message + "]" + "\nSource=[" + e.Source + "]\nStackTrace=[" + e.StackTrace + "]\nTargetSite=[" + e.TargetSite + "]";
                 ZZLogger.Error(ZFILE_NAME, cMessage);
 

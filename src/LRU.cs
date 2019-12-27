@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Volte.Data.Dapper
 {
