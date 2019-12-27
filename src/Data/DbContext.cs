@@ -163,6 +163,7 @@ namespace Volte.Data.Dapper
         public IDataReader DataReader(string strSql, CommandBehavior behavior)
         {
             IDbCommand cmd  = _Streaming.Connection.CreateCommand();
+            cmd.CommandTimeout = CommandTimeout;
             cmd.CommandText = strSql;
 
             if (this.Transaction) {
