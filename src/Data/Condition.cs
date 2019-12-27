@@ -9,7 +9,6 @@ namespace Volte.Data.Dapper
     public class Condition {
         const string ZFILE_NAME = "Condition";
 
-        // Methods
         internal Condition()
         {
             _Parameters      = new List<Criteria>();
@@ -24,7 +23,6 @@ namespace Volte.Data.Dapper
             _BooleanOperator = cBooleanOperator;
         }
 
-        //======   Equals   ===
         public void Equals(string _Name, object _Value)
         {
             AddCondition(_Name, CriteriaOperator.Equals, _Value);
@@ -46,7 +44,6 @@ namespace Volte.Data.Dapper
             AddCondition(_Name, CriteriaOperator.NotEquals, _Name2, true);
         }
 
-        //====  GreaterThan ===
         public void GreaterThan(string _Name, object _Value)
         {
             AddCondition(_Name, CriteriaOperator.GreaterThan, _Value);
@@ -57,7 +54,6 @@ namespace Volte.Data.Dapper
             AddCondition(_Name, CriteriaOperator.GreaterThanOrEquals, _Name2, true);
         }
 
-        //====  GreaterThanOrEquals ===
         public void GreaterThanOrEquals(string _Name, object _Value)
         {
             AddCondition(_Name, CriteriaOperator.GreaterThanOrEquals, _Value);
@@ -68,7 +64,6 @@ namespace Volte.Data.Dapper
             AddCondition(_Name, CriteriaOperator.GreaterThanOrEquals, _Name2, true);
         }
 
-        //==== In
         public void In(string _Name, object[] list)
         {
             if ((list == null) || (list.Length == 0)) {
@@ -83,7 +78,6 @@ namespace Volte.Data.Dapper
             this.In(_Name, XString.Split((new char[3] { ';', ',', '|' })));
         }
 
-        //===== LessThan
         public void LessThan(string _Name, object _Value)
         {
             AddCondition(_Name, CriteriaOperator.LessThan, _Value);
@@ -94,7 +88,6 @@ namespace Volte.Data.Dapper
             AddCondition(_Name, CriteriaOperator.LessThan, _Name2, true);
         }
 
-        //==== LessThanOrEquals
         public void LessThanOrEquals(string _Name, object _Value)
         {
             AddCondition(_Name, CriteriaOperator.LessThanOrEquals, _Value);
@@ -105,7 +98,6 @@ namespace Volte.Data.Dapper
             AddCondition(_Name, CriteriaOperator.LessThanOrEquals, _Name2, true);
         }
 
-        //==== Like
         public void Like(string _Name, string _Value)
         {
             _Value = "%" + _Value + "%";
@@ -124,8 +116,7 @@ namespace Volte.Data.Dapper
                 cValue = "";
             }
 
-            if (cValue == "") {
-            } else {
+            if (!string.IsNullOrEmpty(cValue)) {
                 string cExp = cValue.Substring(0, 1);
 
                 if (cExp == ">" || cExp == "<" || cExp == "=") {
@@ -219,7 +210,6 @@ namespace Volte.Data.Dapper
             _Parameters.Clear();
         }
 
-        // Properties
         public Condition NewCondition()
         {
             return this.NewCondition(" OR ");
@@ -236,7 +226,6 @@ namespace Volte.Data.Dapper
         internal List<Criteria> Parameters  { get { return _Parameters;      }  }
         internal List<Condition> Conditions { get { return _Conditions;      }  }
 
-        // Fields
         private string _BooleanOperator;
         private List<Criteria> _Parameters  = new List<Criteria>();
         private List<Condition> _Conditions = new List<Condition>();

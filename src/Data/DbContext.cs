@@ -31,8 +31,8 @@ namespace Volte.Data.Dapper
                 _Transaction   = false;
                 _IsForceCommit = false;
                 _Broker        = ObjectBroker.Instance();
-                _Streaming     = _Broker.getStreaming(_DbName).GetCopy();
-                _Streaming.Open();
+                _connection     = _Broker.getStreaming(_DbName).GetCopy();
+                _connection.Open();
             }
         }
 
@@ -43,8 +43,8 @@ namespace Volte.Data.Dapper
             Setting _Setting = Settings.Instance().GetValue(_DbName, "MsSqlServer", connStr);
             _dbType          = _Setting.DbType;
             _Broker          = ObjectBroker.Instance();
-            _Streaming       = _Broker.getStreaming(_DbName).GetCopy();
-            _Streaming.Open();
+            _connection       = _Broker.getStreaming(_DbName).GetCopy();
+            _connection.Open();
         }
 
         public DbContext(string _DbName, string providerName, string connStr)
@@ -54,18 +54,18 @@ namespace Volte.Data.Dapper
             Setting _Setting = Settings.Instance().GetValue(_DbName, providerName, connStr);
             _dbType          = _Setting.DbType;
             _Broker          = ObjectBroker.Instance();
-            _Streaming       = _Broker.getStreaming(_DbName).GetCopy();
-            _Streaming.Open();
+            _connection       = _Broker.getStreaming(_DbName).GetCopy();
+            _connection.Open();
         }
 
         public bool IsOpen
         {
             get {
-                if (_Streaming.Connection == null) {
+                if (_connection.Connection == null) {
                     return false;
                 }
 
-                if (_Streaming.Connection.State == ConnectionState.Open) {
+                if (_connection.Connection.State == ConnectionState.Open) {
                     return true;
                 } else {
                     return false;
@@ -74,18 +74,18 @@ namespace Volte.Data.Dapper
         }
         public void Close()
         {
-            if (_Streaming== null || _Streaming.Connection == null) {
+            if (_connection== null || _connection.Connection == null) {
                 return;
             }
-            _Streaming.Close();
+            _connection.Close();
         }
 
         public void DeleteEntity(EntityObject obj)
         {
-            _BeginTransaction();
+            this.BeginTransaction();
 
             obj.DbName = DbName;
-            _Broker.DeleteObject(obj, _Streaming, _IsForceCommit);
+            _Broker.DeleteObject(obj, _connection, _IsForceCommit);
         }
 
         public List<JSONObject> TableColumns(string cSql)
@@ -132,9 +132,7 @@ namespace Volte.Data.Dapper
                 _Column.SetValue("sDataType"   , _DataType);
                 _Column.SetValue("nColumnSize" , _ColumnSize);
                 _JSONObject.Add(_Column);
-
             }
-
             return _JSONObject;
         }
 
@@ -145,11 +143,11 @@ namespace Volte.Data.Dapper
 
         public IDbCommand DbCommand(string strSql, CommandBehavior behavior)
         {
-            IDbCommand cmd  = _Streaming.Connection.CreateCommand();
+            IDbCommand cmd  = _connection.Connection.CreateCommand();
             cmd.CommandText = strSql;
 
             if (this.Transaction) {
-                cmd.Transaction = _Streaming.Transaction;
+                cmd.Transaction = _connection.Transaction;
             }
 
             return cmd;
@@ -162,12 +160,12 @@ namespace Volte.Data.Dapper
 
         public IDataReader DataReader(string strSql, CommandBehavior behavior)
         {
-            IDbCommand cmd  = _Streaming.Connection.CreateCommand();
+            IDbCommand cmd  = _connection.Connection.CreateCommand();
             cmd.CommandTimeout = CommandTimeout;
             cmd.CommandText = strSql;
 
             if (this.Transaction) {
-                cmd.Transaction = _Streaming.Transaction;
+                cmd.Transaction = _connection.Transaction;
             }
 
             return cmd.ExecuteReader(behavior);
@@ -176,15 +174,16 @@ namespace Volte.Data.Dapper
         public DataTable RetrieveDataTable(CriteriaRetrieve retrieve)
         {
             retrieve.DbName = DbName;
-            return _Broker.DoRetrieveDataTable(retrieve, _Streaming);
+            return _Broker.DoRetrieveDataTable(retrieve, _connection);
         }
 
         public void Dispose()
         {
-            if (_Streaming != null) {
-                if (_Streaming.Connection != null) {
+            if (_connection != null) {
+                if (_connection.Connection != null) {
                     try {
-                        _Streaming.Connection.Dispose();
+                        _connection.Connection.Close();
+                        _connection.Connection.Dispose();
                     } catch { }
                 }
             }
@@ -198,11 +197,11 @@ namespace Volte.Data.Dapper
         public dynamic Query(string strSql, int top)
         {
 
-            IDbCommand cmd  = _Streaming.Connection.CreateCommand();
+            IDbCommand cmd  = _connection.Connection.CreateCommand();
             cmd.CommandText = strSql;
 
             if (this.Transaction) {
-                cmd.Transaction = _Streaming.Transaction;
+                cmd.Transaction = _connection.Transaction;
             }
 
             IDataReader _DataReader = cmd.ExecuteReader();
@@ -233,7 +232,7 @@ namespace Volte.Data.Dapper
             retrieve.DbName   = DbName;
             EntityObject obj1 = null;
 
-            IDataReader _DataReader = _Broker.DoRetrieveDataReader(retrieve, _Streaming);
+            IDataReader _DataReader = _Broker.DoRetrieveDataReader(retrieve, _connection);
 
             ObjectCursor cursor1 = new ObjectCursor(DbName, retrieve.ClassType, _DataReader);
 
@@ -249,7 +248,7 @@ namespace Volte.Data.Dapper
         public T Query<T> (CriteriaRetrieve retrieve) where T: new()
         {
             retrieve.DbName = DbName;
-            IDataReader _DataReader = _Broker.DoRetrieveDataReader(retrieve, _Streaming);
+            IDataReader _DataReader = _Broker.DoRetrieveDataReader(retrieve, _connection);
 
             if (!_DataReader.Read()) {
 
@@ -273,7 +272,7 @@ namespace Volte.Data.Dapper
         public List<T> Querys<T> (string strSql) where T: new()
         {
 
-            IDataReader _DataReader = _Broker.getDataReader(this.DbName, _Streaming, strSql, 0);
+            IDataReader _DataReader = _Broker.getDataReader(this.DbName, _connection, strSql, 0);
 
             return  AutoCompiler<T>.ConvertToEntity(_DataReader);
         }
@@ -285,7 +284,7 @@ namespace Volte.Data.Dapper
 
         public dynamic Entities(string strSql, int top)
         {
-            IDataReader _DataReader = _Broker.getDataReader(this.DbName, _Streaming, strSql, top);
+            IDataReader _DataReader = _Broker.getDataReader(this.DbName, _connection, strSql, top);
 
             _Fields.Length = 0;
 
@@ -303,7 +302,7 @@ namespace Volte.Data.Dapper
         public List<T> RetrieveEntitys<T> (CriteriaRetrieve retrieve) where T: new()
         {
             retrieve.DbName = DbName;
-            IDataReader _DataReader = _Broker.DoRetrieveDataReader(retrieve, _Streaming);
+            IDataReader _DataReader = _Broker.DoRetrieveDataReader(retrieve, _connection);
             ClassMapping _classMapping = _Broker.GetClassMapping(DbName, retrieve);
 
             if (_classMapping.AttributeMappings.Count == _DataReader.FieldCount) {
@@ -317,7 +316,7 @@ namespace Volte.Data.Dapper
         {
 
             retrieve.DbName            = DbName;
-            IDataReader _DataReader    = _Broker.DoRetrieveDataReader(retrieve, _Streaming);
+            IDataReader _DataReader    = _Broker.DoRetrieveDataReader(retrieve, _connection);
             ClassMapping _classMapping = _Broker.GetClassMapping(DbName, retrieve);
 
             if (_classMapping.AttributeMappings.Count == _DataReader.FieldCount) {
@@ -342,43 +341,43 @@ namespace Volte.Data.Dapper
         public void RetrieveEntity(EntityObject obj)
         {
             obj.DbName = DbName;
-            _Broker.RetrieveEntityObject(obj, _Streaming);
+            _Broker.RetrieveEntityObject(obj, _connection);
         }
 
         public void SaveChanges(CriteriaUpdate update)
         {
             update.DbName = DbName;
-            _BeginTransaction();
-            _Broker.ProcessCriteria(update, _Streaming, _IsForceCommit);
+            this.BeginTransaction();
+            _Broker.ProcessCriteria(update, _connection, _IsForceCommit);
         }
 
         public void SaveChanges(CriteriaDelete delete)
         {
             delete.DbName = DbName;
-            _BeginTransaction();
-            _Broker.ProcessCriteria(delete, _Streaming, _IsForceCommit);
+            this.BeginTransaction();
+            _Broker.ProcessCriteria(delete, _connection, _IsForceCommit);
         }
 
         public void SaveChanges(EntityObject obj)
         {
             obj.DbName = DbName;
-            _BeginTransaction();
-            _Broker.SaveChange(obj, _Streaming, _IsForceCommit);
+            this.BeginTransaction();
+            _Broker.SaveChange(obj, _connection, _IsForceCommit);
         }
 
         public int Execute(string sCommandText)
         {
-            return _Streaming.DoSql(sCommandText);
+            return _connection.DoSql(sCommandText);
         }
 
         public int Execute(string sCommandText , JSONObject Parameters)
         {
 
-            _BeginTransaction();
-            IDbCommand cmd     = _Streaming.Connection.CreateCommand();
+            this.BeginTransaction();
+            IDbCommand cmd     = _connection.Connection.CreateCommand();
             cmd.CommandText    = sCommandText;
             cmd.CommandTimeout = CommandTimeout;
-            cmd.Transaction    = _Streaming.Transaction;
+            cmd.Transaction    = _connection.Transaction;
 
             JSONObject type = Parameters.GetJSONObject("_");
             foreach (string item in Parameters.Names) {
@@ -394,21 +393,19 @@ namespace Volte.Data.Dapper
 
                     }else if (type.GetValue(item).ToLower()=="datetime"){
 
-                        if (Parameters.GetValue(item)== "") {
-
+                        parameter1.DbType = System.Data.DbType.DateTime;
+                        if (string.IsNullOrEmpty(Parameters.GetValue(item))) {
                             parameter1.Value = DBNull.Value;
                         }else{
-                            parameter1.DbType = System.Data.DbType.DateTime;
                             parameter1.Value  = Parameters.GetDateTime(item);
                         }
 
                     }else if (type.GetValue(item).ToLower()=="decimal"){
 
+                        parameter1.DbType = System.Data.DbType.Decimal;
                         if (Parameters.GetValue(item)== "") {
-
                             parameter1.Value = DBNull.Value;
                         }else{
-                            parameter1.DbType = System.Data.DbType.Decimal;
                             parameter1.Value  = Parameters.GetDecimal(item);
                         }
 
@@ -426,10 +423,10 @@ namespace Volte.Data.Dapper
         {
 
             if (Parameters.Count>0){
-                _BeginTransaction();
-                IDbCommand cmd  = _Streaming.Connection.CreateCommand();
+                this.BeginTransaction();
+                IDbCommand cmd  = _connection.Connection.CreateCommand();
                 cmd.CommandText = sCommandText;
-                cmd.Transaction = _Streaming.Transaction;
+                cmd.Transaction = _connection.Transaction;
 
                 foreach (var item in Parameters) {
 
@@ -449,7 +446,7 @@ namespace Volte.Data.Dapper
                 return Convert.ToInt32(cmd.ExecuteNonQuery());
             }else{
 
-                return _Streaming.DoSql(sCommandText);
+                return _connection.DoSql(sCommandText);
             }
         }
 
@@ -460,9 +457,9 @@ namespace Volte.Data.Dapper
 
         public DataTable RetrieveDataTable(string strSql,  int m_Top)
         {
-            _BeginTransaction();
+            this.BeginTransaction();
 
-            return _Broker.DoQueryTransaction(_Streaming, strSql, m_Top);
+            return _Broker.DoQueryTransaction(_connection, strSql, m_Top);
         }
 
         public IDataReader RetrieveDataReader(string strSql)
@@ -472,16 +469,12 @@ namespace Volte.Data.Dapper
 
         public IDataReader RetrieveDataReader(string strSql,  int m_Top)
         {
-            return _Broker.getDataReader(this.DbName, _Streaming, strSql, m_Top);
+            return _Broker.getDataReader(this.DbName, _connection, strSql, m_Top);
         }
 
         public void BeginTransaction()
         {
-            _BeginTransaction();
-        }
-
-        private void _BeginTransaction()
-        {
+       
             if (_Writeable == false) {
                 throw new DapperException("Data Is Readonly", ExceptionTypes.NotDataIsReadonly);
             }
@@ -491,18 +484,14 @@ namespace Volte.Data.Dapper
                 return;
             }
 
-            _Streaming.BeginTransaction();
+            _connection.BeginTransaction();
             _Transaction = true;
 
         }
 
         public bool Commit()
         {
-            return _Commit();
-        }
-
-        private bool _Commit()
-        {
+       
             bool flag2 = false;
 
             if (_Writeable == false) {
@@ -514,17 +503,15 @@ namespace Volte.Data.Dapper
                 return flag2;
             }
 
-
-
             try {
-                _Streaming.CommitTransaction();
+                _connection.CommitTransaction();
                 flag2        = true;
                 _Transaction = false;
             } catch (Exception exception1) {
-                _Streaming.RollbackTransaction();
+                _connection.RollbackTransaction();
                 throw;
             } finally {
-                _Streaming.Close();
+                _connection.Close();
             }
 
             return flag2;
@@ -532,32 +519,28 @@ namespace Volte.Data.Dapper
 
         public void RollBack()
         {
-            _RollBack();
-        }
-
-        private void _RollBack()
-        {
+      
             try {
-                _Streaming.RollbackTransaction();
+                _connection.RollbackTransaction();
                 _Transaction = false;
             } finally {
-                _Streaming.Close();
+                _connection.Close();
             }
         }
 
         // Properties
-        public bool IsForceCommit  { get { return _IsForceCommit;  } set { _IsForceCommit  = value; }  } 
-        public bool Writeable      { get { return _Writeable;      } set { _Writeable      = value; }  } 
+        public bool IsForceCommit  { get { return _IsForceCommit;  } set { _IsForceCommit  = value; }  }
+        public bool Writeable      { get { return _Writeable;      } set { _Writeable      = value; }  }
         public int  CommandTimeout { get { return _CommandTimeout; } set { _CommandTimeout = value;      }  }
 
-        public IDbConnection DbConnection   { get { return _Streaming.Connection;       }  }
-        public IDbTransaction DbTransaction { get { return _Streaming.Transaction;      }  }
+        public IDbConnection DbConnection   { get { return _connection.Connection;       }  }
+        public IDbTransaction DbTransaction { get { return _connection.Transaction;      }  }
         public DBType DbType                { get { return _dbType;                     }  }
-        public string Vendor                { get { return _Streaming.Vendor;           }  }
+        public string Vendor                { get { return _connection.Vendor;           }  }
         public bool Transaction             { get { return _Transaction;                }  }
-        public string ParamPrefix           { get { return _Streaming.ParameterPrefix;  }  }
+        public string ParamPrefix           { get { return _connection.ParameterPrefix;  }  }
         public string DbName                { get { return _dbName;                     }  }
-        public string dbAdapter             { get { return _Streaming.ConnectionString; }  }
+        public string dbAdapter             { get { return _connection.ConnectionString; }  }
 
         // Fields
         private readonly StringBuilder _Fields    = new StringBuilder();
@@ -569,6 +552,6 @@ namespace Volte.Data.Dapper
         private bool _Writeable      = false;
         private bool _IsForceCommit  = true;
         private ObjectBroker _Broker;
-        private Streaming _Streaming;
+        private Streaming _connection;
     }
 }

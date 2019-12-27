@@ -64,8 +64,6 @@ namespace Volte.Data.Dapper
                     throw new DapperException(text1, ExceptionTypes.XmlError);
                 }
 
-                //Console.WriteLine("DbName+" + _Setting.DbName);
-
                 database1.DbName = _Setting.DbName;
                 database1.Initialize(_Setting.ConnectionString);
                 _DatabasePool[_Setting.DbName] = database1;
@@ -83,7 +81,7 @@ namespace Volte.Data.Dapper
                 Streaming database1 = null;
 
                 try {
-                    string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
+                    string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
                     string Url = path;
 
                     if (path.IndexOf("file:\\") >= 0) {
@@ -93,7 +91,7 @@ namespace Volte.Data.Dapper
                     string cFileName = Url + Path.DirectorySeparatorChar + DatabaseType + ".dll";
 
                     if (File.Exists(cFileName)) {
-                        System.Reflection.Assembly objAssembly = DapperUtil.ReadAssembly(cFileName);
+                        Assembly objAssembly = DapperUtil.ReadAssembly(cFileName);
                         database1 = (Streaming) objAssembly.CreateInstance(DatabaseType);
                     } else {
                         database1 = (Streaming) base.GetType().Assembly.CreateInstance(DatabaseType);
@@ -160,6 +158,7 @@ namespace Volte.Data.Dapper
             IDataReader table1;
             CriteriaRetrieve criteria1 = obj;
             string _DbName = criteria1.DbName;
+
 
             ClassMapping _classMapping = this.GetClassMapping(_DbName, criteria1);
 
@@ -287,15 +286,12 @@ namespace Volte.Data.Dapper
                 }
             }
 
-            ZZLogger.Debug(ZFILE_NAME, "TableName=" + tableName);
-
             foreach (PropertyInfo p in properties)  {
                 if (p.CanWrite && p.CanRead && p.Name != "") {
                     attibutes = Attribute.GetCustomAttributes(p);
                     AttributeMapping _AttributeMapping = null;
 
                     foreach (Attribute attribute in attibutes)  {
-                        //?컳?ǂt???X??AttributeMapping?t??
                         if (attribute.GetType() == typeof(AttributeMapping))  {
                             string key = (cDbName + "_" + _name + "_" + p.Name).ToLower();
 
@@ -309,9 +305,6 @@ namespace Volte.Data.Dapper
                                 if (string.IsNullOrEmpty(_attribute.TableName)) {
                                     _AttributeMapping.TableName = tableName;
                                 }
-
-                                ZZLogger.Debug(ZFILE_NAME, "TableName1=" + tableName);
-                                ZZLogger.Debug(ZFILE_NAME, "TableName2=" + _AttributeMapping.TableName);
 
                                 if (string.IsNullOrEmpty(_attribute.ColumnName)) {
                                     _AttributeMapping.ColumnName = p.Name;
@@ -339,12 +332,8 @@ namespace Volte.Data.Dapper
                         if (p.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>)) {
                             if (p.PropertyType.GetGenericArguments()[0] == typeof(DateTime)) {
                                 _AttributeMapping.Type = DbType.DateTime;
-                                ZZLogger.Debug(ZFILE_NAME , p.Name + " 222= " + p.PropertyType);
-                                ZZLogger.Debug(ZFILE_NAME , p.Name + " 222= " + _AttributeMapping.Type);
-                                ZZLogger.Debug(ZFILE_NAME , p.Name + " = " + Type.GetTypeCode(p.PropertyType));
                             } else {
                                 ZZLogger.Debug(ZFILE_NAME , p.Name + "3 = " + p.PropertyType);
-
                             }
                         } else {
                             ZZLogger.Debug(ZFILE_NAME , p.Name + "4 = " + p.PropertyType);
@@ -563,9 +552,7 @@ namespace Volte.Data.Dapper
 
             try {
                 IDbCommand command1 = _classMapping.GetSelectSqlFor(_Streaming, obj);
-                ZZLogger.Debug(ZFILE_NAME, dbName + "BEF", command1.CommandText);
                 IDataReader reader1 = _Streaming.GetDataReader(command1, 0);
-                ZZLogger.Debug(ZFILE_NAME, dbName + "AFT", command1.CommandText);
 
                 if (reader1.Read()) {
                     this.SetObject(obj, reader1, _classMapping);
@@ -602,9 +589,7 @@ namespace Volte.Data.Dapper
                     if (obj.PropertyChanged.Count > 0) {
 
                         command1 = _classMapping.UpdateSqlClause(_Streaming, obj);
-                        ZZLogger.Debug(ZFILE_NAME, dbName + " BEF", command1.CommandText);
                         num1 = _Streaming.DoCommand(command1);
-                        ZZLogger.Debug(ZFILE_NAME, dbName + " AFT", command1.CommandText);
                     } else {
                         ZZLogger.Debug(ZFILE_NAME, dbName + " Skip ");
                         return 0;
@@ -614,9 +599,7 @@ namespace Volte.Data.Dapper
                     command1 = _classMapping.GetInsertSqlFor(_Streaming, obj);
 
                     if (_classMapping.AutoIdentityIndex < 0) {
-                        ZZLogger.Debug(ZFILE_NAME, dbName + "  " + command1.CommandText);
                         num1 = _Streaming.DoCommand(command1);
-                        ZZLogger.Debug(ZFILE_NAME, dbName + "  " + num1);
                     } else {
                         object obj2;
                         num1 = _Streaming.InsertRecord(command1, out obj2);
