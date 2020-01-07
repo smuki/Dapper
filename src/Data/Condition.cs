@@ -33,7 +33,6 @@ namespace Volte.Data.Dapper
             AddCondition(_Name, CriteriaOperator.Equals, _Name2, true);
         }
 
-        //======   NotEquals   ===
         public void NotEquals(string _Name, object _Value)
         {
             AddCondition(_Name, CriteriaOperator.NotEquals, _Value);
