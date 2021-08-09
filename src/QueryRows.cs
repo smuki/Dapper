@@ -192,6 +192,8 @@ namespace Volte.Data.Dapper
             }
             if (obj is bool) {
                 return (bool)obj;
+            }else if (obj is decimal) {
+                return (decimal)obj==1;
             } else if (obj.Equals("Y") || obj.Equals("y")) {
                 return true;
             } else if (obj.ToString()=="1") {
