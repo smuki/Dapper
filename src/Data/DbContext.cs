@@ -90,13 +90,11 @@ namespace Volte.Data.Dapper
 
         public List<JSONObject> TableColumns(string cSql)
         {
-            List<JSONObject> _JSONObject = new List<JSONObject>();
-
             IDataReader _DataReader = this.DataReader(cSql, CommandBehavior.KeyInfo);
             DataTable myDataTable = _DataReader.GetSchemaTable();
             _DataReader.Close();
 
-            _JSONObject = new List<JSONObject>();
+            List<JSONObject> _JSONObject = new List<JSONObject>();
 
             foreach (DataRow myDataRow in myDataTable.Rows) {
                 string _TableName = "";
@@ -105,16 +103,14 @@ namespace Volte.Data.Dapper
                 string _DataTypeName = "";
                 string _ColumnSize = "10";
 
-                ZZLogger.Debug(ZFILE_NAME , "-----");
                 foreach (DataColumn myDataColumn in myDataTable.Columns) {
 
-                    ZZLogger.Debug(ZFILE_NAME , myDataColumn.ToString()+"=="+myDataRow[myDataColumn].ToString());
+                    //ZZLogger.Debug(ZFILE_NAME , myDataColumn.ToString()+"=="+myDataRow[myDataColumn].ToString());
                     if (myDataColumn.ToString() == "BaseColumnName") {
                         _ColumnName = myDataRow[myDataColumn].ToString();
                     } else if (myDataColumn.ToString() == "BaseTableName") {
                         _TableName = myDataRow[myDataColumn].ToString();
                     } else if (myDataColumn.ToString() == "DataTypeName") {
-
                        _DataTypeName = myDataRow[myDataColumn].ToString();
                     } else if (myDataColumn.ToString() == "DataType") {
                        _DataType = myDataRow[myDataColumn].ToString();
@@ -122,7 +118,7 @@ namespace Volte.Data.Dapper
                        _ColumnSize = myDataRow[myDataColumn].ToString();
                     }
                 }
-                if (_DataTypeName!=""){
+                if (!string.IsNullOrEmpty(_DataTypeName)){
                     _DataType = _DataTypeName;
                 }
 
@@ -153,16 +149,16 @@ namespace Volte.Data.Dapper
             return cmd;
         }
 
-        public IDataReader DataReader(string strSql)
+        public IDataReader DataReader(string sCommandText)
         {
-            return DataReader(strSql , CommandBehavior.Default);
+            return DataReader(sCommandText, CommandBehavior.Default);
         }
 
-        public IDataReader DataReader(string strSql, CommandBehavior behavior)
+        public IDataReader DataReader(string sCommandText, CommandBehavior behavior)
         {
             IDbCommand cmd  = _connection.Connection.CreateCommand();
             cmd.CommandTimeout = CommandTimeout;
-            cmd.CommandText = strSql;
+            cmd.CommandText = sCommandText;
 
             if (this.Transaction) {
                 cmd.Transaction = _connection.Transaction;
@@ -381,7 +377,6 @@ namespace Volte.Data.Dapper
 
             JSONObject type = Parameters.GetJSONObject("_");
             foreach (string item in Parameters.Names) {
-
                 if (item!="_"){
                     IDataParameter parameter1 = cmd.CreateParameter();
                     parameter1.ParameterName  = this.ParamPrefix + item;
@@ -403,7 +398,7 @@ namespace Volte.Data.Dapper
                     }else if (type.GetValue(item).ToLower()=="decimal"){
 
                         parameter1.DbType = System.Data.DbType.Decimal;
-                        if (Parameters.GetValue(item)== "") {
+                        if (string.IsNullOrEmpty(Parameters.GetValue(item))) {
                             parameter1.Value = DBNull.Value;
                         }else{
                             parameter1.Value  = Parameters.GetDecimal(item);
@@ -421,7 +416,6 @@ namespace Volte.Data.Dapper
 
         public int Execute(string sCommandText , Dictionary<string , object> Parameters)
         {
-
             if (Parameters.Count>0){
                 this.BeginTransaction();
                 IDbCommand cmd  = _connection.Connection.CreateCommand();
@@ -445,7 +439,6 @@ namespace Volte.Data.Dapper
                 }
                 return Convert.ToInt32(cmd.ExecuteNonQuery());
             }else{
-
                 return _connection.DoSql(sCommandText);
             }
         }
@@ -532,10 +525,11 @@ namespace Volte.Data.Dapper
         public bool IsForceCommit  { get { return _IsForceCommit;  } set { _IsForceCommit  = value; }  }
         public bool Writeable      { get { return _Writeable;      } set { _Writeable      = value; }  }
         public int  CommandTimeout { get { return _CommandTimeout; } set { _CommandTimeout = value;      }  }
+        public DBType DbType       { get { return _dbType;      }  }
 
         public IDbConnection DbConnection   { get { return _connection.Connection;       }  }
         public IDbTransaction DbTransaction { get { return _connection.Transaction;      }  }
-        public DBType DbType                { get { return _dbType;                     }  }
+
         public string Vendor                { get { return _connection.Vendor;           }  }
         public bool Transaction             { get { return _Transaction;                }  }
         public string ParamPrefix           { get { return _connection.ParameterPrefix;  }  }
