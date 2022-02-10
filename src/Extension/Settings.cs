@@ -87,24 +87,25 @@ namespace Volte.Data.Dapper
             _Setting.TypeName         = text1 + providerName;
             _Setting.DbName           = DbName;
 
+            Console.WriteLine("TypeName = "+_Setting.TypeName);
             // 使用类型名判断
             //
-            if (providerName.StartsWith("MsSqlServer")) {
+            if (providerName.StartsWith("MsSqlServer",StringComparison.OrdinalIgnoreCase)) {
                 _Setting.DbType  = DBType.SqlServer;
                 _Setting.Include = true;
-            } else if (providerName.StartsWith("MySql")) {
+            } else if (providerName.StartsWith("MySql",StringComparison.OrdinalIgnoreCase)) {
                 _Setting.DbType = DBType.MySql;
-            } else if (providerName.StartsWith("Vertica")) {
+            } else if (providerName.StartsWith("Vertica",StringComparison.OrdinalIgnoreCase)) {
                 _Setting.DbType = DBType.Vertica;
-            } else if (providerName.StartsWith("SqlCe")) {
+            } else if (providerName.StartsWith("SqlCe",StringComparison.OrdinalIgnoreCase)) {
                 _Setting.DbType = DBType.SqlServerCE;
-            } else if (providerName.StartsWith("Npgsql")) {
+            } else if (providerName.StartsWith("Npgsql",StringComparison.OrdinalIgnoreCase)) {
                 _Setting.DbType = DBType.PostgreSQL;
-            } else if (providerName.StartsWith("Oracle")) {
+            } else if (providerName.StartsWith("Oracle",StringComparison.OrdinalIgnoreCase)) {
                 _Setting.DbType = DBType.Oracle;
-            } else if (providerName.StartsWith("SQLite")) {
+            } else if (providerName.StartsWith("SQLite",StringComparison.OrdinalIgnoreCase)) {
                 _Setting.DbType = DBType.SQLite;
-            } else if (providerName.StartsWith("System.Data.SqlClient.")) {
+            } else if (providerName.StartsWith("System.Data.SqlClient.",StringComparison.OrdinalIgnoreCase)) {
                 _Setting.DbType = DBType.SqlServer;
             }
             // else try with provider name

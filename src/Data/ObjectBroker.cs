@@ -48,6 +48,7 @@ namespace Volte.Data.Dapper
 
                     string cFileName = Url + Path.DirectorySeparatorChar + _Setting.TypeName + ".dll";
 
+Console.WriteLine("fileName = "+cFileName);
                     if (File.Exists(cFileName) && !_Setting.Include) {
                         System.Reflection.Assembly objAssembly = DapperUtil.ReadAssembly(cFileName);
                         database1 = (Streaming)objAssembly.CreateInstance(_Setting.TypeName);
@@ -60,7 +61,7 @@ namespace Volte.Data.Dapper
                     }
 
                 } catch (Exception e) {
-                    string text1 = "?t?t?X?t??" + _Setting.TypeName + "?X?????t?t???,Message=" + e.Message + ",Source=" + e.Source + ",StackTrace=" + e.StackTrace + ",TargetSite=" + e.TargetSite;
+                    string text1 =  _Setting.TypeName + ",Message=" + e.Message + ",Source=" + e.Source + ",StackTrace=" + e.StackTrace + ",TargetSite=" + e.TargetSite;
                     throw new DapperException(text1, ExceptionTypes.XmlError);
                 }
 
