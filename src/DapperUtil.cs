@@ -92,6 +92,29 @@ namespace Volte.Data.Dapper
             return !_sysobjects.EOF;
         }
 
+        public static string RemoveSensitive(string sValue)
+        {
+            if (string.IsNullOrEmpty(sValue))
+            {
+                return sValue;
+            }
+            string tValue = sValue;
+            StringBuilder newT = new StringBuilder();
+            foreach (string s in tValue.Split(new char[1] { ';' }))
+            {
+                if (!(s.IndexOf("pwd", StringComparison.OrdinalIgnoreCase) >= 0 || s.IndexOf("Password", StringComparison.OrdinalIgnoreCase) >= 0))
+                {
+                    newT.Append(s);
+                }
+                else
+                {
+                    newT.Append("###secret###");
+                }
+                newT.Append(";");
+            }
+            return newT.ToString();
+        }
+
         public static bool IsNullOrEmpty(decimal cValue)
         {
             return cValue == 0;
@@ -119,63 +142,72 @@ namespace Volte.Data.Dapper
 
         public static bool IsBoolean(string oValue)
         {
-            if (string.IsNullOrEmpty(oValue)) {
+            if (string.IsNullOrEmpty(oValue))
+            {
                 oValue = "";
             }
 
             oValue = oValue.ToUpper();
 
-            if (oValue.Equals("CHECKED")) {
-                return true;;
+            if (oValue.Equals("CHECKED"))
+            {
+                return true; ;
             }
 
-            if (oValue.Equals("Y")) {
-                return true;;
+            if (oValue.Equals("Y"))
+            {
+                return true; ;
             }
 
-            if (oValue.Equals("N")) {
-                return true;;
+            if (oValue.Equals("N"))
+            {
+                return true; ;
             }
 
-            if (oValue.Equals("YES")) {
-                return true;;
+            if (oValue.Equals("YES"))
+            {
+                return true; ;
             }
 
-            if (oValue.Equals("NO")) {
-                return true;;
+            if (oValue.Equals("NO"))
+            {
+                return true; ;
             }
 
-            if (oValue.Equals("TRUE")) {
-                return true;;
+            if (oValue.Equals("TRUE"))
+            {
+                return true; ;
             }
 
-            if (oValue.Equals("FALSE")) {
-                return true;;
+            if (oValue.Equals("FALSE"))
+            {
+                return true; ;
             }
 
-            return false;;
+            return false; ;
         }
 
         public static bool IsDateTime(string sdate, string dateFormatWithSeperator)
         {
-
             DateTime dt;
 
-            if (dateFormatWithSeperator != "") {
-                if (DateTime.TryParseExact(sdate, dateFormatWithSeperator, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dt)) {
+            if (dateFormatWithSeperator != "")
+            {
+                if (DateTime.TryParseExact(sdate, dateFormatWithSeperator, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dt))
+                {
                     return true;
                 }
             }
 
-            string[] formats = {"yyyy-MM-dd", "MM-dd-yyyy", "yyyy/MM/dd", "MM/dd/yyyy"};
+            string[] formats = { "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "MM-dd-yyyy", "yyyy/MM/dd", "MM/dd/yyyy" };
 
-            if (DateTime.TryParseExact(sdate, formats, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dt)) {
+            if (DateTime.TryParseExact(sdate, formats, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out dt))
+            {
                 return true;
             }
 
             return false;
         }
-
 
         public static bool IsDateTime(string sdate)
         {
@@ -230,24 +262,29 @@ namespace Volte.Data.Dapper
 
         public static DateTime ZZDateTime
         {
-            get {
+            get
+            {
                 return new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
             }
         }
 
         public static string AntiSQLInjection(string inputString)
         {
-
-            if (string.IsNullOrEmpty(inputString)) {
+            if (string.IsNullOrEmpty(inputString))
+            {
                 return "";
-            } else {
+            }
+            else
+            {
                 StringBuilder sb = new StringBuilder();
                 char[] old = inputString.ToCharArray();
 
-                for (int i = 0; i < old.Length; i++) {
+                for (int i = 0; i < old.Length; i++)
+                {
                     char c = old[i];
 
-                    switch (c) {
+                    switch (c)
+                    {
                         case '\'':
                         case '\\':
                             {
@@ -282,7 +319,7 @@ namespace Volte.Data.Dapper
             return Encoding.UTF8.GetString(Decompress(Util.Base64UrlDecodeByte(str)));
         }
 
-        public static string Compress(string str , string password)
+        public static string Compress(string str, string password)
         {
             byte[] byKey = null;
             byte[] IV = { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
@@ -297,7 +334,7 @@ namespace Volte.Data.Dapper
             return Convert.ToBase64String(ms.ToArray());
         }
 
-        public static string Decompress(string str , string password)
+        public static string Decompress(string str, string password)
         {
             byte[] byKey = null;
             byte[] IV = { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
@@ -375,10 +412,7 @@ namespace Volte.Data.Dapper
             _fileStream.Read(temp, 0, (int)length);
             _fileStream.Close();
 
-            ZZLogger.Debug(ZFILE_NAME, length);
-
             System.IO.File.WriteAllBytes(toFileName, Compress(temp));
-
         }
 
         public static void DecompressFile(string fileName, string toFileName)
@@ -392,43 +426,45 @@ namespace Volte.Data.Dapper
             _fileStream.Read(temp, 0, (int)length);
             _fileStream.Close();
 
-            ZZLogger.Debug(ZFILE_NAME, length);
-
             System.IO.File.WriteAllBytes(toFileName, Decompress(temp));
 
         }
 
         public static byte[] Compress(byte[] bytes)
         {
-            using(MemoryStream ms = new MemoryStream()) {
+            using (MemoryStream ms = new MemoryStream())
+            {
                 GZipStream Compress = new GZipStream(ms, CompressionMode.Compress);
                 Compress.Write(bytes, 0, bytes.Length);
                 Compress.Close();
                 return ms.ToArray();
-
             }
         }
 
         public static byte[] Decompress(byte[] bytes)
         {
-            using(MemoryStream tempMs = new MemoryStream()) {
-                using(MemoryStream ms = new MemoryStream(bytes)) {
+            using (MemoryStream tempMs = new MemoryStream())
+            {
+                using (MemoryStream ms = new MemoryStream(bytes))
+                {
                     GZipStream Decompress = new GZipStream(ms, CompressionMode.Decompress);
                     Decompress.CopyTo(tempMs);
                     Decompress.Close();
                     return tempMs.ToArray();
                 }
             }
-
         }
 
-        private object CopyObject(object obj) {
-            if (obj == null) {
+        private object CopyObject(object obj)
+        {
+            if (obj == null)
+            {
                 return null;
             }
             Object targetDeepCopyObj;
             Type targetType = obj.GetType();
-            if (targetType.IsValueType == true) {
+            if (targetType.IsValueType == true)
+            {
                 targetDeepCopyObj = obj;
             } else {
                 targetDeepCopyObj = System.Activator.CreateInstance(targetType);
@@ -727,9 +763,9 @@ namespace Volte.Data.Dapper
 
                         _AttributeMapping.Nullable = Nullable.GetUnderlyingType(p.PropertyType) != null;
 
-                        ZZLogger.Debug(ZFILE_NAME , "X1" + p.PropertyType.Name);
-                        ZZLogger.Debug(ZFILE_NAME , "X2" + tableName);
-                        ZZLogger.Debug(ZFILE_NAME , "X3" + _AttributeMapping.TableName);
+                        //ZZLogger.Debug(ZFILE_NAME , "X1" + p.PropertyType.Name);
+                        //ZZLogger.Debug(ZFILE_NAME , "X2" + tableName);
+                        //ZZLogger.Debug(ZFILE_NAME , "X3" + _AttributeMapping.TableName);
 
                         if (_AttributeMapping.Type == DbType.Object) {
 
@@ -810,16 +846,17 @@ namespace Volte.Data.Dapper
                         continue;
                     }
 
-                    if ((!add) &&  item.PrimaryKey) {
+                    if ((!add) && item.PrimaryKey)
+                    {
                         continue;
                     }
 
-                    if (!item.CanWrite) {
+                    if (!item.CanWrite)
+                    {
                         continue;
                     }
 
                     columns.Add(item);
-
                 }
             }
 
