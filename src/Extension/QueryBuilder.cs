@@ -17,17 +17,17 @@ namespace Volte.Data.Dapper
         protected List<QueryOrder> _Orders;
         protected StringBuilder _Sql;
         protected IList<DynamicPropertyModel> _Param;
-        protected string ParamPrefix     = "@";
-        protected string _selectMode     = "";
-        protected string _FromClause     = "";
+        protected string ParamPrefix = "@";
+        protected string _selectMode = "";
+        protected string _FromClause = "";
         protected string _RestrictClause = "";
-        protected string _CountClause    = "";
+        protected string _CountClause = "";
         protected int _PageIndex;
         protected List<AttributeMapping> _Fields = new List<AttributeMapping>();
         protected int _PageSize;
-        protected int _OFFSET    = -1;
+        protected int _OFFSET = -1;
         protected bool _Distinct = false;
-        protected bool _GroupBy  = false;
+        protected bool _GroupBy = false;
         protected string Vendor;
 
         protected static Dictionary<string, Type> DynamicParamModelCache = new Dictionary<string, Type>();
@@ -55,36 +55,46 @@ namespace Volte.Data.Dapper
 
         public virtual IList<QueryOrder> Orders
         {
-            get {
+            get
+            {
                 return _Orders;
             }
         }
 
         public virtual string WhereClauseSql
         {
-            get {
+            get
+            {
                 var sb = new StringBuilder();
 
                 string _sb2 = _Sql.ToString();
 
                 var arr = _sb2.Split(' ').Where(m => !string.IsNullOrEmpty(m)).ToList();
 
-                if (_Param != null && _Param.Count > 0) {
-                    foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping)) {
-                        if (sb.Length == 0) {
+                if (_Param != null && _Param.Count > 0)
+                {
+                    foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping))
+                    {
+                        if (sb.Length == 0)
+                        {
                             sb.Append(string.Format(" {0}={1}", p.ColumnName, ParamPrefix + p.Name));
-                        } else {
-                            sb.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +p.Name));
+                        }
+                        else
+                        {
+                            sb.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix + p.Name));
                         }
                     }
                 }
 
-                for (int i = 0; i < arr.Count; i++) {
-                    if (i == 0 && (arr[i] == "AND" || arr[i] == "OR")) {
+                for (int i = 0; i < arr.Count; i++)
+                {
+                    if (i == 0 && (arr[i] == "AND" || arr[i] == "OR"))
+                    {
                         continue;
                     }
 
-                    if (i > 0 && arr[i - 1] == "(" && (arr[i] == "AND" || arr[i] == "OR")) {
+                    if (i > 0 && arr[i - 1] == "(" && (arr[i] == "AND" || arr[i] == "OR"))
+                    {
                         continue;
                     }
 
@@ -98,19 +108,23 @@ namespace Volte.Data.Dapper
 
         public virtual string WhereSql
         {
-            get {
+            get
+            {
                 var sb = new StringBuilder();
 
                 string _sb2 = _Sql.ToString();
 
                 var arr = _sb2.Split(' ').Where(m => !string.IsNullOrEmpty(m)).ToList();
 
-                for (int i = 0; i < arr.Count; i++) {
-                    if (i == 0 && (arr[i] == "AND" || arr[i] == "OR")) {
+                for (int i = 0; i < arr.Count; i++)
+                {
+                    if (i == 0 && (arr[i] == "AND" || arr[i] == "OR"))
+                    {
                         continue;
                     }
 
-                    if (i > 0 && arr[i - 1] == "(" && (arr[i] == "AND" || arr[i] == "OR")) {
+                    if (i > 0 && arr[i - 1] == "(" && (arr[i] == "AND" || arr[i] == "OR"))
+                    {
                         continue;
                     }
 
@@ -118,29 +132,35 @@ namespace Volte.Data.Dapper
                     sb.Append(arr[i]);
                 }
 
-                if (sb.Length > 0) {
-                    return " WHERE (" + sb.ToString()+")";
-                }else{
+                if (sb.Length > 0)
+                {
+                    return " WHERE (" + sb.ToString() + ")";
+                }
+                else
+                {
                     return "";
                 }
-
             }
         }
 
         public virtual string OrderSql
         {
-            get {
+            get
+            {
                 var sb = new StringBuilder();
 
                 int i = 0;
 
-                foreach (QueryOrder item in this.Orders) {
-
-                    if (i == 0) {
+                foreach (QueryOrder item in this.Orders)
+                {
+                    if (i == 0)
+                    {
                         sb.Append(" ");
                         sb.Append("ORDER BY");
                         sb.Append(" ");
-                    } else {
+                    }
+                    else
+                    {
                         sb.Append(",");
                     }
 
@@ -155,10 +175,13 @@ namespace Volte.Data.Dapper
                 return sb.ToString();
             }
         }
+
         public object Param
         {
-            get {
-                if (_Param != null && _Param.Count > 0) {
+            get
+            {
+                if (_Param != null && _Param.Count > 0)
+                {
                     var paramKeys = this.ParamValues.Keys.ToList();
                     var listCacheKeys = new List<string>();
                     listCacheKeys.Add(_ClassMapping.TableName);
@@ -166,23 +189,28 @@ namespace Volte.Data.Dapper
 
                     var cacheKey = string.Empty;
 
-                    foreach (var key in DynamicParamModelCache.Keys.Where(m => m.StartsWith(_ClassMapping.TableName))) {
-                        if (listCacheKeys.All(m => key.Split('_').Contains(m))) {
+                    foreach (var key in DynamicParamModelCache.Keys.Where(m => m.StartsWith(_ClassMapping.TableName)))
+                    {
+                        if (listCacheKeys.All(m => key.Split('_').Contains(m)))
+                        {
                             cacheKey = key;
                             break;
                         }
                     }
 
-                    if (string.IsNullOrEmpty(cacheKey)) {
+                    if (string.IsNullOrEmpty(cacheKey))
+                    {
                         cacheKey = string.Join("_", listCacheKeys);
                     }
 
                     Type modelType;
 
-                    lock (objLock) {
+                    lock (objLock)
+                    {
                         DynamicParamModelCache.TryGetValue(cacheKey, out modelType);
 
-                        if (modelType == null) {
+                        if (modelType == null)
+                        {
                             var tyName = "CustomDynamicParamClass";
                             modelType = DynamicBuilder.DynamicCreateType(tyName, _Param);
                             DynamicParamModelCache.Add(cacheKey, modelType);
@@ -191,24 +219,30 @@ namespace Volte.Data.Dapper
 
                     var model = Activator.CreateInstance(modelType);
 
-                    foreach (var item in this.ParamValues) {
+                    foreach (var item in this.ParamValues)
+                    {
                         modelType.GetProperty(item.Key).SetValue(model, item.Value, null);
                     }
 
                     return model;
-                } else {
+                }
+                else
+                {
                     return null;
                 }
             }
         }
+
         public virtual string InsertSql
         {
-            get {
+            get
+            {
                 StringBuilder sql = new StringBuilder();
                 sql.Append(string.Format("INSERT INTO {0}(", _ClassMapping.TableName));
                 var colums = DapperUtil.GetExecColumns(_ClassMapping);
 
-                for (int i = 0; i < colums.Count; i++) {
+                for (int i = 0; i < colums.Count; i++)
+                {
                     if (i == 0) sql.Append(colums[i].ColumnName);
                     else sql.Append(string.Format(",{0}", colums[i].ColumnName));
                 }
@@ -216,7 +250,8 @@ namespace Volte.Data.Dapper
                 sql.Append(")");
                 sql.Append(" VALUES(");
 
-                for (int i = 0; i < colums.Count; i++) {
+                for (int i = 0; i < colums.Count; i++)
+                {
                     if (i == 0) sql.Append(string.Format("{0}{1}", ParamPrefix, colums[i].ColumnName));
                     else sql.Append(string.Format(",{0}{1}", ParamPrefix, colums[i].ColumnName));
                 }
@@ -228,39 +263,50 @@ namespace Volte.Data.Dapper
 
         public virtual string DeleteSql
         {
-            get {
+            get
+            {
                 StringBuilder sql = new StringBuilder();
 
                 sql.Append(string.Format("DELETE FROM {0} ", _ClassMapping.TableName));
 
-                if (string.IsNullOrEmpty(this.WhereSql)) {
+                if (string.IsNullOrEmpty(this.WhereSql))
+                {
                     int i = 0;
 
-                    foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping)) {
-                        if (i == 0) {
-                            sql.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix +p.Name));
-                        } else {
-                            sql.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +p.Name));
+                    foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping))
+                    {
+                        if (i == 0)
+                        {
+                            sql.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix + p.Name));
+                        }
+                        else
+                        {
+                            sql.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix + p.Name));
                         }
                         i++;
                     }
-                } else {
+                }
+                else
+                {
                     sql.Append(string.Format(" {0}", this.WhereSql));
                 }
 
                 return sql.ToString();
-
             }
         }
+
         public virtual string UpdateSql
         {
-            get {
+            get
+            {
                 StringBuilder sql = new StringBuilder();
                 sql.Append(string.Format("UPDATE {0} SET", _ClassMapping.TableName));
                 var colums = DapperUtil.GetExecColumns(_ClassMapping, false);
 
-                for (int i = 0; i < colums.Count; i++) {
-                    if (i != 0) {
+                for (int i = 0; i < colums.Count; i++)
+                {
+                    if (i != 0)
+                    {
                         sql.Append(",");
                     }
 
@@ -272,19 +318,26 @@ namespace Volte.Data.Dapper
                     sql.Append(ParamPrefix + colums[i].ColumnName);
                 }
 
-                if (string.IsNullOrEmpty(WhereSql)) {
+                if (string.IsNullOrEmpty(WhereSql))
+                {
                     int i = 0;
 
-                    foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping)) {
-                        if (i == 0) {
-                            sql.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix +p.Name));
-                        } else {
-                            sql.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +p.Name));
+                    foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping))
+                    {
+                        if (i == 0)
+                        {
+                            sql.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix + p.Name));
+                        }
+                        else
+                        {
+                            sql.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix + p.Name));
                         }
 
                         i++;
                     }
-                } else {
+                }
+                else
+                {
                     sql.Append(string.Format(" {0}", WhereSql));
                 }
 
@@ -294,99 +347,132 @@ namespace Volte.Data.Dapper
 
         public virtual string QuerySql
         {
-            get {
+            get
+            {
                 StringBuilder _Where = new StringBuilder();
-                string _TableName    = _ClassMapping.TableName;
-                var sqlStr           = "";
+                string _TableName = _ClassMapping.TableName;
+                var sqlStr = "";
 
-                if (string.IsNullOrEmpty(WhereSql)) {
-                    if (_Param != null && _Param.Count > 0) {
-
+                if (string.IsNullOrEmpty(WhereSql))
+                {
+                    if (_Param != null && _Param.Count > 0)
+                    {
                         int i = 0;
 
-                        foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping)) {
-                            if (i == 0) {
-                                _Where.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix +p.Name));
-                            } else {
-                                _Where.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix +p.Name));
+                        foreach (AttributeMapping p in DapperUtil.GetPrimary(_ClassMapping))
+                        {
+                            if (i == 0)
+                            {
+                                _Where.Append(string.Format(" WHERE {0}={1}", p.ColumnName, ParamPrefix + p.Name));
+                            }
+                            else
+                            {
+                                _Where.Append(string.Format(" AND {0}={1}", p.ColumnName, ParamPrefix + p.Name));
                             }
 
                             i++;
                         }
                     }
-                } else {
+                }
+                else
+                {
                     _Where.Append(string.Format(" {0}", WhereSql));
                 }
 
-                StringBuilder _select  = new StringBuilder();
+                StringBuilder _select = new StringBuilder();
                 StringBuilder _GroupbyClause = new StringBuilder();
 
-                if (_Fields.Count > 0) {
+                if (_Fields.Count > 0)
+                {
                     int i = 0;
                     int gi = 0;
 
-                    foreach (AttributeMapping _att in _Fields) {
-                        if (i != 0) {
+                    foreach (AttributeMapping _att in _Fields)
+                    {
+                        if (i != 0)
+                        {
                             _select.Append(",");
                         }
 
-                        if (_att["Expression"] != "" || _att.TableName == "variable") {
-
-                            if (_att["Expression"] != "") {
+                        if (_att["Expression"] != "" || _att.TableName == "variable")
+                        {
+                            if (_att["Expression"] != "")
+                            {
                                 _select.Append(_att["Expression"]);
-                            } else {
+                            }
+                            else
+                            {
                                 _select.Append("''");
                             }
 
                             _select.Append(" AS ");
 
-                            if (_att.AliasName != "") {
+                            if (_att.AliasName != "")
+                            {
                                 _select.Append(_att.AliasName);
-                            } else {
+                            }
+                            else
+                            {
                                 _select.Append(_att.ColumnName);
                             }
 
-                            if (GroupBy){
-                                if (_att.DataType=="string" || _att.DataType=="datetime" ){
-                                    if (gi != 0) {
+                            if (GroupBy)
+                            {
+                                if (_att.DataType == "string" || _att.DataType == "datetime")
+                                {
+                                    if (gi != 0)
+                                    {
                                         _GroupbyClause.Append(",");
                                     }
                                     _GroupbyClause.Append(_att.TableName + "." + _att.ColumnName);
                                     gi++;
                                 }
                             }
-                        } else {
-
-                            if (GroupBy){
-                                if (_att.DataType=="string" || _att.DataType=="datetime" ){
-                                    if (gi != 0) {
+                        }
+                        else
+                        {
+                            if (GroupBy)
+                            {
+                                if (_att.DataType == "string" || _att.DataType == "datetime")
+                                {
+                                    if (gi != 0)
+                                    {
                                         _GroupbyClause.Append(",");
                                     }
                                     _GroupbyClause.Append(_att.TableName + "." + _att.ColumnName);
                                     gi++;
                                 }
-                                if (_att.DataType=="int" || _att.DataType=="decimal"  || _att.DataType=="bigint" ){
-                                    _select.Append("sum("+_att.TableName + "." + _att.ColumnName+")");
-                                    if (_att.AliasName != "") {
+                                if (_att.DataType == "int" || _att.DataType == "decimal" || _att.DataType == "bigint")
+                                {
+                                    _select.Append("sum(" + _att.TableName + "." + _att.ColumnName + ")");
+                                    if (_att.AliasName != "")
+                                    {
                                         _select.Append(_att.AliasName);
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         _select.Append(_att.ColumnName);
                                     }
-                                }else{
+                                }
+                                else
+                                {
                                     _select.Append(_att.TableName + "." + _att.ColumnName);
-                                    if (_att.AliasName != "") {
+                                    if (_att.AliasName != "")
+                                    {
                                         _select.Append(" AS ");
                                         _select.Append(_att.AliasName);
                                     }
                                 }
-                            }else{
+                            }
+                            else
+                            {
                                 _select.Append(_att.TableName + "." + _att.ColumnName);
-                                if (_att.AliasName != "") {
+                                if (_att.AliasName != "")
+                                {
                                     _select.Append(" AS ");
                                     _select.Append(_att.AliasName);
                                 }
                             }
-
                         }
 
                         i++;
@@ -493,18 +579,21 @@ namespace Volte.Data.Dapper
                             i++;
                         }
                     }
-                } else {
+                }
+                else
+                {
                     _Where.Append(string.Format(" {0}", WhereSql));
                 }
 
-                return string.Format("SELECT COUNT(*) AS RecordCount FROM {0} {1}" , _TableName , _Where.ToString());
+                return string.Format("SELECT COUNT(*) AS RecordCount FROM {0} {1}", _TableName, _Where.ToString());
             }
         }
 
         protected QueryBuilder()
         {
-            _Sql        = new StringBuilder();
+            _Sql = new StringBuilder();
         }
+
         public QueryBuilder Top(int top)
         {
             _TopNum = top;
@@ -526,23 +615,28 @@ namespace Volte.Data.Dapper
 
         public QueryBuilder OrderClause(string field)
         {
-            _Orders.Add(new QueryOrder() {
-                    Field = field, Asc = ""
-                    });
+            _Orders.Add(new QueryOrder()
+            {
+                Field = field,
+                Asc = ""
+            });
             return this;
         }
+
         public QueryBuilder OrderBy(string field, bool Asc = true)
         {
-
             var _order_Asc = "ASC";
 
-            if (!Asc) {
+            if (!Asc)
+            {
                 _order_Asc = "DESC";
             }
 
-            _Orders.Add(new QueryOrder() {
-                    Field = field, Asc = _order_Asc
-                    });
+            _Orders.Add(new QueryOrder()
+            {
+                Field = field,
+                Asc = _order_Asc
+            });
             return this;
         }
 
@@ -552,10 +646,12 @@ namespace Volte.Data.Dapper
             s = s + ",X1_X2_X3";
             string[] aSegment = s.Split(',');
 
-            foreach (string Segment in aSegment) {
-                if (!string.IsNullOrEmpty(Segment)){
-
-                    if (_r != "") {
+            foreach (string Segment in aSegment)
+            {
+                if (!string.IsNullOrEmpty(Segment))
+                {
+                    if (_r != "")
+                    {
                         _r = _r + ",";
                     }
 
@@ -565,20 +661,21 @@ namespace Volte.Data.Dapper
 
             return _r;
         }
+
         public QueryBuilder Where(string whereClause, bool isAnd = true)
         {
-            if (whereClause.Trim() != "") {
-
+            if (whereClause.Trim() != "")
+            {
                 var cn = isAnd ? "AND" : "OR";
                 _Sql.Append(" ");
                 _Sql.Append(cn);
                 _Sql.Append(" ");
                 _Sql.Append(whereClause);
                 _Sql.Append(" ");
-
             }
             return this;
         }
+
         public QueryBuilder LeftParen(bool isAnd = true)
         {
             var cn = isAnd ? "AND" : "OR";
@@ -588,15 +685,18 @@ namespace Volte.Data.Dapper
             _Sql.Append("(");
             return this;
         }
+
         public QueryBuilder RightParen()
         {
             _Sql.Append(" ");
             _Sql.Append(")");
             return this;
         }
+
         protected string GetOpStr(Operation method)
         {
-            switch (method) {
+            switch (method)
+            {
                 case Operation.Contains:
                 case Operation.StartsWith:
                 case Operation.EndsWith:
@@ -619,7 +719,6 @@ namespace Volte.Data.Dapper
 
                 case Operation.NotEqual:
                     return "<>";
-
             }
 
             return "=";
@@ -634,19 +733,27 @@ namespace Volte.Data.Dapper
         {
             string _value = DapperUtil.AntiSQLInjection(value);
 
-            if (operation == Operation.Contains) {
+            if (operation == Operation.Contains)
+            {
                 _value = string.Format("%{0}%", _value);
-            } else if (operation == Operation.StartsWith) {
+            }
+            else if (operation == Operation.StartsWith)
+            {
                 _value = string.Format("{0}%", _value);
-            } else if (operation == Operation.EndsWith) {
+            }
+            else if (operation == Operation.EndsWith)
+            {
                 _value = string.Format("%{0}", _value);
-            } else if (operation == Operation.WhereIn) {
-                string s = " "+field+" IN(" + this.WhereIn(value) + ") ";
+            }
+            else if (operation == Operation.WhereIn)
+            {
+                string s = " " + field + " IN(" + this.WhereIn(value) + ") ";
                 return Where(s);
             }
 
             return _WhereClause(field, operation, "N'" + _value + "'", isAnd);
         }
+
         public QueryBuilder WhereClause(string field, Operation operation, DateTime value, bool isAnd = true)
         {
             return _WhereClause(field, operation, "'" + value.ToString("yyyy-MM-dd") + "'", isAnd);
@@ -679,6 +786,7 @@ namespace Volte.Data.Dapper
 
             return this;
         }
+
         public QueryBuilder OrWhere(string field, Operation operation, object value)
         {
             return Where(field, operation, value, false);
@@ -701,9 +809,11 @@ namespace Volte.Data.Dapper
 
             return this;
         }
+
         private object CreateParam(Operation method, object value)
         {
-            switch (method) {
+            switch (method)
+            {
                 case Operation.Contains:
                     return string.Format("%{0}%", value);
 
@@ -730,7 +840,6 @@ namespace Volte.Data.Dapper
 
                 case Operation.NotEqual:
                     return value;
-
             }
 
             return value;
@@ -738,7 +847,8 @@ namespace Volte.Data.Dapper
 
         protected DynamicPropertyModel AddParam(Operation method, string field, object value)
         {
-            if (_Param == null) {
+            if (_Param == null)
+            {
                 _Param = new List<DynamicPropertyModel>();
             }
 
@@ -793,17 +903,21 @@ namespace Volte.Data.Dapper
         {
             int _ndx = 1;
 
-            if (_ParamIndex.ContainsKey(field)) {
+            if (_ParamIndex.ContainsKey(field))
+            {
                 _ndx = _ParamIndex[field] + 1;
                 _ParamIndex[field] = _ndx;
-            } else {
+            }
+            else
+            {
                 _ParamIndex[field] = _ndx;
             }
 
             return _ndx.ToString();
         }
 
-        internal QueryBuilder AppendParam<T> (T t) where T : class {
+        internal QueryBuilder AppendParam<T>(T t) where T : class
+        {
             if (_Param == null)
             {
                 _Param = new List<DynamicPropertyModel>();
@@ -820,9 +934,12 @@ namespace Volte.Data.Dapper
                 var pmodel = new DynamicPropertyModel();
                 pmodel.Name = item.Name;
 
-                if (item.Nullable && item.Type == DbType.DateTime) {
+                if (item.Nullable && item.Type == DbType.DateTime)
+                {
                     pmodel.PropertyType = typeof(DateTime?);
-                } else {
+                }
+                else
+                {
                     pmodel.PropertyType = value.GetType();
                 }
 
@@ -854,31 +971,35 @@ namespace Volte.Data.Dapper
             var result = new QueryBuilder<T>();
 
             result.ParamPrefix = db.ParamPrefix;
-            result.Vendor      = db.Vendor;
+            result.Vendor = db.Vendor;
 
             return result;
         }
 
         public QueryBuilder<T> OrderBy(string field, bool Asc = true)
         {
-
             var _order_Asc = "ASC";
 
-            if (!Asc) {
+            if (!Asc)
+            {
                 _order_Asc = "DESC";
             }
 
-            _Orders.Add(new QueryOrder() {
-                    Field = field, Asc = _order_Asc
-                    });
+            _Orders.Add(new QueryOrder()
+            {
+                Field = field,
+                Asc = _order_Asc
+            });
             return this;
         }
 
         public QueryBuilder<T> OrderClause(string field)
         {
-            _Orders.Add(new QueryOrder() {
-                    Field = field, Asc = ""
-                    });
+            _Orders.Add(new QueryOrder()
+            {
+                Field = field,
+                Asc = ""
+            });
             return this;
         }
     }

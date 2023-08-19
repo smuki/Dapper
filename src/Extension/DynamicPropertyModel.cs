@@ -2,7 +2,8 @@
 
 namespace Volte.Data.Dapper
 {
-    public class DynamicPropertyModel {
+    public class DynamicPropertyModel
+    {
         public string Name
         {
             get;

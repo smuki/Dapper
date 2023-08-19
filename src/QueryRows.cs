@@ -156,9 +156,12 @@ namespace Volte.Data.Dapper
 
         public void MoveFirst()
         {
-            if (_Data.Count > 0) {
+            if (_Data.Count > 0)
+            {
                 _Pointer = 0;
-            } else {
+            }
+            else
+            {
                 _Pointer = 1000000;
             }
 
@@ -226,7 +229,8 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[Name];
 
-            if (DBNull.Value.Equals(_obj)) {
+            if (DBNull.Value.Equals(_obj))
+            {
                 return 0;
             }
 
@@ -237,7 +241,8 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[i];
 
-            if (DBNull.Value.Equals(_obj)) {
+            if (DBNull.Value.Equals(_obj))
+            {
                 return 0;
             }
 
@@ -248,7 +253,8 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[Name];
 
-            if (DBNull.Value.Equals(_obj)) {
+            if (DBNull.Value.Equals(_obj))
+            {
                 return 0;
             }
 
@@ -259,7 +265,8 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[i];
 
-            if (_obj==null || DBNull.Value.Equals(_obj)) {
+            if (_obj == null || DBNull.Value.Equals(_obj))
+            {
                 return 0;
             }
 
@@ -270,7 +277,8 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[Name];
 
-            if (_obj==null || DBNull.Value.Equals(_obj)) {
+            if (_obj == null || DBNull.Value.Equals(_obj))
+            {
                 return 0;
             }
 
@@ -281,7 +289,8 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[i];
 
-            if (_obj==null || DBNull.Value.Equals(_obj)) {
+            if (_obj == null || DBNull.Value.Equals(_obj))
+            {
                 return 0;
             }
 
@@ -292,7 +301,8 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[Name];
 
-            if (_obj==null || DBNull.Value.Equals(_obj)) {
+            if (_obj == null || DBNull.Value.Equals(_obj))
+            {
                 return 0;
             }
 
@@ -303,7 +313,8 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[i];
 
-            if (DBNull.Value.Equals(_obj)) {
+            if (DBNull.Value.Equals(_obj))
+            {
                 return "";
             }
 
@@ -314,7 +325,8 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[Name];
 
-            if (DBNull.Value.Equals(_obj)) {
+            if (DBNull.Value.Equals(_obj))
+            {
                 return "";
             }
 
@@ -325,7 +337,8 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[i];
 
-            if (DBNull.Value.Equals(_obj)) {
+            if (DBNull.Value.Equals(_obj))
+            {
                 return Util.DateTime_MinValue;
             }
 
@@ -336,7 +349,8 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[Name];
 
-            if (DBNull.Value.Equals(_obj)) {
+            if (DBNull.Value.Equals(_obj))
+            {
                 return Util.DateTime_MinValue;
             }
 
@@ -347,7 +361,8 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[i];
 
-            if (DBNull.Value.Equals(_obj)) {
+            if (DBNull.Value.Equals(_obj))
+            {
                 return null;
             }
 
@@ -358,7 +373,8 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[Name];
 
-            if (DBNull.Value.Equals(_obj)) {
+            if (DBNull.Value.Equals(_obj))
+            {
                 return null;
             }
 
@@ -369,9 +385,12 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[i];
 
-            if (DBNull.Value.Equals(_obj)) {
+            if (DBNull.Value.Equals(_obj))
+            {
                 return true;
-            }else{
+            }
+            else
+            {
                 return false;
             }
         }
@@ -380,9 +399,12 @@ namespace Volte.Data.Dapper
         {
             object _obj = this[Name];
 
-            if (DBNull.Value.Equals(_obj)) {
+            if (DBNull.Value.Equals(_obj))
+            {
                 return true;
-            }else{
+            }
+            else
+            {
                 return false;
             }
         }
@@ -391,6 +413,7 @@ namespace Volte.Data.Dapper
         {
             return _Type[Name];
         }
+
         public string GetName(int i)
         {
             return _Names[i];
@@ -432,7 +455,8 @@ namespace Volte.Data.Dapper
 
         public object this[int i]
         {
-            get {
+            get
+            {
                 return _Row[i];
             }
         }

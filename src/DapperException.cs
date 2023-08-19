@@ -2,7 +2,8 @@ using System;
 
 namespace Volte.Data.Dapper
 {
-    public class DapperException : Exception {
+    public class DapperException : Exception
+    {
         // Methods
         public DapperException(Exception e) : base("Entity Exception")
         {
@@ -20,25 +21,26 @@ namespace Volte.Data.Dapper
             _ErrorType = errorType;
         }
 
-
         // Properties
         public Exception ErrorSource
         {
-            get {
+            get
+            {
                 return _ErrorSource;
             }
         }
 
         public ExceptionTypes ErrorType
         {
-            get {
+            get
+            {
                 return _ErrorType;
             }
         }
 
-
         // Fields
         private Exception _ErrorSource;
+
         private ExceptionTypes _ErrorType;
     }
 }

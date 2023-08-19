@@ -5,7 +5,8 @@ using System.Text;
 
 namespace Volte.Data.Dapper
 {
-    public class QueryOrder {
+    public class QueryOrder
+    {
         public virtual string Field
         {
             get;
